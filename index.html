@@ -83,7 +83,9 @@ svg.mucha{width:16px;height:16px;flex:none}
 .tile.arch.open{opacity:1}
 .tmenu{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;align-items:stretch;gap:8px;padding:14px;background:var(--tb)}
 .tile.open .tmenu{display:flex;animation:pop .25s ease}
-.tb{min-height:44px;border-radius:99px;font-weight:700;font-size:14px;background:transparent;color:var(--tf);box-shadow:inset 0 0 0 2px var(--tf);padding:0 10px}
+.tb .ti,.tbtn .ti{width:15px;height:15px;flex:none}
+.tbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.tb{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;border-radius:99px;font-weight:700;font-size:14px;background:transparent;color:var(--tf);box-shadow:inset 0 0 0 2px var(--tf);padding:0 10px}
 .tb.go{background:var(--tf);color:var(--tb);box-shadow:none}
 .tq{font-weight:700;font-size:14px;text-align:center}
 @media (hover:hover){.tile:hover .tmenu{display:flex}}
@@ -920,8 +922,8 @@ function start(){
     const menu = pyta
       ? `<span class="tq">Odłożyć do skumanych?</span><button class="tb go" data-act="archiwizuj" data-t="${t.id}">Tak</button><button class="tb" data-act="nie-archiwizuj">Nie</button>`
       : arch
-        ? `<button class="tb go" data-act="przywroc" data-t="${t.id}">Przywróć do ćwiczeń</button><button class="tb" data-act="runda" data-t="${t.id}">Zacznij ▶</button>`
-        : `<button class="tb go" data-act="runda" data-t="${t.id}">Zacznij ▶</button><button class="tb" data-act="pytaj-archiwum" data-t="${t.id}">Skumane ✓</button>`;
+        ? `<button class="tb go" data-act="przywroc" data-t="${t.id}">Przywróć do ćwiczeń</button><button class="tb" data-act="runda" data-t="${t.id}">Zacznij<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10.2-6.5a1 1 0 0 0 0-1.8L9.5 4.6A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg></button>`
+        : `<button class="tb go" data-act="runda" data-t="${t.id}">Zacznij<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10.2-6.5a1 1 0 0 0 0-1.8L9.5 4.6A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg></button><button class="tb" data-act="pytaj-archiwum" data-t="${t.id}">Skumane<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`;
     return `<div class="tile${open ? " open" : ""}${arch ? " arch" : ""}" style="background:${bg};color:${fg};--tb:${bg};--tf:${fg}" data-act="wybierz" data-t="${t.id}" tabindex="0" role="button" aria-expanded="${open}" aria-label="${esc(t.nazwa)}${arch ? ", skumane" : ""}">
       <span class="tname">${t.nazwa.includes(": ") ? `<small>${esc(t.nazwa.split(": ")[0])}</small>` : ""}<span class="mega">${esc(t.nazwa.includes(": ") ? t.nazwa.split(": ").slice(1).join(": ").replace(/^./, c => c.toUpperCase()) : t.nazwa)}</span></span>
       <span class="foot"><span>${arch ? "skumane ✓" : Math.round(p * 100) + "%"}</span><span aria-hidden="true">${gwiazdki(p)}</span></span>
@@ -1131,7 +1133,7 @@ function tematy(){
         ? `<button class="tbtn" data-act="przywroc" data-t="${t.id}">Przywróć</button>`
         : pyta
           ? `<span class="tconf"><button class="tbtn go" data-act="archiwizuj" data-t="${t.id}">Tak, skumane</button><button class="tbtn" data-act="nie-archiwizuj">Nie</button></span>`
-          : `<button class="tbtn" data-act="pytaj-archiwum" data-t="${t.id}">Skumane ✓</button>`}
+          : `<button class="tbtn" data-act="pytaj-archiwum" data-t="${t.id}">Skumane<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`}
     </div>`;
   };
   const akt = TEMATY.map((t, i) => Zapis.archiwum[t.id] ? "" : wiersz(t, i, false)).join("");
