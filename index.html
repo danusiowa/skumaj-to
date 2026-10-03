@@ -39,7 +39,8 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .screen{display:flex;flex-direction:column;gap:14px;flex-grow:1;padding-bottom:18px}
 .hero{position:relative;border-radius:24px;background:var(--lawenda);padding:20px 18px;min-height:150px;display:flex;flex-direction:column;justify-content:space-between;gap:14px}
 .hero h1{margin:0;max-width:60%;font-size:23px;line-height:1.15;text-wrap:balance}
-.hero .frog{position:absolute;right:10px;bottom:16px;width:120px;height:157px;filter:drop-shadow(0 6px 6px rgba(74,63,107,.28))}
+.hero .frog{position:absolute;right:10px;bottom:16px;width:120px;height:157px;z-index:1}
+.hero .cien{position:absolute;right:32px;bottom:24px;width:84px;height:14px;border-radius:50%;background:rgba(74,63,107,.28);filter:blur(1.5px)}
 .pill{align-self:flex-start;padding:5px 12px;border-radius:99px;background:var(--kartka);color:var(--pomidor);font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px}
 .pills{display:flex;flex-direction:column;gap:6px;align-items:flex-start;max-width:60%}
 .hero .stan{margin:0;max-width:58%;font-size:14px;font-weight:500;color:var(--fiolet-ink)}
@@ -150,7 +151,9 @@ ul.zad li.zle{background:var(--piwonia);color:#7A2E1A;font-weight:700}
 ul.zad li span:last-child{white-space:nowrap}
 @media (prefers-reduced-motion:no-preference){
 .hero .frog{animation:heroZaba 6s ease-in-out infinite;transform-origin:50% 100%}
+.hero .cien{animation:cienZaby 6s ease-in-out infinite}
 }
+@keyframes cienZaby{0%,100%{transform:none;opacity:1}20%{transform:scaleX(1.06)}40%{transform:translateX(-3px)}55%{transform:translateX(3px)}68%{transform:scaleX(1.1)}76%{transform:scale(.55);opacity:.45}84%{transform:scaleX(1.12);opacity:1}90%{transform:scale(.8);opacity:.75}95%{transform:none;opacity:1}}
 @keyframes heroZaba{0%,100%{transform:none}20%{transform:scale(1.03,.97)}40%{transform:rotate(-2deg)}55%{transform:rotate(2deg)}68%{transform:scale(1.05,.94)}76%{transform:translateY(-12px) scale(.97,1.04)}84%{transform:scale(1.04,.96)}90%{transform:translateY(-4px)}95%{transform:none}}
 .loader{min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;font-size:15px}
 .lmucha{width:70px;height:56px}
@@ -781,6 +784,7 @@ function start(){
       <h1 class="mega">Co dziś kumamy?</h1>
       <p class="stan">${Zapis.rundy.length ? STAN_ZABY[lv] : "Żabka czeka na pierwsze muchy. Każda dobra odpowiedź to jedna mucha!"}</p>
       <div class="pills"><span class="pill">${pill}</span><span class="pill">${ICO_MUCHA}${muchy} ${muchSlowo(muchy)}</span></div>
+      <span class="cien" aria-hidden="true"></span>
       ${zabaPet(lv)}
     </section>
     ${tiles.trim() ? `<div class="tiles">${tiles}</div>` : `<div class="strip" style="background:var(--slonko);color:var(--staw)"><span class="mega">Wszystko skumane!</span><span>Przywróć temat ze skumanych poniżej.</span></div>`}
