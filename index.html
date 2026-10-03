@@ -221,6 +221,7 @@ ul.zad li span:last-child{white-space:nowrap}
 .login .btn{margin-top:10px}
 .blad{margin:4px 0 0;color:var(--pomidor);font-weight:700;font-size:14px}
 .konto{margin:4px 0 0;text-align:center;font-size:13px;color:var(--szary)}
+.zlink{font:inherit;font-size:14px;height:44px;padding:0 12px;border-radius:12px;border:0;box-shadow:inset 0 0 0 1.5px var(--linia);background:var(--kartka);color:var(--staw);width:100%}
 .konto button{color:var(--staw);font-weight:700;text-decoration:underline;min-height:32px}
 .pond{border-radius:24px;overflow:hidden;box-shadow:inset 0 0 0 1.5px var(--linia);background:var(--kartka)}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
@@ -380,12 +381,23 @@ const KOLORY_ZAPASOWE = [["#80B0E8","#16324F"],["#898E46","#FFF8EE"],["#C45F3F",
    ===================================================================== */
 /* Supabase: uzupełnij adres i klucz publiczny projektu (Project Settings → API).
    Puste = wyniki tylko na urządzeniu (albo w chmurze Claude, gdy apka działa w Claude). */
-const SUPABASE = { URL: "", KLUCZ: "" };
+const SUPABASE = { URL: "https://inzczrhfnifkugnbmbtt.supabase.co", KLUCZ: "", ADMINI: ["danusiowa@gmail.com"] };
+
+// Link z zaproszeniem: #zaproszenie=<kod>&typ=invite|recovery. Czytamy i czyścimy adres od razu.
+const ZAPROSZENIE = (() => {
+  try {
+    const q = new URLSearchParams(location.hash.slice(1));
+    const kod = q.get("zaproszenie");
+    if (!kod) return null;
+    history.replaceState(null, "", location.pathname + location.search);
+    return { kod, typ: q.get("typ") === "recovery" ? "recovery" : "invite" };
+  } catch (e) { return null; }
+})();
 
 const Zapis = {
   rundy: [], oczekujace: [], archiwum: {}, archDoWyslania: false, stan: "urzadzenie", onChange: null,
   chmura: null,               // { zapiszRunde(r), zapiszArchiwum(a) } – Claude albo Supabase
-  sb: null, uid: null, email: "", potrzebneLogowanie: false,
+  sb: null, uid: null, email: "", potrzebneLogowanie: false, ustawHaslo: false, bladZaproszenia: "",
   KLUCZ: "skumaj-to-v1",
   wczytajLokalnie(){
     try {
@@ -406,7 +418,7 @@ const Zapis = {
   async start(){
     this.wczytajLokalnie();
     window.addEventListener("online", () => this.wyslij());
-    if (SUPABASE.URL && window.supabase) return this.startSupabase();
+    if (SUPABASE.URL && SUPABASE.KLUCZ && window.supabase) return this.startSupabase();
     let db = null;
     try { db = (window.claude && window.claude.use) ? await window.claude.use("db") : null; } catch (e) { db = null; }
     if (!db) { this.stan = "urzadzenie"; this.zmiana(); return; }
@@ -429,7 +441,16 @@ const Zapis = {
   async startSupabase(){
     this.sb = window.supabase.createClient(SUPABASE.URL, SUPABASE.KLUCZ, { auth: { persistSession: true, autoRefreshToken: true } });
     let sesja = null;
-    try { sesja = (await this.sb.auth.getSession()).data.session; } catch (e) {}
+    if (ZAPROSZENIE) {
+      try {
+        const { data, error } = await this.sb.auth.verifyOtp({ token_hash: ZAPROSZENIE.kod, type: ZAPROSZENIE.typ });
+        if (error) throw error;
+        sesja = data.session; this.ustawHaslo = true;
+      } catch (e) {
+        this.bladZaproszenia = "Ten link już wygasł albo był użyty. Poproś o nowy.";
+      }
+    }
+    if (!sesja) { try { sesja = (await this.sb.auth.getSession()).data.session; } catch (e) {} }
     if (!sesja) { this.potrzebneLogowanie = true; this.zmiana(); return; }
     await this.poZalogowaniu(sesja);
   },
@@ -438,6 +459,18 @@ const Zapis = {
     if (error) throw error;
     this.potrzebneLogowanie = false;
     await this.poZalogowaniu(data.session);
+  },
+  async nadajHaslo(haslo){
+    const { error } = await this.sb.auth.updateUser({ password: haslo });
+    if (error) throw error;
+    this.ustawHaslo = false; this.zmiana();
+  },
+  jestAdminem(){ return !!this.uid && SUPABASE.ADMINI.includes((this.email || "").toLowerCase()); },
+  async zapros(email){
+    const { data, error } = await this.sb.functions.invoke("invite-link", { body: { email } });
+    if (error) throw error;
+    if (!data || !data.link) throw new Error((data && data.error) || "brak linku");
+    return data;
   },
   async wyloguj(){
     try { await this.sb.auth.signOut(); } catch (e) {}
@@ -736,7 +769,8 @@ function loader(){
 function render(){
   if (!gotowe) { app.innerHTML = loader(); return; }
   if (Zapis.potrzebneLogowanie) { app.innerHTML = logowanie(); return; }
-  app.innerHTML = ekran === "start" ? start() : ekran === "zadanie" ? zadanie() : ekran === "podsumowanie" ? podsumowanie() : ekran === "staw" ? staw() : ekran === "tematy" ? tematy() : kalendarz();
+  if (Zapis.ustawHaslo) { app.innerHTML = noweHaslo(); return; }
+  app.innerHTML = ekran === "start" ? start() : ekran === "zadanie" ? zadanie() : ekran === "podsumowanie" ? podsumowanie() : ekran === "staw" ? staw() : ekran === "tematy" ? tematy() : ekran === "zapros" ? zapros() : kalendarz();
   const inp = document.getElementById("odp-tekst");
   if (inp) { inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }
   const chip = app.querySelector('.filtry [aria-pressed="true"]');
@@ -1005,10 +1039,52 @@ function logowanie(){
       <input id="l-email" type="email" autocomplete="username" inputmode="email" required value="${esc(Zapis.email)}">
       <label for="l-haslo">Hasło</label>
       <input id="l-haslo" type="password" autocomplete="current-password" required>
-      ${bladLogowania ? `<p class="blad" role="alert">${esc(bladLogowania)}</p>` : ""}
+      ${bladLogowania || Zapis.bladZaproszenia ? `<p class="blad" role="alert">${esc(bladLogowania || Zapis.bladZaproszenia)}</p>` : ""}
       <button class="btn" type="submit" ${logujeSie ? "disabled" : ""}>${logujeSie ? "Loguję…" : "Zaloguj"}</button>
+      <p class="hint" style="margin:6px 0 0;text-align:center">Konta tylko na zaproszenie. Żabka wpuszcza wyłącznie znajomych ze stawu.</p>
     </form>
   </main>`;
+}
+let bladHasla = "";
+function noweHaslo(){
+  return `${naglowek()}
+  <main class="screen">
+    <section class="hero">
+      <h1 class="mega">Witaj w stawie!</h1>
+      <p class="stan">Wymyśl hasło. Wpiszesz je tylko raz na każdym urządzeniu.</p>
+      <span class="cien" aria-hidden="true"></span>${zabaPet(2)}
+    </section>
+    <form id="haslo" class="login" novalidate>
+      <label for="h-1">Nowe hasło</label>
+      <input id="h-1" type="password" autocomplete="new-password" minlength="6" required>
+      <label for="h-2">Powtórz hasło</label>
+      <input id="h-2" type="password" autocomplete="new-password" minlength="6" required>
+      ${bladHasla ? `<p class="blad" role="alert">${esc(bladHasla)}</p>` : ""}
+      <button class="btn" type="submit">Zapisz hasło</button>
+    </form>
+  </main>`;
+}
+let zaproszenieWynik = null, bladZaproszenia = "", tworzeLink = false;
+function zapros(){
+  return `${naglowek()}
+  <main class="screen">
+    <h1 class="mega" style="margin:4px 0 0;font-size:22px">Zaproś do stawu</h1>
+    <p class="hint" style="margin:0">Wpisz e-mail osoby. Powstanie link, który wyślesz SMS-em albo komunikatorem. Po otwarciu linku osoba ustawi sobie hasło i będzie miała własną żabkę.</p>
+    <form id="zapros" class="login" novalidate>
+      <label for="z-email">E-mail osoby</label>
+      <input id="z-email" type="email" inputmode="email" autocomplete="off" placeholder="np. ola@poczta.pl" required>
+      ${bladZaproszenia ? `<p class="blad" role="alert">${esc(bladZaproszenia)}</p>` : ""}
+      <button class="btn" type="submit" ${tworzeLink ? "disabled" : ""}>${tworzeLink ? "Tworzę link…" : "Utwórz link"}</button>
+    </form>
+    ${zaproszenieWynik ? `<section class="detail" style="border:0;background:var(--bialy);box-shadow:inset 0 0 0 1.5px var(--linia);border-radius:20px;padding:14px">
+      <span class="mega">${zaproszenieWynik.existing ? "Link do nowego hasła gotowy" : "Zaproszenie gotowe"}</span>
+      <input class="zlink" id="z-link" readonly value="${esc(zaproszenieWynik.link)}" aria-label="Link z zaproszeniem">
+      <p>${zaproszenieWynik.existing ? "To konto już istnieje. Link pozwoli ustawić nowe hasło." : "Link działa raz i wygasa po około dobie."}</p>
+      <div class="tconf"><button class="tbtn go" data-act="kopiuj-link">Kopiuj link</button>${navigator.share ? '<button class="tbtn" data-act="udostepnij-link">Udostępnij</button>' : ""}</div>
+    </section>` : ""}
+    <button class="btn ghost" data-act="ekran" data-to="kalendarz">Wróć</button>
+  </main>
+  ${zakladki("kalendarz")}`;
 }
 
 function staw(){
@@ -1106,13 +1182,13 @@ function kalendarz(){
         ${det}
       </div>` : `<p class="hint" style="margin:0;text-align:center;font-size:13px">Stuknij w dzień, żeby zobaczyć wyniki.</p>`}
     </section>
-    ${Zapis.uid ? `<p class="konto">Zalogowano jako ${esc(Zapis.email)} · <button data-act="wyloguj">Wyloguj</button></p>` : ""}
+    ${Zapis.uid ? `<p class="konto">Zalogowano jako ${esc(Zapis.email)} · ${Zapis.jestAdminem() ? '<button data-act="ekran" data-to="zapros">Zaproś</button> · ' : ""}<button data-act="wyloguj">Wyloguj</button></p>` : ""}
   </main>
   ${zakladki("kalendarz")}`;
 }
 
 /* ===================== zdarzenia ===================== */
-app.addEventListener("click", e => {
+app.addEventListener("click", async e => {
   const b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
   const a = b.dataset.act;
   if (a === "ekran") { wybranyTemat = null; pytanieArchiwum = null; ekran = b.dataset.to; if (ekran === "kalendarz") kal = null; render(); window.scrollTo({ top: 0 }); }
@@ -1136,12 +1212,35 @@ app.addEventListener("click", e => {
   else if (a === "archiwizuj") { pytanieArchiwum = null; wybranyTemat = null; Zapis.ustawArchiwum(b.dataset.t, true); }
   else if (a === "przywroc") { wybranyTemat = null; Zapis.ustawArchiwum(b.dataset.t, false); }
   else if (a === "wyloguj") { Zapis.wyloguj(); }
+  else if (a === "kopiuj-link") {
+    const inp = document.getElementById("z-link");
+    try { await navigator.clipboard.writeText(inp.value); b.textContent = "Skopiowano ✓"; }
+    catch (err) { inp.select(); b.textContent = "Zaznaczone, skopiuj ręcznie"; }
+  }
+  else if (a === "udostepnij-link") { try { await navigator.share({ title: "Skumaj to!", text: "Zaproszenie do Skumaj to! 🐸", url: zaproszenieWynik.link }); } catch (err) {} }
   else if (a === "wszystkie-bledy") { pokazWszystkieBledy = true; render(); }
   else if (a === "dzien") { kal.sel = b.dataset.k; kal.otwarta = null; render(); const d = document.getElementById("szczegoly"); if (d) d.scrollIntoView({ behavior: "smooth", block: "nearest" }); }
   else if (a === "zamknij-dzien") { kal.sel = null; kal.otwarta = null; render(); }
   else if (a === "rozwin") { kal.otwarta = kal.otwarta === b.dataset.id ? null : b.dataset.id; render(); }
 });
 app.addEventListener("submit", async e => {
+  if (e.target.id === "haslo") {
+    e.preventDefault();
+    const h1 = document.getElementById("h-1").value, h2 = document.getElementById("h-2").value;
+    if (h1.length < 6) { bladHasla = "Hasło musi mieć co najmniej 6 znaków."; render(); return; }
+    if (h1 !== h2) { bladHasla = "Hasła się różnią. Wpisz to samo dwa razy."; render(); return; }
+    try { await Zapis.nadajHaslo(h1); bladHasla = ""; } catch (err) { bladHasla = "Nie udało się zapisać hasła. Spróbuj jeszcze raz."; }
+    render(); return;
+  }
+  if (e.target.id === "zapros") {
+    e.preventDefault();
+    const email = document.getElementById("z-email").value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { bladZaproszenia = "Wpisz poprawny adres e-mail."; render(); return; }
+    tworzeLink = true; bladZaproszenia = ""; zaproszenieWynik = null; render();
+    try { zaproszenieWynik = await Zapis.zapros(email); }
+    catch (err) { bladZaproszenia = "Nie udało się utworzyć linku. Sprawdź internet i spróbuj ponownie."; }
+    tworzeLink = false; render(); return;
+  }
   if (e.target.id !== "logowanie") return;
   e.preventDefault();
   const email = document.getElementById("l-email").value.trim(), haslo = document.getElementById("l-haslo").value;
