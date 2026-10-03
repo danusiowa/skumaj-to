@@ -336,6 +336,18 @@ const TEMATY = [
     }
   },
   {
+    id: "dzielenie", nazwa: "Dzielenie", typ: "liczby", polecenie: "Ile to jest?",
+    tlo: "#80B0E8", napis: "#16324F",
+    zadania(){
+      const out = [];
+      for (let a = 1; a <= 10; a++) for (let b = 1; b <= 10; b++)
+        out.push({ klucz: (a * b) + ":" + b, pytanie: (a * b) + " : " + b, odp: String(a),
+          grupa: Math.min(a, b) + "x" + Math.max(a, b),           // 56 : 7 i 56 : 8 nie w jednej rundzie
+          waga: (a === 1 || b === 1 || a === 10 || b === 10) ? 0.5 : 1 }); // łatwe rzadziej
+      return out;
+    }
+  },
+  {
     id: "ang-liczby", nazwa: "Angielski: liczby do 100", typ: "tekst", polecenie: "Napisz słowami po angielsku",
     tlo: "#F4D242", napis: "#00594F",
     zadania(){
