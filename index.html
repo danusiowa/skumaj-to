@@ -11,6 +11,7 @@
 <link rel="apple-touch-icon" href="ikona-180.png">
 <link rel="icon" type="image/png" href="ikona-512.png">
 <link rel="manifest" href="manifest.json">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}*,*::before,*::after{box-sizing:inherit}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Skumaj to!</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,11 +39,11 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .screen{display:flex;flex-direction:column;gap:14px;flex-grow:1;padding-bottom:18px}
 .hero{position:relative;border-radius:24px;background:var(--lawenda);padding:20px 18px;min-height:150px;display:flex;flex-direction:column;justify-content:space-between;gap:14px}
 .hero h1{margin:0;max-width:60%;font-size:23px;line-height:1.15;text-wrap:balance}
-.hero .frog{position:absolute;right:8px;bottom:-14px;width:120px;height:157px}
+.hero .frog{position:absolute;right:10px;bottom:16px;width:120px;height:157px;filter:drop-shadow(0 6px 6px rgba(74,63,107,.28))}
 .pill{align-self:flex-start;padding:5px 12px;border-radius:99px;background:var(--kartka);color:var(--pomidor);font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px}
 .pills{display:flex;flex-direction:column;gap:6px;align-items:flex-start;max-width:60%}
 .hero .stan{margin:0;max-width:58%;font-size:14px;font-weight:500;color:var(--fiolet-ink)}
-.hero .frog{width:132px;height:152px}
+.hero .frog{width:124px;height:144px}
 svg.mucha{width:16px;height:16px;flex:none}
 .tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:8px}
 .tile{position:relative;aspect-ratio:1;border-radius:18px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;transition:transform .15s;cursor:pointer;overflow:hidden}
@@ -55,11 +56,11 @@ svg.mucha{width:16px;height:16px;flex:none}
 .tq{font-weight:700;font-size:14px;text-align:center}
 @media (hover:hover){.tile:hover .tmenu{display:flex}}
 .tile:hover{transform:translateY(-2px)}
-.tile .mega{font-size:15px;line-height:1.25;overflow-wrap:anywhere}
+.tile .mega{font-size:17px;line-height:1.25;overflow-wrap:anywhere}
 .tile .foot{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;font-size:13px;letter-spacing:.06em}
 .strip{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--rzesa);color:var(--kartka);font-size:14px;flex-wrap:wrap}
 .strip .mega{font-size:13px;color:var(--piwonia)}
-.btn{height:56px;border-radius:999px;background:var(--pomidor);color:var(--kartka);font-family:var(--mega);font-weight:800;font-size:15px;text-transform:uppercase;width:100%}
+.btn{height:56px;border-radius:999px;background:var(--pomidor);color:var(--kartka);font-family:var(--mega);font-weight:800;font-size:16px;width:100%}
 .btn.ghost{background:transparent;color:var(--staw);box-shadow:inset 0 0 0 2px var(--staw)}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .spacer{flex-grow:1}
@@ -85,7 +86,8 @@ nav.tabs button[aria-current="page"] i{background:var(--zakreslacz)}
 .card .eq{font-size:40px}
 .ans{min-width:104px;height:64px;padding:0 14px;border-radius:16px;background:var(--kartka);color:var(--staw);display:grid;place-items:center;font-family:var(--mega);font-weight:800;font-size:36px;box-shadow:inset 0 0 0 3px var(--zakreslacz)}
 input.ans{font-size:22px;text-transform:none;width:100%;min-width:0;border:0;text-align:center}
-.card .frog{position:absolute;right:10px;bottom:-14px;width:118px;height:128px}
+input.ans:focus,input.ans:focus-visible{outline:none;box-shadow:inset 0 0 0 3px var(--slonko)}
+.card .frog{position:absolute;right:12px;bottom:12px;width:104px;height:113px;filter:drop-shadow(0 6px 6px rgba(0,40,30,.3))}
 .hint{margin:6px 0 0;font-size:15px;color:var(--szary)}
 .pad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .pad button{height:60px;border-radius:18px;background:var(--bialy);box-shadow:inset 0 0 0 1.5px var(--linia);font-family:var(--mega);font-weight:800;font-size:24px;color:var(--staw)}
@@ -98,7 +100,7 @@ input.ans{font-size:22px;text-transform:none;width:100%;min-width:0;border:0;tex
 /* podsumowanie */
 .score{position:relative;border-radius:28px;background:var(--zakreslacz);color:var(--staw);padding:20px;min-height:190px;display:flex;flex-direction:column;justify-content:space-between}
 .score .big{font-size:56px;line-height:1;font-variant-numeric:tabular-nums}
-.score .frog{position:absolute;right:8px;bottom:-6px;width:112px;height:146px}
+.score .frog{position:absolute;right:12px;bottom:14px;width:104px;height:136px;filter:drop-shadow(0 6px 6px rgba(0,60,40,.25))}
 .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .stat{border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
 .stat .mega{font-size:12px}
@@ -209,6 +211,14 @@ ul.zad li span:last-child{white-space:nowrap}
 @keyframes wpadnij{0%{transform:translate(-50%,-140%) rotate(-4deg)}100%{transform:translate(-50%,0) rotate(0)}}
 @keyframes wypadnij{to{transform:translate(-50%,-160%);opacity:0}}
 @media (prefers-reduced-motion:reduce){.toast,.toast.out{animation:none}}
+.login{display:flex;flex-direction:column;gap:8px}
+.login label{font-weight:700;font-size:14px}
+.login input{font:inherit;font-size:17px;height:50px;padding:0 14px;border-radius:14px;border:0;box-shadow:inset 0 0 0 1.5px var(--linia);background:var(--bialy);color:var(--staw)}
+.login input:focus{outline:3px solid var(--slonko);outline-offset:1px}
+.login .btn{margin-top:10px}
+.blad{margin:4px 0 0;color:var(--pomidor);font-weight:700;font-size:14px}
+.konto{margin:4px 0 0;text-align:center;font-size:13px;color:var(--szary)}
+.konto button{color:var(--staw);font-weight:700;text-decoration:underline;min-height:32px}
 .pond{border-radius:24px;overflow:hidden;box-shadow:inset 0 0 0 1.5px var(--linia);background:var(--kartka)}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{padding:6px 12px;border-radius:99px;font-size:13px;font-weight:700;background:var(--puste);color:var(--szary)}
@@ -365,8 +375,14 @@ const KOLORY_ZAPASOWE = [["#80B0E8","#16324F"],["#898E46","#FFF8EE"],["#C45F3F",
    Zapis jest automatyczny: od razu na urządzeniu, potem w chmurze.
    Przy przenosinach na własną bazę wystarczy podmienić ten obiekt.
    ===================================================================== */
+/* Supabase: uzupełnij adres i klucz publiczny projektu (Project Settings → API).
+   Puste = wyniki tylko na urządzeniu (albo w chmurze Claude, gdy apka działa w Claude). */
+const SUPABASE = { URL: "", KLUCZ: "" };
+
 const Zapis = {
-  rundy: [], oczekujace: [], archiwum: {}, archDoWyslania: false, db: null, stan: "urzadzenie", onChange: null,
+  rundy: [], oczekujace: [], archiwum: {}, archDoWyslania: false, stan: "urzadzenie", onChange: null,
+  chmura: null,               // { zapiszRunde(r), zapiszArchiwum(a) } – Claude albo Supabase
+  sb: null, uid: null, email: "", potrzebneLogowanie: false,
   KLUCZ: "skumaj-to-v1",
   wczytajLokalnie(){
     try {
@@ -377,26 +393,82 @@ const Zapis = {
   zapiszLokalnie(){
     try { localStorage.setItem(this.KLUCZ, JSON.stringify({ rundy: this.rundy, oczekujace: this.oczekujace, archiwum: this.archiwum, archDoWyslania: this.archDoWyslania })); } catch (e) {}
   },
+  scal(zSerwera){
+    const ids = new Set(zSerwera.map(r => r.id));
+    const lokalneTylko = this.rundy.filter(r => !ids.has(r.id));
+    for (const r of lokalneTylko) if (!this.oczekujace.includes(r.id)) this.oczekujace.push(r.id);
+    this.rundy = zSerwera.concat(lokalneTylko).sort((a, b) => a.data.localeCompare(b.data));
+    this.zapiszLokalnie();
+  },
   async start(){
     this.wczytajLokalnie();
+    window.addEventListener("online", () => this.wyslij());
+    if (SUPABASE.URL && window.supabase) return this.startSupabase();
     let db = null;
     try { db = (window.claude && window.claude.use) ? await window.claude.use("db") : null; } catch (e) { db = null; }
     if (!db) { this.stan = "urzadzenie"; this.zmiana(); return; }
-    this.db = db; this.stan = this.oczekujace.length ? "czeka" : "chmura";
+    this.chmura = {
+      zapiszRunde: r => db.doc("rundy/" + r.id).set(JSON.parse(JSON.stringify(r))),
+      zapiszArchiwum: a => db.doc("ustawienia/archiwum").set({ tematy: { ...a } })
+    };
+    this.stan = this.oczekujace.length ? "czeka" : "chmura";
     db.doc("ustawienia/archiwum").onSnapshot(d => {
       if (d.exists && !this.archDoWyslania) { this.archiwum = { ...(d.data().tematy || {}) }; this.zapiszLokalnie(); this.zmiana(); }
     }, () => {});
     db.collection("rundy").onSnapshot(snap => {
-      const zSerwera = snap.docs.map(d => d.data());
-      const ids = new Set(zSerwera.map(r => r.id));
-      const lokalneTylko = this.rundy.filter(r => !ids.has(r.id) && this.oczekujace.includes(r.id));
-      this.rundy = zSerwera.concat(lokalneTylko).sort((a, b) => a.data.localeCompare(b.data));
-      this.zapiszLokalnie();
+      this.scal(snap.docs.map(d => d.data()));
       this.zmiana();
     }, () => { this.stan = "urzadzenie"; this.zmiana(); });
     this.wyslij();
-    window.addEventListener("online", () => this.wyslij());
   },
+
+  /* ---------- Supabase ---------- */
+  async startSupabase(){
+    this.sb = window.supabase.createClient(SUPABASE.URL, SUPABASE.KLUCZ, { auth: { persistSession: true, autoRefreshToken: true } });
+    let sesja = null;
+    try { sesja = (await this.sb.auth.getSession()).data.session; } catch (e) {}
+    if (!sesja) { this.potrzebneLogowanie = true; this.zmiana(); return; }
+    await this.poZalogowaniu(sesja);
+  },
+  async zaloguj(email, haslo){
+    const { data, error } = await this.sb.auth.signInWithPassword({ email, password: haslo });
+    if (error) throw error;
+    this.potrzebneLogowanie = false;
+    await this.poZalogowaniu(data.session);
+  },
+  async wyloguj(){
+    try { await this.sb.auth.signOut(); } catch (e) {}
+    this.uid = null; this.chmura = null; this.potrzebneLogowanie = true; this.zmiana();
+  },
+  async poZalogowaniu(sesja){
+    this.uid = sesja.user.id; this.email = sesja.user.email || "";
+    const sb = this.sb, uid = this.uid;
+    this.chmura = {
+      zapiszRunde: async r => {
+        const { error } = await sb.from("rundy").upsert({ id: r.id, user_id: uid, data: r.data, dzien: r.dzien, temat: r.temat, rodzaj: r.rodzaj, zadania: r.zadania, dobre: r.dobre, wszystkie: r.wszystkie, ms: r.ms });
+        if (error) throw error;
+      },
+      zapiszArchiwum: async a => {
+        const { error } = await sb.from("ustawienia").upsert({ user_id: uid, archiwum: { ...a }, zmieniono: new Date().toISOString() });
+        if (error) throw error;
+      }
+    };
+    try {
+      const { data, error } = await sb.from("rundy").select("id,data,dzien,temat,rodzaj,zadania,dobre,wszystkie,ms").order("data").limit(10000);
+      if (error) throw error;
+      this.scal(data.map(r => ({ ...r, data: new Date(r.data).toISOString() })));
+      const u = await sb.from("ustawienia").select("archiwum").maybeSingle();
+      if (u.data && !this.archDoWyslania) this.archiwum = { ...(u.data.archiwum || {}) };
+      else if (!u.data && Object.keys(this.archiwum).length) this.archDoWyslania = true;
+      this.zapiszLokalnie();
+      this.stan = "chmura";
+    } catch (e) {
+      this.stan = "czeka";
+    }
+    this.zmiana();
+    this.wyslij();
+  },
+
   async dodaj(runda){
     this.rundy.push(runda);
     this.oczekujace.push(runda.id);
@@ -412,18 +484,18 @@ const Zapis = {
     this.wyslij();
   },
   async wyslij(){
-    if (!this.db || this.wysylanie) return;
+    if (!this.chmura || this.wysylanie) return;
     this.wysylanie = true;
     try {
       if (this.archDoWyslania) {
-        await this.db.doc("ustawienia/archiwum").set({ tematy: { ...this.archiwum } });
+        await this.chmura.zapiszArchiwum(this.archiwum);
         this.archDoWyslania = false;
         this.zapiszLokalnie();
       }
       while (this.oczekujace.length) {
         const id = this.oczekujace[0];
         const r = this.rundy.find(x => x.id === id);
-        if (r) await this.db.doc("rundy/" + id).set(JSON.parse(JSON.stringify(r)));
+        if (r) await this.chmura.zapiszRunde(r);
         this.oczekujace.shift();
         this.zapiszLokalnie();
       }
@@ -660,6 +732,7 @@ function loader(){
 
 function render(){
   if (!gotowe) { app.innerHTML = loader(); return; }
+  if (Zapis.potrzebneLogowanie) { app.innerHTML = logowanie(); return; }
   app.innerHTML = ekran === "start" ? start() : ekran === "zadanie" ? zadanie() : ekran === "podsumowanie" ? podsumowanie() : ekran === "staw" ? staw() : ekran === "tematy" ? tematy() : kalendarz();
   const inp = document.getElementById("odp-tekst");
   if (inp) { inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }
@@ -774,7 +847,7 @@ function zakonczRunde(){
     dobre: R.odpowiedzi.filter(o => o.dobrze).length, wszystkie: R.odpowiedzi.length,
     ms: teraz.getTime() - R.start
   };
-  ostatnia = runda; R = null; ekran = "podsumowanie";
+  ostatnia = runda; R = null; ekran = "podsumowanie"; pokazWszystkieBledy = false;
   Zapis.dodaj(runda);
   render(); window.scrollTo({ top: 0 });
   if (runda.rodzaj === "runda") setTimeout(() => pokazToast(runda), 350);
@@ -876,7 +949,8 @@ function podsumowanie(){
       <div class="stat" style="background:var(--piwonia);color:var(--pomidor)"><span class="mega">Na zadanie</span><span class="v">${Math.round(r.ms / r.wszystkie / 1000)} s</span><small style="color:#7A2E1A">średnio</small></div>
     </div>
     ${bledy.length ? `<section class="errs"><span class="mega t">Do poprawy</span>
-      ${bledy.map(z => `<div class="err"><b>${esc(z.pytanie)} = ${esc(pierwszaOdp(z.odp))}</b><span>wpisane: <s>${esc(z.wpis)}</s></span></div>`).join("")}
+      ${bledy.slice(0, pokazWszystkieBledy ? bledy.length : 4).map(z => `<div class="err"><b>${esc(z.pytanie)} = ${esc(pierwszaOdp(z.odp))}</b><span>wpisane: <s>${esc(z.wpis)}</s></span></div>`).join("")}
+      ${bledy.length > 4 && !pokazWszystkieBledy ? `<button class="tbtn" style="align-self:center" data-act="wszystkie-bledy">Pokaż wszystkie (${bledy.length})</button>` : ""}
     </section>` : `<div class="strip"><span class="mega">Zero błędów</span><span>Żabka zakłada okulary. Pełen luz!</span></div>`}
     <div class="spacer"></div>
     ${bledy.length ? `<button class="btn" data-act="popraw">Popraw błędy</button>` : ""}
@@ -885,7 +959,7 @@ function podsumowanie(){
   </main>`;
 }
 
-let pytanieArchiwum = null, wybranyTemat = null;
+let pytanieArchiwum = null, wybranyTemat = null, pokazWszystkieBledy = false;
 function tematy(){
   const wiersz = (t, i, arch) => {
     const [bg, fg] = kolorTematu(t, i); const p = Math.round(opanowanie(t) * 100);
@@ -911,6 +985,26 @@ function tematy(){
     <section class="tlist"><span class="mega tl">Skumane</span>${arch || '<p class="hint" style="margin:0">Na razie pusto. Tu trafią opanowane tematy.</p>'}</section>
   </main>
   ${zakladki("start")}`;
+}
+
+let bladLogowania = "", logujeSie = false;
+function logowanie(){
+  return `${naglowek()}
+  <main class="screen">
+    <section class="hero">
+      <h1 class="mega">Cześć!</h1>
+      <p class="stan">Zaloguj się, żeby żabka pamiętała wszystkie wyniki na każdym urządzeniu.</p>
+      ${zabaPet(1)}
+    </section>
+    <form id="logowanie" class="login" novalidate>
+      <label for="l-email">E-mail</label>
+      <input id="l-email" type="email" autocomplete="username" inputmode="email" required value="${esc(Zapis.email)}">
+      <label for="l-haslo">Hasło</label>
+      <input id="l-haslo" type="password" autocomplete="current-password" required>
+      ${bladLogowania ? `<p class="blad" role="alert">${esc(bladLogowania)}</p>` : ""}
+      <button class="btn" type="submit" ${logujeSie ? "disabled" : ""}>${logujeSie ? "Loguję…" : "Zaloguj"}</button>
+    </form>
+  </main>`;
 }
 
 function staw(){
@@ -963,7 +1057,7 @@ function kalendarz(){
     const opis = `${d} ${MIESIACE_D[kal.m]}: ${przyszly ? "jeszcze przed nami" : done ? "ćwiczenie zrobione" : przedStartem ? "przed pierwszą rundą" : "bez ćwiczenia"}`;
     const opisPelny = done ? opis + " (" + nazwyDnia(k) + ")" : opis;
     const kolko = przyszly || (przedStartem && !done) ? `<span class="${cls}" aria-label="${opis}">${d}</span>` : `<button class="${cls}" data-act="dzien" data-k="${k}" aria-label="${esc(opisPelny)}">${d}</button>`;
-    cells += `<div class="dcell">${kolko}<span class="kropki" aria-hidden="true">${F ? "" : kropki(k)}</span></div>`;
+    cells += `<div class="dcell">${kolko}</div>`;
   }
   const minR = Zapis.rundy.length ? new Date(Zapis.rundy[0].data) : dzis;
   const moznaWstecz = kal.r > minR.getFullYear() || (kal.r === minR.getFullYear() && kal.m > minR.getMonth());
@@ -1008,6 +1102,7 @@ function kalendarz(){
         ${det}
       </div>` : `<p class="hint" style="margin:0;text-align:center;font-size:13px">Stuknij w dzień, żeby zobaczyć wyniki.</p>`}
     </section>
+    ${Zapis.uid ? `<p class="konto">Zalogowano jako ${esc(Zapis.email)} · <button data-act="wyloguj">Wyloguj</button></p>` : ""}
   </main>
   ${zakladki("kalendarz")}`;
 }
@@ -1036,9 +1131,21 @@ app.addEventListener("click", e => {
   else if (a === "nie-archiwizuj") { pytanieArchiwum = null; render(); }
   else if (a === "archiwizuj") { pytanieArchiwum = null; wybranyTemat = null; Zapis.ustawArchiwum(b.dataset.t, true); }
   else if (a === "przywroc") { wybranyTemat = null; Zapis.ustawArchiwum(b.dataset.t, false); }
+  else if (a === "wyloguj") { Zapis.wyloguj(); }
+  else if (a === "wszystkie-bledy") { pokazWszystkieBledy = true; render(); }
   else if (a === "dzien") { kal.sel = b.dataset.k; kal.otwarta = null; render(); const d = document.getElementById("szczegoly"); if (d) d.scrollIntoView({ behavior: "smooth", block: "nearest" }); }
   else if (a === "zamknij-dzien") { kal.sel = null; kal.otwarta = null; render(); }
   else if (a === "rozwin") { kal.otwarta = kal.otwarta === b.dataset.id ? null : b.dataset.id; render(); }
+});
+app.addEventListener("submit", async e => {
+  if (e.target.id !== "logowanie") return;
+  e.preventDefault();
+  const email = document.getElementById("l-email").value.trim(), haslo = document.getElementById("l-haslo").value;
+  if (!email || !haslo) { bladLogowania = "Wpisz e-mail i hasło."; render(); return; }
+  logujeSie = true; bladLogowania = ""; Zapis.email = email; render();
+  try { await Zapis.zaloguj(email, haslo); }
+  catch (err) { bladLogowania = /invalid/i.test(err.message || "") ? "Nieprawidłowy e-mail albo hasło. Spróbuj jeszcze raz." : "Nie udało się zalogować. Sprawdź internet i spróbuj ponownie."; }
+  logujeSie = false; render();
 });
 let ukryteOd = 0;
 document.addEventListener("visibilitychange", () => {
