@@ -47,11 +47,12 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .hero h1{margin:0;max-width:60%;font-size:23px;line-height:1.15;text-wrap:balance}
 .hero .frog{position:absolute;right:10px;bottom:16px;width:120px;height:157px;z-index:1}
 .hero{--mx:73px;--my:84px}
-.h-mucha,.h-jezyk{display:none}
+.h-mucha,.h-jezyk,.h-usta{display:none}
 @media (prefers-reduced-motion:no-preference){
   .h-mucha{display:block;position:absolute;right:calc(var(--mx) - 9px);bottom:calc(var(--my) - 9px);width:18px;height:18px;z-index:3;opacity:0;animation:muchaLot 12s linear infinite}
   .h-mucha .h-skrz{transform-box:fill-box;transform-origin:50% 100%;animation:flap .1s linear infinite alternate}
-  .h-jezyk{display:block;position:absolute;right:var(--mx);bottom:calc(var(--my) - 3px);width:72px;height:7px;border-radius:7px;background:#F29CC3;box-shadow:inset 0 0 0 1.5px #C45F7F;transform-origin:100% 50%;transform:scaleX(0);z-index:2;animation:jezyk 12s linear infinite}
+  .h-usta{display:block;position:absolute;right:calc(var(--mx) - 9px);bottom:calc(var(--my) - 8px);width:18px;height:14px;border-radius:50%;background:#6B2433;box-shadow:0 0 0 2.5px #008471;z-index:2;opacity:0;transform:scale(.3);animation:usta 12s ease-out infinite}
+  .h-jezyk{display:block;position:absolute;right:calc(var(--mx) - 2px);bottom:calc(var(--my) - 10px);width:80px;height:20px;z-index:3;clip-path:inset(0 0 0 100%);animation:jezyk 12s linear infinite}
 }
 @keyframes muchaLot{
   0%{transform:translate(30px,-118px);opacity:0}
@@ -60,12 +61,14 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
   40%{transform:translate(-82px,-52px)}
   55%{transform:translate(-30px,-80px)}
   66%{transform:translate(-84px,-22px)}
-  72.5%{transform:translate(-68px,0);opacity:1}
-  75.5%{transform:translate(-4px,0) scale(.45);opacity:1}
+  73.2%{transform:translate(-70px,0);opacity:1}
+  73.8%{transform:translate(-70px,0)}
+  75.6%{transform:translate(-6px,0) scale(.45);opacity:1}
   76.5%{transform:translate(0,0) scale(.3);opacity:0}
   100%{transform:translate(0,0) scale(.3);opacity:0}
 }
-@keyframes jezyk{0%,72%{transform:scaleX(0)}73%{transform:scaleX(1)}75.5%{transform:scaleX(.08)}76.5%,100%{transform:scaleX(0)}}
+@keyframes jezyk{0%,72%{clip-path:inset(0 0 0 100%)}73.2%{clip-path:inset(0 0 0 0)}73.8%{clip-path:inset(0 0 0 0)}75.8%{clip-path:inset(0 0 0 96%)}76.5%,100%{clip-path:inset(0 0 0 100%)}}
+@keyframes usta{0%,71.2%{opacity:0;transform:scale(.3)}72%{opacity:1;transform:scale(1)}76%{opacity:1;transform:scale(1)}77.5%,100%{opacity:0;transform:scale(.3)}}
 .hero .cien{position:absolute;right:32px;bottom:24px;width:84px;height:14px;border-radius:50%;background:rgba(74,63,107,.28);filter:blur(1.5px)}
 .pill{align-self:flex-start;padding:5px 12px;border-radius:99px;background:var(--kartka);color:var(--pomidor);font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px}
 .pills{display:flex;flex-direction:column;gap:6px;align-items:flex-start;max-width:60%}
@@ -933,7 +936,8 @@ function start(){
       <div class="pills"><span class="pill">${pill}</span><span class="pill">${ICO_MUCHA}${muchy} ${muchSlowo(muchy)}</span></div>
       <span class="cien" aria-hidden="true"></span>
       ${zabaPet(lv)}
-      <span class="h-jezyk" aria-hidden="true"></span>
+      <span class="h-usta" aria-hidden="true"></span>
+      <svg class="h-jezyk" viewBox="0 0 80 20" aria-hidden="true"><path d="M78 7.5Q44 4 12 8.5L12 11.5Q44 16 78 12.5Z" fill="#F29CC3" stroke="#C45F7F" stroke-width="1.4" stroke-linejoin="round"/><circle cx="10" cy="10" r="6.2" fill="#F29CC3" stroke="#C45F7F" stroke-width="1.4"/><path d="M58 10H72" stroke="#C45F7F" stroke-width="1.2" stroke-linecap="round" opacity=".6"/></svg>
       <svg class="h-mucha" viewBox="0 0 24 24" aria-hidden="true"><g class="h-skrz"><ellipse cx="8" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="#008471" stroke-width="1.6" transform="rotate(-25 8 8)"/><ellipse cx="16" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="#008471" stroke-width="1.6" transform="rotate(25 16 8)"/></g><ellipse cx="12" cy="14.5" rx="3.6" ry="5" fill="#008471"/><circle cx="12" cy="9" r="2.6" fill="#008471"/></svg>
     </section>
     ${tiles.trim() ? `<div class="tiles">${tiles}</div>` : `<div class="strip" style="background:var(--slonko);color:var(--staw)"><span class="mega">Wszystko skumane!</span><span>Przywróć temat ze skumanych poniżej.</span></div>`}
