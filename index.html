@@ -523,11 +523,14 @@ const Zapis = {
         const { data, error } = await this.sb.auth.verifyOtp({ token_hash: ZAPROSZENIE.kod, type: ZAPROSZENIE.typ });
         if (error) throw error;
         sesja = data.session; this.ustawHaslo = true;
+        try { localStorage.setItem("skumaj-haslo-do-ustawienia", "1"); } catch (e) {}
       } catch (e) {
         this.bladZaproszenia = "Ten link już wygasł albo był użyty. Poproś o nowy.";
       }
     }
     if (!sesja) { try { sesja = (await this.sb.auth.getSession()).data.session; } catch (e) {} }
+    // Ktoś otworzył zaproszenie, ale zamknął apkę przed ustawieniem hasła: wracamy do tego kroku.
+    if (sesja) { try { if (localStorage.getItem("skumaj-haslo-do-ustawienia")) this.ustawHaslo = true; } catch (e) {} }
     if (!sesja) { this.potrzebneLogowanie = true; this.zmiana(); return; }
     await this.poZalogowaniu(sesja);
   },
@@ -540,7 +543,9 @@ const Zapis = {
   async nadajHaslo(haslo){
     const { error } = await this.sb.auth.updateUser({ password: haslo });
     if (error) throw error;
-    this.ustawHaslo = false; this.zmiana();
+    this.ustawHaslo = false;
+    try { localStorage.removeItem("skumaj-haslo-do-ustawienia"); } catch (e) {}
+    this.zmiana();
   },
   jestAdminem(){ return !!this.uid && SUPABASE.ADMINI.includes((this.email || "").toLowerCase()); },
   async zapros(email){
