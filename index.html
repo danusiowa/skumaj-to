@@ -26,6 +26,7 @@
   --mega:"Playpen Sans","Comic Sans MS","Trebuchet MS",sans-serif; --tekst:"Andika","Trebuchet MS",Arial,sans-serif;
   color-scheme:light;
 }
+*,*::before,*::after{box-sizing:border-box}
 html,body{min-height:100%}
 body{background:var(--kartka);color:var(--staw);font-family:var(--tekst);font-size:16px;line-height:1.45;padding-inline:16px;padding-block:0}
 #app{max-width:440px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
@@ -36,6 +37,8 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .top .logo{width:46px;height:46px;border-radius:50%;background:var(--kartka);display:grid;place-items:center;flex:none}
 .top svg{width:32px;height:38px}
 .top .mega{font-size:17px;color:var(--zakreslacz)}
+.top .wyloguj{margin-left:auto;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:99px;background:rgba(255,248,238,.14);color:var(--kartka);font-weight:700;font-size:13px}
+.top .wyloguj svg{width:16px;height:16px}
 .screen{display:flex;flex-direction:column;gap:14px;flex-grow:1;padding-bottom:18px}
 .hero{position:relative;border-radius:24px;background:var(--lawenda);padding:20px 18px;min-height:150px;display:flex;flex-direction:column;justify-content:space-between;gap:14px}
 .hero h1{margin:0;max-width:60%;font-size:23px;line-height:1.15;text-wrap:balance}
@@ -219,10 +222,67 @@ ul.zad li span:last-child{white-space:nowrap}
 .login input{font:inherit;font-size:17px;height:50px;padding:0 14px;border-radius:14px;border:0;box-shadow:inset 0 0 0 1.5px var(--linia);background:var(--bialy);color:var(--staw)}
 .login input:focus{outline:3px solid var(--slonko);outline-offset:1px}
 .login .btn{margin-top:10px}
+.wejscie{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding-block:28px 32px;text-align:center}
+.w-staw{position:relative;width:220px;height:190px;display:grid;place-items:end center}
+.w-staw::before{content:"";position:absolute;inset:auto 0 0 0;height:96px;border-radius:50%;background:var(--niebo);box-shadow:inset 0 0 0 3px var(--staw)}
+.w-lilia{position:absolute;bottom:22px;left:50%;width:120px;height:30px;margin-left:-60px;border-radius:50%;background:var(--rzesa);box-shadow:inset 0 0 0 3px var(--staw)}
+.w-cien{position:absolute;bottom:34px;left:50%;width:76px;height:12px;margin-left:-38px;border-radius:50%;background:rgba(0,60,50,.3);filter:blur(1.5px);z-index:1}
+.w-zaba{position:relative;z-index:2;width:118px;height:136px;margin-bottom:34px}
+.w-tytul{margin:0;font-size:34px;line-height:1.05}
+.w-lead{margin:0;max-width:30ch;color:var(--szary);font-size:16px}
+.w-karta{width:100%;max-width:400px;text-align:left;background:var(--bialy);border-radius:24px;padding:18px;box-shadow:inset 0 0 0 1.5px var(--linia),0 10px 30px rgba(0,60,50,.08)}
+.w-haslo{position:relative;display:flex}
+.w-haslo input{flex:1;min-width:0;padding-right:84px}
+.w-oko{position:absolute;right:6px;top:50%;transform:translateY(-50%);min-height:38px;padding:0 12px;border-radius:99px;font-weight:700;font-size:13px;color:var(--staw);background:var(--kartka)}
+.w-podp{margin:0;font-size:13px;color:var(--szary)}
+.w-stopka{margin:4px 0 0;font-size:13px;color:var(--szary);line-height:1.5}
+@media (prefers-reduced-motion:no-preference){
+.w-zaba{animation:heroZaba 6s ease-in-out infinite;transform-origin:50% 100%}
+.w-cien{animation:cienZaby 6s ease-in-out infinite}
+}
 .blad{margin:4px 0 0;color:var(--pomidor);font-weight:700;font-size:14px}
 .konto{margin:4px 0 0;text-align:center;font-size:13px;color:var(--szary)}
 .zlink{font:inherit;font-size:14px;height:44px;padding:0 12px;border-radius:12px;border:0;box-shadow:inset 0 0 0 1.5px var(--linia);background:var(--kartka);color:var(--staw);width:100%}
 .konto button{color:var(--staw);font-weight:700;text-decoration:underline;min-height:32px}
+/* ===== Szerokie ekrany: tablet i komputer ===== */
+@media (min-width:760px){
+  body{padding-inline:24px}
+  #app{max-width:1040px}
+  .top{margin:12px 0 20px;padding:12px 20px;border-radius:22px}
+  nav.tabs{margin:0;border-radius:22px 22px 0 0;padding-inline:max(24px,calc((100% - 520px)/2))}
+  .dcell .day{max-width:54px;margin-inline:auto}
+  .screen{gap:18px;padding-bottom:28px}
+  .tiles{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+  .hero{min-height:200px;padding:28px 32px}
+  .hero h1{font-size:34px}
+  .hero .stan{font-size:16px}
+  .hero .frog{width:150px;height:174px;right:32px}
+  .hero .cien{right:62px;width:96px}
+  #app[data-ekran="kalendarz"] .screen,
+  #app[data-ekran="staw"] .screen,
+  #app[data-ekran="podsumowanie"] .screen,
+  #app[data-ekran="zapros"] .screen,
+  #app[data-ekran="tematy"] .screen{width:100%;max-width:640px;margin-inline:auto}
+  #app[data-ekran="podsumowanie"] .qhead{width:100%;max-width:640px;margin-inline:auto}
+  #app[data-ekran="zadanie"] .qhead{width:100%;max-width:980px;margin-inline:auto}
+  #app[data-ekran="zadanie"] .screen{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);column-gap:28px;row-gap:16px;align-content:start;width:100%;max-width:980px;margin-inline:auto}
+  #app[data-ekran="zadanie"] .dots,#app[data-ekran="zadanie"] .confirm{grid-column:1/-1}
+  #app[data-ekran="zadanie"] .card{grid-column:1;grid-row:span 3;min-height:420px}
+  #app[data-ekran="zadanie"] .hint{grid-column:2;margin:0;align-self:end}
+  #app[data-ekran="zadanie"] .pad,#app[data-ekran="zadanie"] .screen>.btn{grid-column:2;align-self:start}
+  #app[data-ekran="zadanie"] .pad button{height:72px;font-size:28px}
+  .card .q{font-size:clamp(48px,6vw,72px)}
+  .wejscie{padding-block:48px}
+  .w-karta{padding:24px}
+}
+@media (min-width:1100px){
+  .tiles{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (hover:hover){
+  .tile:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,60,50,.14)}
+  .pad button:hover,.tbtn:hover,.filtry button:hover{filter:brightness(.97)}
+  .btn:hover{filter:brightness(1.05)}
+}
 .pond{border-radius:24px;overflow:hidden;box-shadow:inset 0 0 0 1.5px var(--linia);background:var(--kartka)}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{padding:6px 12px;border-radius:99px;font-size:13px;font-weight:700;background:var(--puste);color:var(--szary)}
@@ -324,7 +384,7 @@ function lista(pary){ return pary.map(([pytanie, odp]) => ({ klucz: pytanie, pyt
 
 const TEMATY = [
   {
-    id: "tabliczka", nazwa: "Tabliczka mnożenia", typ: "liczby", polecenie: "Ile to jest?",
+    id: "tabliczka", nazwa: "Tabliczka mnożenia do 100", typ: "liczby", polecenie: "Ile to jest?",
     tlo: "#008471", napis: "#D6D35F",
     zadania(){
       const out = [];
@@ -336,7 +396,7 @@ const TEMATY = [
     }
   },
   {
-    id: "dzielenie", nazwa: "Dzielenie", typ: "liczby", polecenie: "Ile to jest?",
+    id: "dzielenie", nazwa: "Dzielenie do 100", typ: "liczby", polecenie: "Ile to jest?",
     tlo: "#80B0E8", napis: "#16324F",
     zadania(){
       const out = [];
@@ -779,6 +839,7 @@ function loader(){
 }
 
 function render(){
+  app.dataset.ekran = !gotowe ? "loader" : Zapis.potrzebneLogowanie || Zapis.ustawHaslo ? "wejscie" : ekran;
   if (!gotowe) { app.innerHTML = loader(); return; }
   if (Zapis.potrzebneLogowanie) { app.innerHTML = logowanie(); return; }
   if (Zapis.ustawHaslo) { app.innerHTML = noweHaslo(); return; }
@@ -792,7 +853,7 @@ Zapis.onChange = () => { gotowe = true; if (ekran !== "zadanie") render(); };
 setTimeout(() => { if (!gotowe) { gotowe = true; render(); } }, 4000);
 
 function naglowek(){
-  return `<div class="top"><span class="logo">${frog("luz", "")}</span><span class="mega">Skumaj to!</span></div>`;
+  return `<div class="top"><span class="logo">${frog("luz", "")}</span><span class="mega">Skumaj to!</span>${Zapis.uid ? `<button class="wyloguj" data-act="wyloguj" aria-label="${pytamWyloguj ? "Potwierdź wylogowanie" : "Wyloguj się"}">${pytamWyloguj ? "Na pewno? Wyloguj" : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M9 8l-4 4 4 4M5 12h11"/></svg>Wyloguj`}</button>` : ""}</div>`;
 }
 function zakladki(akt){
   return `<nav class="tabs" aria-label="Menu">
@@ -1037,42 +1098,49 @@ function tematy(){
   ${zakladki("start")}`;
 }
 
-let bladLogowania = "", logujeSie = false;
+let bladLogowania = "", logujeSie = false, pytamWyloguj = false;
 function logowanie(){
-  return `${naglowek()}
-  <main class="screen">
-    <section class="hero">
-      <h1 class="mega">Cześć!</h1>
-      <p class="stan">Zaloguj się, żeby żabka pamiętała wszystkie wyniki na każdym urządzeniu.</p>
-      ${zabaPet(1)}
-    </section>
-    <form id="logowanie" class="login" novalidate>
+  const blad = bladLogowania || Zapis.bladZaproszenia;
+  return `<main class="wejscie">
+    <div class="w-staw" aria-hidden="true">
+      <span class="w-cien"></span>
+      ${zabaPet(2, "w-zaba")}
+      <span class="w-lilia"></span>
+    </div>
+    <h1 class="mega w-tytul">Skumaj to!</h1>
+    <p class="w-lead">Żabka czeka na muchy. Zaloguj się i kumamy!</p>
+    <form id="logowanie" class="login w-karta" novalidate>
       <label for="l-email">E-mail</label>
-      <input id="l-email" type="email" autocomplete="username" inputmode="email" required value="${esc(Zapis.email)}">
+      <input id="l-email" type="email" autocomplete="username" inputmode="email" autocapitalize="off" placeholder="twoj@email.pl" required value="${esc(Zapis.email)}">
       <label for="l-haslo">Hasło</label>
-      <input id="l-haslo" type="password" autocomplete="current-password" required>
-      ${bladLogowania || Zapis.bladZaproszenia ? `<p class="blad" role="alert">${esc(bladLogowania || Zapis.bladZaproszenia)}</p>` : ""}
-      <button class="btn" type="submit" ${logujeSie ? "disabled" : ""}>${logujeSie ? "Loguję…" : "Zaloguj"}</button>
-      <p class="hint" style="margin:6px 0 0;text-align:center">Konta tylko na zaproszenie. Żabka wpuszcza wyłącznie znajomych ze stawu.</p>
+      <div class="w-haslo">
+        <input id="l-haslo" type="password" autocomplete="current-password" required>
+        <button type="button" class="w-oko" data-act="pokaz-haslo" aria-label="Pokaż hasło" aria-pressed="false">Pokaż</button>
+      </div>
+      ${blad ? `<p class="blad" role="alert">${esc(blad)}</p>` : ""}
+      <button class="btn" type="submit" ${logujeSie ? "disabled" : ""}>${logujeSie ? "Loguję…" : "Wskakuję do stawu"}</button>
     </form>
+    <p class="w-stopka">Konta są tylko na zaproszenie.<br>Nie masz konta? Poproś mamę albo tatę o link.</p>
   </main>`;
 }
 let bladHasla = "";
 function noweHaslo(){
-  return `${naglowek()}
-  <main class="screen">
-    <section class="hero">
-      <h1 class="mega">Witaj w stawie!</h1>
-      <p class="stan">Wymyśl hasło. Wpiszesz je tylko raz na każdym urządzeniu.</p>
-      <span class="cien" aria-hidden="true"></span>${zabaPet(2)}
-    </section>
-    <form id="haslo" class="login" novalidate>
+  return `<main class="wejscie">
+    <div class="w-staw" aria-hidden="true">
+      <span class="w-cien"></span>
+      ${zabaPet(3, "w-zaba")}
+      <span class="w-lilia"></span>
+    </div>
+    <h1 class="mega w-tytul">Witaj w stawie!</h1>
+    <p class="w-lead">Wymyśl hasło. Wpiszesz je tylko raz na każdym urządzeniu.</p>
+    <form id="haslo" class="login w-karta" novalidate>
       <label for="h-1">Nowe hasło</label>
       <input id="h-1" type="password" autocomplete="new-password" minlength="6" required>
       <label for="h-2">Powtórz hasło</label>
       <input id="h-2" type="password" autocomplete="new-password" minlength="6" required>
+      <p class="w-podp">Co najmniej 6 znaków.</p>
       ${bladHasla ? `<p class="blad" role="alert">${esc(bladHasla)}</p>` : ""}
-      <button class="btn" type="submit">Zapisz hasło</button>
+      <button class="btn" type="submit">Zapisz hasło i zaczynamy</button>
     </form>
   </main>`;
 }
@@ -1194,7 +1262,7 @@ function kalendarz(){
         ${det}
       </div>` : `<p class="hint" style="margin:0;text-align:center;font-size:13px">Stuknij w dzień, żeby zobaczyć wyniki.</p>`}
     </section>
-    ${Zapis.uid ? `<p class="konto">Zalogowano jako ${esc(Zapis.email)} · ${Zapis.jestAdminem() ? '<button data-act="ekran" data-to="zapros">Zaproś</button> · ' : ""}<button data-act="wyloguj">Wyloguj</button></p>` : ""}
+    ${Zapis.uid ? `<p class="konto">Zalogowano jako ${esc(Zapis.email)}${Zapis.jestAdminem() ? ' · <button data-act="ekran" data-to="zapros">Zaproś do stawu</button>' : ""}</p>` : ""}
   </main>
   ${zakladki("kalendarz")}`;
 }
@@ -1223,7 +1291,12 @@ app.addEventListener("click", async e => {
   else if (a === "nie-archiwizuj") { pytanieArchiwum = null; render(); }
   else if (a === "archiwizuj") { pytanieArchiwum = null; wybranyTemat = null; Zapis.ustawArchiwum(b.dataset.t, true); }
   else if (a === "przywroc") { wybranyTemat = null; Zapis.ustawArchiwum(b.dataset.t, false); }
-  else if (a === "wyloguj") { Zapis.wyloguj(); }
+  else if (a === "wyloguj") { if (!pytamWyloguj) { pytamWyloguj = true; render(); setTimeout(() => { if (pytamWyloguj) { pytamWyloguj = false; render(); } }, 4000); } else { pytamWyloguj = false; ekran = "start"; Zapis.wyloguj(); } }
+  else if (a === "pokaz-haslo") {
+    const inp = document.getElementById("l-haslo"); const pokaz = inp.type === "password";
+    inp.type = pokaz ? "text" : "password"; b.textContent = pokaz ? "Ukryj" : "Pokaż";
+    b.setAttribute("aria-pressed", String(pokaz)); b.setAttribute("aria-label", pokaz ? "Ukryj hasło" : "Pokaż hasło");
+  }
   else if (a === "kopiuj-link") {
     const inp = document.getElementById("z-link");
     try { await navigator.clipboard.writeText(inp.value); b.textContent = "Skopiowano ✓"; }
