@@ -1,0 +1,1047 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#008471">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Skumaj to!">
+<link rel="apple-touch-icon" href="ikona-180.png">
+<link rel="icon" type="image/png" href="ikona-512.png">
+<link rel="manifest" href="manifest.json">
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}*,*::before,*::after{box-sizing:inherit}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Skumaj to!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@500;700;800&family=Andika:wght@400;700&display=swap">
+<style>
+/* Układ: jedna kolumna jak ekran telefonu; kremowa kartka, kolorowe kafelki z kolorowym napisem, żabka-doodle. Celowo jeden, jasny motyw. */
+:root{
+  --kartka:#FFF8EE; --staw:#008471; --zakreslacz:#D6D35F; --slonko:#F4D242; --piwonia:#FFC0C0;
+  --pomidor:#C45F3F; --lawenda:#D1CAEA; --niebo:#80B0E8; --guma:#F29CC3; --rzesa:#898E46;
+  --linia:#E8DCCB; --szary:#5E6B57; --fiolet-ink:#4A3F6B; --bialy:#FFFFFF; --puste:#EADFCB;
+  --mega:"Playpen Sans","Comic Sans MS","Trebuchet MS",sans-serif; --tekst:"Andika","Trebuchet MS",Arial,sans-serif;
+  color-scheme:light;
+}
+html,body{min-height:100%}
+body{background:var(--kartka);color:var(--staw);font-family:var(--tekst);font-size:16px;line-height:1.45;padding-inline:16px;padding-block:0}
+#app{max-width:440px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--slonko);outline-offset:2px}
+.mega{font-family:var(--mega);font-weight:800;letter-spacing:0}
+.top{display:flex;align-items:center;gap:10px;padding:10px 16px;margin:0 -16px 14px;background:var(--staw);color:var(--kartka);border-radius:0 0 22px 22px}
+.top .logo{width:46px;height:46px;border-radius:50%;background:var(--kartka);display:grid;place-items:center;flex:none}
+.top svg{width:32px;height:38px}
+.top .mega{font-size:17px;color:var(--zakreslacz)}
+.screen{display:flex;flex-direction:column;gap:14px;flex-grow:1;padding-bottom:18px}
+.hero{position:relative;border-radius:24px;background:var(--slonko);padding:20px 18px;min-height:150px;display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.hero h1{margin:0;max-width:60%;font-size:23px;line-height:1.15;text-wrap:balance}
+.hero .frog{position:absolute;right:8px;bottom:-14px;width:120px;height:157px}
+.pill{align-self:flex-start;padding:5px 12px;border-radius:99px;background:var(--kartka);color:var(--pomidor);font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px}
+.pills{display:flex;flex-direction:column;gap:6px;align-items:flex-start;max-width:60%}
+.hero .stan{margin:0;max-width:58%;font-size:14px;font-weight:500;color:var(--staw)}
+.hero .frog{width:132px;height:152px}
+svg.mucha{width:16px;height:16px;flex:none}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:8px}
+.tile{aspect-ratio:1;border-radius:18px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;transition:transform .15s}
+.tile:hover{transform:translateY(-2px)}
+.tile .mega{font-size:15px;line-height:1.25;overflow-wrap:anywhere}
+.tile .foot{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;font-size:13px;letter-spacing:.06em}
+.strip{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--rzesa);color:var(--kartka);font-size:14px;flex-wrap:wrap}
+.strip .mega{font-size:13px;color:var(--piwonia)}
+.btn{height:56px;border-radius:999px;background:var(--pomidor);color:var(--kartka);font-family:var(--mega);font-weight:800;font-size:15px;text-transform:uppercase;width:100%}
+.btn.ghost{background:transparent;color:var(--staw);box-shadow:inset 0 0 0 2px var(--staw)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.spacer{flex-grow:1}
+nav.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding:10px 6px calc(14px + env(safe-area-inset-bottom, 0px));font-size:12px;text-align:center;position:sticky;bottom:0;background:var(--staw);margin:0 -16px;border-radius:22px 22px 0 0}
+nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:4px;color:#CFE6DF}
+nav.tabs button i{width:44px;height:28px;border-radius:14px;display:grid;place-items:center}
+nav.tabs button i svg{width:18px;height:18px}
+nav.tabs button[aria-current="page"]{color:var(--zakreslacz);font-weight:700}
+nav.tabs button[aria-current="page"] i{color:var(--staw)}
+nav.tabs button[aria-current="page"] i{background:var(--zakreslacz)}
+.save{font-size:12px;color:var(--szary);text-align:center}
+/* zadanie */
+.qhead{display:flex;align-items:center;justify-content:space-between;padding-top:20px}
+.x{height:44px;padding:0 16px;border-radius:99px;display:inline-flex;align-items:center;gap:6px;background:var(--lawenda);color:var(--fiolet-ink);font-size:14px;font-weight:700}
+.dots{display:grid;gap:4px}
+.dots i{height:8px;border-radius:99px;background:var(--puste)}
+.dots i.done{background:var(--staw)} .dots i.now{background:var(--slonko)}
+.card{position:relative;border-radius:28px;background:var(--staw);color:var(--zakreslacz);padding:22px 20px 20px;min-height:290px;display:flex;flex-direction:column;justify-content:space-between;gap:12px}
+.card .label{font-size:13px;letter-spacing:.04em}
+.card .q{font-size:clamp(34px,13vw,54px);line-height:1.05;font-variant-numeric:tabular-nums;max-width:100%;overflow-wrap:anywhere}
+.card .q.long{font-size:clamp(26px,8vw,36px);max-width:62%}
+.card .ansrow{display:flex;align-items:center;gap:10px;max-width:62%}
+.card .eq{font-size:40px}
+.ans{min-width:104px;height:64px;padding:0 14px;border-radius:16px;background:var(--kartka);color:var(--staw);display:grid;place-items:center;font-family:var(--mega);font-weight:800;font-size:36px;box-shadow:inset 0 0 0 3px var(--zakreslacz)}
+input.ans{font-size:22px;text-transform:none;width:100%;min-width:0;border:0;text-align:center}
+.card .frog{position:absolute;right:10px;bottom:-14px;width:118px;height:128px}
+.hint{margin:6px 0 0;font-size:15px;color:var(--szary)}
+.pad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.pad button{height:60px;border-radius:18px;background:var(--bialy);box-shadow:inset 0 0 0 1.5px var(--linia);font-family:var(--mega);font-weight:800;font-size:24px;color:var(--staw)}
+.pad button.ok{background:var(--pomidor);color:var(--kartka);box-shadow:none;font-size:20px}
+.pad button.del{background:var(--kartka);font-size:22px}
+.confirm{border-radius:16px;background:var(--lawenda);color:var(--fiolet-ink);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;font-weight:500}
+.confirm div{display:flex;gap:8px}
+.confirm button{padding:8px 14px;border-radius:99px;font-weight:700;background:var(--kartka)}
+.confirm button.go{background:var(--pomidor);color:var(--kartka)}
+/* podsumowanie */
+.score{position:relative;border-radius:28px;background:var(--zakreslacz);color:var(--staw);padding:20px;min-height:190px;display:flex;flex-direction:column;justify-content:space-between}
+.score .big{font-size:56px;line-height:1;font-variant-numeric:tabular-nums}
+.score .frog{position:absolute;right:8px;bottom:-6px;width:112px;height:146px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.stat{border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.stat .mega{font-size:12px}
+.stat .v{font-family:var(--mega);font-weight:800;font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
+.stat small{font-size:12px}
+.errs{display:flex;flex-direction:column;gap:8px}
+.errs .mega.t{font-size:13px;color:var(--pomidor)}
+.err{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:16px;box-shadow:inset 0 0 0 1.5px var(--linia);background:var(--bialy)}
+.err b{font-family:var(--mega);font-weight:800;font-size:16px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.err span{font-size:13px;color:var(--szary);white-space:nowrap}
+/* kalendarz */
+.cal{border-radius:24px;background:var(--bialy);box-shadow:inset 0 0 0 1.5px var(--linia);padding:14px 12px 16px;display:flex;flex-direction:column;gap:10px}
+.calhead{display:flex;align-items:center;justify-content:space-between;padding:0 4px}
+.calhead button{width:38px;height:38px;border-radius:50%;background:var(--kartka);font-size:20px;font-weight:700}
+.calhead button:disabled{opacity:.3;cursor:default}
+.calhead .mega{font-size:14px}
+.grid7{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;text-align:center}
+.wd{font-size:11px;font-weight:700;color:var(--szary)}
+.day{aspect-ratio:1;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:14px;font-variant-numeric:tabular-nums}
+.day.done{background:var(--niebo);color:#16324F}
+.day.miss{background:var(--piwonia);color:var(--pomidor)}
+.day.future{color:#B9B0A2}
+.day.today{box-shadow:inset 0 0 0 2px var(--staw)}
+.day.sel{box-shadow:0 0 0 3px var(--slonko)}
+.legend{display:flex;gap:14px;justify-content:center;font-size:12px;color:var(--szary);flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:50%}
+.legend i.kr{width:9px;height:9px;box-shadow:0 0 0 1.5px var(--staw)}
+.dcell{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+.dcell .day{width:100%}
+.kropki{display:flex;gap:3px;height:8px;justify-content:center}
+.kropki i{width:7px;height:7px;border-radius:50%;box-shadow:0 0 0 1.5px var(--staw)}
+.detail{border-top:1.5px dashed var(--linia);color:var(--staw);padding:12px 0 0;display:flex;flex-direction:column;gap:8px}
+.dethead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.dethead .tbtn{min-height:36px;padding:0 12px}
+.detail .mega{font-size:15px;padding:0 4px}
+.detail p{margin:0;color:var(--szary);font-size:14px;padding:0 4px}
+.runda-dnia{background:var(--kartka);border-radius:14px;overflow:hidden}
+.runda-dnia button{width:100%;display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:10px 12px;text-align:left;color:var(--staw);min-height:44px}
+.rd-nazwa{font-weight:700;font-size:14px;min-width:0}
+.rd-wynik{font-family:var(--mega);font-weight:800;font-size:16px;color:var(--staw);grid-row:span 2;align-self:center;font-variant-numeric:tabular-nums}
+.rd-meta{font-size:12px;color:var(--szary)}
+ul.zad{list-style:none;margin:0;padding:0 12px 10px;display:flex;flex-direction:column;gap:4px}
+ul.zad li{display:flex;justify-content:space-between;gap:8px;font-size:13px;padding:6px 8px;border-radius:8px;font-variant-numeric:tabular-nums}
+ul.zad li.ok{background:#E9F1E2;color:var(--staw)}
+ul.zad li.zle{background:var(--piwonia);color:#7A2E1A;font-weight:700}
+ul.zad li span:last-child{white-space:nowrap}
+@media (prefers-reduced-motion:no-preference){
+.hero .frog{animation:heroZaba 6s ease-in-out infinite;transform-origin:50% 100%}
+}
+@keyframes heroZaba{0%,100%{transform:none}20%{transform:scale(1.03,.97)}40%{transform:rotate(-2deg)}55%{transform:rotate(2deg)}68%{transform:scale(1.05,.94)}76%{transform:translateY(-12px) scale(.97,1.04)}84%{transform:scale(1.04,.96)}90%{transform:translateY(-4px)}95%{transform:none}}
+.loader{min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;font-size:15px}
+.lmucha{width:70px;height:56px}
+.lmucha .wing{transform-box:fill-box;transform-origin:50% 100%}
+@media (prefers-reduced-motion:no-preference){
+.lmucha{animation:lot 2.6s ease-in-out infinite}
+.lmucha .wing{animation:flap .11s linear infinite alternate}
+}
+@keyframes lot{0%,100%{transform:translate(-46px,6px) rotate(-12deg)}25%{transform:translate(0,-20px) rotate(4deg)}50%{transform:translate(46px,4px) rotate(12deg)}75%{transform:translate(0,18px) rotate(-4deg)}}
+@keyframes flap{to{transform:scaleY(.35)}}
+.pond [class^="a-"],.pond [class*=" a-"]{transform-box:fill-box}
+@media (prefers-reduced-motion:no-preference){
+.a-bob{animation:bob 3.2s ease-in-out infinite}
+.d2{animation-delay:-1.4s}
+.a-sway{animation:sway 4.5s ease-in-out infinite;transform-origin:50% 100%}
+.a-rock{animation:rock 3.6s ease-in-out infinite;transform-origin:50% 100%}
+.a-sun{animation:pulse 4s ease-in-out infinite;transform-origin:center}
+.a-fly{animation:fly 6s ease-in-out infinite}
+.a-hover{animation:hover 2.6s ease-in-out infinite}
+.a-fish{animation:jump 4.5s ease-in-out infinite}
+.a-hop{animation:hop 5s ease-in-out infinite}
+.bulb{animation:tw 2.4s ease-in-out infinite}
+}
+@keyframes bob{50%{transform:translateY(-3px)}}
+@keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes rock{0%,100%{transform:rotate(-5deg) translateY(0)}50%{transform:rotate(5deg) translateY(-2px)}}
+@keyframes pulse{50%{transform:scale(1.07)}}
+@keyframes fly{0%,100%{transform:translate(0,0)}25%{transform:translate(-10px,-5px)}50%{transform:translate(-18px,3px)}75%{transform:translate(-6px,6px)}}
+@keyframes jump{0%,50%{transform:translateY(18px);opacity:0}60%{opacity:1}72%{transform:translateY(-6px) rotate(-8deg)}86%{transform:translateY(8px) rotate(12deg);opacity:1}100%{transform:translateY(18px);opacity:0}}
+@keyframes hop{0%,78%,100%{transform:translateY(0)}84%{transform:translateY(-8px)}90%{transform:translateY(0)}94%{transform:translateY(-3px)}}
+@keyframes hover{0%,100%{transform:translate(0,0)}30%{transform:translate(-3px,-4px)}60%{transform:translate(2px,-2px)}}
+@keyframes tw{0%,100%{opacity:1}50%{opacity:.45}}
+.pond .hl *{stroke:none!important}
+.pond .hl .ink{display:none}
+.pond .marker{mix-blend-mode:multiply}
+.pond .ln *:not(.ink){fill:none!important}
+.tlist{display:flex;flex-direction:column;gap:8px}
+.tlist .tl{font-size:15px}
+.trow{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;background:var(--bialy);box-shadow:inset 0 0 0 1.5px var(--linia);flex-wrap:wrap}
+.tdot{width:28px;height:28px;border-radius:9px;background:var(--tb);flex:none}
+.tinfo{display:flex;flex-direction:column;min-width:0;flex:1 1 140px}
+.tinfo b{font-size:15px}
+.tinfo small{font-size:12px;color:var(--szary)}
+.tbtn{min-height:40px;padding:0 14px;border-radius:99px;background:var(--kartka);box-shadow:inset 0 0 0 1.5px var(--staw);color:var(--staw);font-weight:700;font-size:13px}
+.tbtn.go{background:var(--staw);color:var(--kartka);box-shadow:none}
+.tconf{display:flex;gap:6px}
+.filtry{display:flex;gap:8px;flex-wrap:wrap}
+.filtry button{flex:none;min-height:40px;padding:0 14px;border-radius:99px;font-weight:700;font-size:13px;background:var(--bialy);box-shadow:inset 0 0 0 1.5px var(--linia);color:var(--szary)}
+.filtry button[aria-pressed="true"]{background:var(--fb,var(--staw));color:var(--ff,var(--kartka));box-shadow:none}
+.toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top, 0px) + 12px);transform:translateX(-50%);width:min(408px,calc(100% - 32px));display:flex;align-items:center;gap:12px;padding:10px 16px 10px 10px;border-radius:20px;text-align:left;z-index:20;box-shadow:0 10px 30px rgba(0,60,50,.25);animation:wpadnij .55s cubic-bezier(.2,1.4,.4,1) both}
+.toast.ok{background:var(--slonko);color:var(--staw)}
+.toast.nie{background:var(--lawenda);color:var(--fiolet-ink)}
+.toast .tfrog{width:58px;height:64px;flex:none}
+.toast span{display:flex;flex-direction:column;gap:2px;font-size:15px;line-height:1.3}
+.toast b{font-family:var(--mega);font-size:17px}
+.toast.out{animation:wypadnij .4s ease-in both}
+@keyframes wpadnij{0%{transform:translate(-50%,-140%) rotate(-4deg)}100%{transform:translate(-50%,0) rotate(0)}}
+@keyframes wypadnij{to{transform:translate(-50%,-160%);opacity:0}}
+@media (prefers-reduced-motion:reduce){.toast,.toast.out{animation:none}}
+.pond{border-radius:24px;overflow:hidden;box-shadow:inset 0 0 0 1.5px var(--linia);background:var(--kartka)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:6px 12px;border-radius:99px;font-size:13px;font-weight:700;background:var(--puste);color:var(--szary)}
+.chip small{font-weight:500}
+.chip.on{background:var(--zakreslacz);color:var(--staw)}
+.pop{animation:pop .35s ease}
+@keyframes pop{0%{transform:scale(.94)}60%{transform:scale(1.03)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.pop{animation:none}.tile{transition:none}}
+</style>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <path id="glowa" d="M40 100C38 80 46 66 52 60C44 40 62 30 74 34C84 36 90 44 92 52C98 50 104 50 110 52C112 42 120 34 132 34C146 34 154 46 148 60C158 70 162 86 160 100C158 122 132 132 100 132C66 133 42 122 40 100Z"/>
+    <path id="cialo" d="M78 130C70 142 72 160 84 166C94 170 108 170 118 166C130 160 132 142 122 130"/>
+    <g id="baza">
+      <use href="#cialo" fill="#D6D35F" transform="translate(5 4)"/>
+      <use href="#glowa" fill="#D6D35F" transform="translate(6 5)"/>
+      <g fill="none" stroke="#008471" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+        <use href="#cialo"/><use href="#glowa"/>
+        <path d="M80 141q-13 6-17 17M120 141q12 5 16 15"/>
+        <path d="M84 167q-8 5-16 4M86 169q-4 7-12 10M116 167q8 5 16 4M114 169q4 7 12 10"/>
+      </g>
+    </g>
+    <g id="baza-slonko">
+      <use href="#cialo" fill="#F4D242" transform="translate(5 4)"/>
+      <use href="#glowa" fill="#F4D242" transform="translate(6 5)"/>
+      <g fill="none" stroke="#008471" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+        <use href="#cialo"/><use href="#glowa"/>
+        <path d="M80 141q-13 6-17 17M120 141q12 5 16 15"/>
+        <path d="M84 167q-8 5-16 4M86 169q-4 7-12 10M116 167q8 5 16 4M114 169q4 7 12 10"/>
+      </g>
+    </g>
+    <symbol id="luz" viewBox="30 20 140 165">
+      <use href="#baza"/>
+      <g stroke="#008471" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M48 52h42q0 22-21 22q-21 0-21-22Z" fill="#008471"/>
+        <path d="M110 52h42q0 22-21 22q-21 0-21-22Z" fill="#008471"/>
+        <path d="M90 55q10-5 20 0M86 106q16 6 30-7" fill="none"/>
+      </g>
+      <path d="M58 56h8M120 56h8" stroke="#FFF8EE" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="skup" viewBox="30 20 152 165">
+      <use href="#baza"/>
+      <g fill="none" stroke="#008471" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="70" cy="58" r="14" fill="#fff"/><circle cx="130" cy="58" r="14" fill="#fff"/>
+        <path d="M84 104q16 7 30-2"/>
+        <path d="M108 104q8 13 20 7q-1-9-12-9" fill="#F29CC3"/>
+        <path d="M138 156L170 118M146 160L176 124M170 118l6 6M170 118l10-8l-4 14"/>
+      </g>
+      <circle cx="73" cy="63" r="5" fill="#008471"/><circle cx="134" cy="63" r="5" fill="#008471"/>
+    </symbol>
+    <symbol id="aha" viewBox="30 2 140 183">
+      <use href="#baza"/>
+      <g fill="none" stroke="#008471" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="70" cy="58" r="13" fill="#fff"/><circle cx="131" cy="57" r="18" fill="#fff"/>
+        <ellipse cx="101" cy="108" rx="7" ry="9" fill="#F29CC3"/>
+        <path d="M100 24V10M78 26L70 15M122 26L130 15"/>
+      </g>
+      <circle cx="70" cy="58" r="3.5" fill="#008471"/><circle cx="131" cy="57" r="4.5" fill="#008471"/>
+    </symbol>
+    <symbol id="aha-slonko" viewBox="30 2 140 183">
+      <use href="#baza-slonko"/>
+      <g fill="none" stroke="#008471" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="70" cy="58" r="13" fill="#fff"/><circle cx="131" cy="57" r="18" fill="#fff"/>
+        <ellipse cx="101" cy="108" rx="7" ry="9" fill="#F29CC3"/>
+        <path d="M100 24V10M78 26L70 15M122 26L130 15"/>
+      </g>
+      <circle cx="70" cy="58" r="3.5" fill="#008471"/><circle cx="131" cy="57" r="4.5" fill="#008471"/>
+    </symbol>
+    <symbol id="zakr" viewBox="30 4 140 181">
+      <use href="#baza-slonko"/>
+      <g fill="none" stroke="#008471" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="70" cy="58" r="15" fill="#fff"/><circle cx="130" cy="58" r="15" fill="#fff"/>
+        <path d="M70 58m-2 0a2 2 0 1 1 4 0a5 5 0 1 1-10 0a8 8 0 1 1 16 0a10 10 0 1 1-20 0"/>
+        <path d="M130 58m2 0a2 2 0 1 0-4 0a5 5 0 1 0 10 0a8 8 0 1 0-16 0a10 10 0 1 0 20 0"/>
+        <path d="M80 108q6-7 12 0q6 7 12 0q6-7 12 0"/>
+        <path d="M88 26q-6-10 4-14q8-2 8 6q6-10 14-4q6 6-2 12"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div id="app"></div>
+
+<script>
+/* =====================================================================
+   ZAGADNIENIA
+   Żeby dodać nowe zagadnienie, dopisz obiekt do listy TEMATY.
+   - typ "liczby": odpowiedź wpisywana na klawiaturze z cyframi
+   - typ "tekst":  odpowiedź wpisywana zwykłą klawiaturą
+   Każde zadanie ma: klucz (unikalny w temacie), pytanie, odp.
+   Kilka dobrych odpowiedzi rozdziel ukośnikiem: "mum / mother".
+   ===================================================================== */
+const DLUGOSC_RUNDY = 15;
+
+function lista(pary){ return pary.map(([pytanie, odp]) => ({ klucz: pytanie, pytanie, odp })); }
+
+const TEMATY = [
+  {
+    id: "tabliczka", nazwa: "Tabliczka mnożenia", typ: "liczby", polecenie: "Ile to jest?",
+    tlo: "#008471", napis: "#D6D35F",
+    zadania(){
+      const out = [];
+      for (let a = 1; a <= 10; a++) for (let b = 1; b <= 10; b++)
+        out.push({ klucz: a + "x" + b, pytanie: a + " × " + b, odp: String(a * b),
+          grupa: Math.min(a, b) + "x" + Math.max(a, b),           // 3×7 i 7×3 to ta sama „para”
+          waga: (a === 1 || b === 1 || a === 10 || b === 10) ? 0.5 : 1 }); // łatwe rzadziej
+      return out;
+    }
+  },
+  {
+    id: "ang-liczby", nazwa: "Angielski: liczby do 100", typ: "tekst", polecenie: "Napisz słowami po angielsku",
+    tlo: "#F4D242", napis: "#00594F",
+    zadania(){
+      const jed = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+      const nasty = ["ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
+      const dzies = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+      const out = [];
+      for (let n = 1; n <= 100; n++) {
+        let odp;
+        if (n < 10) odp = jed[n];
+        else if (n < 20) odp = nasty[n - 10];
+        else if (n === 100) odp = "one hundred / a hundred";
+        else {
+          const d = Math.floor(n / 10), j = n % 10;
+          odp = j ? `${dzies[d]}-${jed[j]} / ${dzies[d]} ${jed[j]}` : dzies[d];
+        }
+        out.push({ klucz: String(n), pytanie: String(n), odp });
+      }
+      return out;
+    }
+  },
+  {
+    id: "ang-rodzina", nazwa: "Angielski: rodzina", typ: "tekst", polecenie: "Napisz po angielsku",
+    tlo: "#FFC0C0", napis: "#9C3A20",
+    zadania(){
+      return lista([
+        ["mama","mum / mom / mother"],["tata","dad / father"],["siostra","sister"],["brat","brother"],
+        ["babcia","grandma / grandmother"],["dziadek","grandpa / grandfather"],["ciocia","aunt"],["wujek","uncle"],
+        ["kuzyn","cousin"],["rodzice","parents"],["syn","son"],["córka","daughter"],
+        ["rodzina","family"],["dziecko","child"],["dziadkowie","grandparents"]
+      ]);
+    }
+  }
+];
+const KOLORY_ZAPASOWE = [["#D1CAEA","#C45F3F"],["#80B0E8","#1B3550"],["#F4D242","#008471"],["#898E46","#FFC0C0"]];
+
+/* =====================================================================
+   ZAPIS WYNIKÓW
+   Jedyne miejsce, które wie, gdzie trafiają dane. Każda runda to jeden
+   wpis { id, data, dzien, temat, rodzaj, zadania[], dobre, wszystkie, ms }.
+   Zapis jest automatyczny: od razu na urządzeniu, potem w chmurze.
+   Przy przenosinach na własną bazę wystarczy podmienić ten obiekt.
+   ===================================================================== */
+const Zapis = {
+  rundy: [], oczekujace: [], archiwum: {}, archDoWyslania: false, db: null, stan: "urzadzenie", onChange: null,
+  KLUCZ: "skumaj-to-v1",
+  wczytajLokalnie(){
+    try {
+      const raw = JSON.parse(localStorage.getItem(this.KLUCZ) || "null");
+      if (raw) { this.rundy = raw.rundy || []; this.oczekujace = raw.oczekujace || []; this.archiwum = raw.archiwum || {}; this.archDoWyslania = !!raw.archDoWyslania; }
+    } catch (e) {}
+  },
+  zapiszLokalnie(){
+    try { localStorage.setItem(this.KLUCZ, JSON.stringify({ rundy: this.rundy, oczekujace: this.oczekujace, archiwum: this.archiwum, archDoWyslania: this.archDoWyslania })); } catch (e) {}
+  },
+  async start(){
+    this.wczytajLokalnie();
+    let db = null;
+    try { db = (window.claude && window.claude.use) ? await window.claude.use("db") : null; } catch (e) { db = null; }
+    if (!db) { this.stan = "urzadzenie"; this.zmiana(); return; }
+    this.db = db; this.stan = this.oczekujace.length ? "czeka" : "chmura";
+    db.doc("ustawienia/archiwum").onSnapshot(d => {
+      if (d.exists && !this.archDoWyslania) { this.archiwum = { ...(d.data().tematy || {}) }; this.zapiszLokalnie(); this.zmiana(); }
+    }, () => {});
+    db.collection("rundy").onSnapshot(snap => {
+      const zSerwera = snap.docs.map(d => d.data());
+      const ids = new Set(zSerwera.map(r => r.id));
+      const lokalneTylko = this.rundy.filter(r => !ids.has(r.id) && this.oczekujace.includes(r.id));
+      this.rundy = zSerwera.concat(lokalneTylko).sort((a, b) => a.data.localeCompare(b.data));
+      this.zapiszLokalnie();
+      this.zmiana();
+    }, () => { this.stan = "urzadzenie"; this.zmiana(); });
+    this.wyslij();
+    window.addEventListener("online", () => this.wyslij());
+  },
+  async dodaj(runda){
+    this.rundy.push(runda);
+    this.oczekujace.push(runda.id);
+    this.zapiszLokalnie();
+    this.zmiana();
+    await this.wyslij();
+  },
+  ustawArchiwum(id, skumany){
+    if (skumany) this.archiwum[id] = new Date().toISOString(); else delete this.archiwum[id];
+    this.archDoWyslania = true;
+    this.zapiszLokalnie();
+    this.zmiana();
+    this.wyslij();
+  },
+  async wyslij(){
+    if (!this.db || this.wysylanie) return;
+    this.wysylanie = true;
+    try {
+      if (this.archDoWyslania) {
+        await this.db.doc("ustawienia/archiwum").set({ tematy: { ...this.archiwum } });
+        this.archDoWyslania = false;
+        this.zapiszLokalnie();
+      }
+      while (this.oczekujace.length) {
+        const id = this.oczekujace[0];
+        const r = this.rundy.find(x => x.id === id);
+        if (r) await this.db.doc("rundy/" + id).set(JSON.parse(JSON.stringify(r)));
+        this.oczekujace.shift();
+        this.zapiszLokalnie();
+      }
+      this.stan = "chmura";
+    } catch (e) {
+      this.stan = "czeka";
+    }
+    this.wysylanie = false;
+    this.zmiana();
+  },
+  zmiana(){ if (this.onChange) this.onChange(); }
+};
+
+/* ===================== pomocnicze ===================== */
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+const norm = s => String(s).toLowerCase().replace(/\s+/g, " ").trim();
+const pad2 = n => String(n).padStart(2, "0");
+const dzienKlucz = d => d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+const czas = ms => { const s = Math.round(ms / 1000); return Math.floor(s / 60) + ":" + pad2(s % 60); };
+const MIESIACE = ["styczeń","luty","marzec","kwiecień","maj","czerwiec","lipiec","sierpień","wrzesień","październik","listopad","grudzień"];
+const MIESIACE_D = ["stycznia","lutego","marca","kwietnia","maja","czerwca","lipca","sierpnia","września","października","listopada","grudnia"];
+const DNI = ["nd","pn","wt","śr","cz","pt","sb"];
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const tematById = id => TEMATY.find(t => t.id === id);
+const kolorTematu = (t, i) => t.tlo ? [t.tlo, t.napis] : KOLORY_ZAPASOWE[i % KOLORY_ZAPASOWE.length];
+const frog = (id, cls) => `<svg class="${cls || "frog"}" aria-hidden="true"><use href="#${id}"/></svg>`;
+/* Żabka zbiera muchy: każda dobra odpowiedź to jedna mucha.
+   Najedzenie liczy się z ostatnich dni (starsze muchy „trawią się”), więc
+   gdy córka ćwiczy, żabka jest pulchna i zadowolona, a gdy robi przerwę, chudnie i robi się śpiąca. */
+function najedzenie(){
+  const dzis = new Date(dzienKlucz(new Date()) + "T12:00:00");
+  let s = 0;
+  for (const r of Zapis.rundy) {
+    const dni = Math.round((dzis - new Date(r.dzien + "T12:00:00")) / 864e5);
+    s += r.dobre * Math.pow(0.6, Math.max(0, dni));
+  }
+  if (!Zapis.rundy.length) return 1;
+  return s < 4 ? 0 : s < 12 ? 1 : s < 25 ? 2 : 3;
+}
+const wszystkieMuchy = () => Zapis.rundy.reduce((a, r) => a + r.dobre, 0);
+const muchSlowo = n => n === 1 ? "mucha" : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? "muchy" : "much";
+const STAN_ZABY = [
+  "Żabka jest głodna i śpiąca. Nakarmisz ją muchami?",
+  "Żabka zjadłaby jeszcze kilka much.",
+  "Żabka jest najedzona i zadowolona!",
+  "Żabka jest pełniutka i przeszczęśliwa!"
+];
+function zabaPet(lv, cls, attrs){
+  const S = [[.7, .9], [1, 1], [1.3, 1.12], [1.65, 1.25]][lv];
+  const T = `translate(102 150) scale(${S[0]} ${S[1]}) translate(-102 -150)`;
+  const ax = (S[0] - 1) * 28, fx = (S[0] - 1) * 18, fy = (S[1] - 1) * 20;
+  const twarz = [
+    `<circle cx="70" cy="58" r="13" fill="#fff"/><circle cx="130" cy="58" r="13" fill="#fff"/>
+     <circle cx="70" cy="64" r="3.5" fill="#008471" stroke="none"/><circle cx="130" cy="64" r="3.5" fill="#008471" stroke="none"/>
+     <path d="M57 58a13 13 0 0 1 26 0Z" fill="#D6D35F"/><path d="M117 58a13 13 0 0 1 26 0Z" fill="#D6D35F"/>
+     <path d="M88 112q12-8 24 0"/>`,
+    `<circle cx="70" cy="58" r="14" fill="#fff"/><circle cx="130" cy="58" r="14" fill="#fff"/>
+     <circle cx="71" cy="59" r="4.5" fill="#008471" stroke="none"/><circle cx="131" cy="59" r="4.5" fill="#008471" stroke="none"/>
+     <path d="M86 106q14 8 28 0"/>`,
+    `<circle cx="70" cy="58" r="14" fill="#fff"/><circle cx="130" cy="58" r="14" fill="#fff"/>
+     <circle cx="72" cy="57" r="5" fill="#008471" stroke="none"/><circle cx="132" cy="57" r="5" fill="#008471" stroke="none"/>
+     <circle cx="54" cy="94" r="6" fill="#F29CC3" stroke="none"/><circle cx="146" cy="94" r="6" fill="#F29CC3" stroke="none"/>
+     <path d="M82 102q18 16 36 0"/>`,
+    `<path d="M58 62q12-13 24 0M118 62q12-13 24 0"/>
+     <circle cx="54" cy="94" r="7" fill="#F29CC3" stroke="none"/><circle cx="146" cy="94" r="7" fill="#F29CC3" stroke="none"/>
+     <path d="M80 100q20 26 40 0Z" fill="#F29CC3"/>
+     <path d="M30 70l-10-4M28 84l-10 2M170 70l10-4M172 84l10 2"/>`
+  ][lv];
+  const zzz = lv === 0 ? `<text x="150" y="34" font-family="Playpen Sans, sans-serif" font-weight="800" font-size="18" fill="#008471">z</text><text x="166" y="18" font-family="Playpen Sans, sans-serif" font-weight="800" font-size="13" fill="#008471">z</text>` : "";
+  return `<svg class="${cls || "frog"}" ${attrs || ""} viewBox="14 -2 176 202" aria-hidden="true">
+    <g transform="translate(5 4)"><use href="#cialo" fill="#D6D35F" transform="${T}"/></g>
+    <use href="#glowa" fill="#D6D35F" transform="translate(6 5)"/>
+    <g fill="none" stroke="#008471" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+      <use href="#cialo" transform="${T}"/>
+      <use href="#glowa"/>
+      <path transform="translate(${-ax} 0)" d="M80 141q-13 6-17 17"/><path transform="translate(${ax} 0)" d="M120 141q12 5 16 15"/>
+      <path transform="translate(${-fx} ${fy})" d="M84 167q-8 5-16 4M86 169q-4 7-12 10"/><path transform="translate(${fx} ${fy})" d="M116 167q8 5 16 4M114 169q4 7 12 10"/>
+      ${twarz}
+    </g>${zzz}</svg>`;
+}
+const ICO_MUCHA = '<svg class="mucha" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="8" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="currentColor" stroke-width="1.6" transform="rotate(-25 8 8)"/><ellipse cx="16" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="currentColor" stroke-width="1.6" transform="rotate(25 16 8)"/><ellipse cx="12" cy="14.5" rx="3.6" ry="5" fill="currentColor"/><circle cx="12" cy="9" r="2.6" fill="currentColor"/></svg>';
+/* STAW: za każdy dzień z ćwiczeniem w stawie pojawia się nowa rzecz.
+   Kolejność na liście = kolejność odblokowania. "z" ustala, co jest rysowane z tyłu (0 = za trawą). */
+const INK = 'stroke="#008471" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"';
+const LAMPKI = [[110.6,16.1,"#F4D242"],[150.5,22.8,"#F29CC3"],[190.4,26.3,"#D6D35F"],[230.3,26.8,"#80B0E8"],[270.2,24.3,"#F4D242"],[310.1,18.7,"#F29CC3"]];
+const STAW = [
+  { nazwa: "Lilia wodna", z: 5, anim: "a-bob", svg: `<g ${INK}><ellipse cx="88" cy="212" rx="24" ry="8" fill="#898E46"/><path d="M89 212l20-4v8z" fill="#80B0E8" stroke="none"/><path d="M88 212l-14-4M88 212l-10 5M88 212l2-7" fill="none" stroke-width="1.5"/></g>` },
+  { nazwa: "Kwiatek", z: 5, anim: "a-bob d2", svg: `<g ${INK}><ellipse cx="128" cy="292" rx="18" ry="5" fill="#898E46"/>${[-50,-25,0,25,50].map(a => `<ellipse cx="128" cy="276" rx="4.5" ry="9" fill="#F29CC3" stroke-width="2" transform="rotate(${a} 128 286)"/>`).join("")}<circle cx="128" cy="284" r="3.5" fill="#F4D242" stroke-width="2"/></g>` },
+  { nazwa: "Domek", z: 3, svg: `<ellipse cx="46" cy="157" rx="30" ry="3.5" fill="#898E46" opacity=".55"/><g ${INK}><path d="M58 105V90h8v22" fill="#FFF8EE"/><path d="M24 156V120h44v36z" fill="#FFF8EE"/><path d="M16 122L46 94L76 122z" fill="#C45F3F"/><path d="M38 156v-20h12v20" fill="#80B0E8"/><circle cx="59" cy="133" r="5" fill="#F4D242"/><path d="M59 128v10M54 133h10" stroke-width="1.5"/></g>` },
+  { nazwa: "Trzciny", z: 4, anim: "a-sway", svg: `<g stroke-linecap="round" fill="none"><path d="M34 238q-14-22-20-42M46 240q14-18 24-30" stroke="#898E46" stroke-width="4"/><g ${INK}><path d="M28 238q2-34-2-62M40 240q0-42 6-70M52 238q2-26 10-46"/><ellipse cx="26" cy="182" rx="4.5" ry="10" fill="#C45F3F"/><ellipse cx="46" cy="176" rx="4.5" ry="10" fill="#C45F3F"/><ellipse cx="62" cy="196" rx="4" ry="8" fill="#C45F3F"/></g></g>` },
+  { nazwa: "Słoneczko", z: 1, anim: "a-sun", svg: `<g ${INK}><path d="M40 14v-8M40 66v8M14 40h-8M66 40h8M22 22l-6-6M58 22l6-6M22 58l-6 6M58 58l6 6" fill="none"/><circle cx="40" cy="40" r="16" fill="#F4D242"/><path d="M34 44q6 5 12 0" fill="none" stroke-width="2"/><circle cx="35" cy="37" r="1.5" fill="#008471" stroke="none" class="ink"/><circle cx="45" cy="37" r="1.5" fill="#008471" stroke="none" class="ink"/></g>` },
+  { nazwa: "Kamień do opalania", z: 5, svg: `<g ${INK}><path d="M40 274q2-16 22-16q22 0 24 14q-6 10-24 10q-18 0-22-8z" fill="#D1CAEA"/><path d="M52 264q6-3 12-2" fill="none" stroke="#FFF8EE" stroke-width="2.5"/></g>` },
+  { nazwa: "Rybka", z: 6, anim: "a-fish", svg: `<g transform="translate(146 -42)"><g ${INK}><path d="M96 252q14-18 30-6q-14 14-30 6z" fill="#F4D242"/><path d="M125 246l11-9l-1 13z" fill="#F4D242"/><circle cx="104" cy="249" r="1.8" fill="#008471" stroke="none" class="ink"/></g><g fill="none" stroke="#FFF8EE" stroke-width="2.5" stroke-linecap="round"><ellipse cx="108" cy="266" rx="15" ry="3.5"/><path d="M96 260l-4-5M108 258v-6M120 260l4-5"/></g></g>` },
+  { nazwa: "Ważka", z: 7, anim: "a-hover", svg: `<g ${INK} transform="translate(290 66) scale(1.15) rotate(90) translate(-308 -262)"><g fill="#CFE6F7" stroke-width="2"><ellipse cx="303" cy="250" rx="4.5" ry="12" transform="rotate(-20 303 250)"/><ellipse cx="314" cy="250" rx="4.5" ry="12" transform="rotate(20 314 250)"/><ellipse cx="303" cy="274" rx="4" ry="10" transform="rotate(20 303 274)"/><ellipse cx="314" cy="274" rx="4" ry="10" transform="rotate(-20 314 274)"/></g><path d="M314 262h24" stroke-width="4.5"/><path d="M320 259v6M326 259v6M332 259v6" stroke="#FFF8EE" stroke-width="1.5"/><ellipse cx="308" cy="262" rx="6" ry="5" fill="#898E46"/><circle cx="298" cy="262" r="5.5" fill="#898E46"/><circle cx="295" cy="258" r="3.2" fill="#fff" stroke-width="1.5"/><circle cx="295" cy="266" r="3.2" fill="#fff" stroke-width="1.5"/><circle cx="294" cy="258" r="1.4" fill="#008471" stroke="none" class="ink"/><circle cx="294" cy="266" r="1.4" fill="#008471" stroke="none" class="ink"/></g>` },
+  { nazwa: "Pomost", z: 4, svg: `<g ${INK}><path d="M300 218v16M320 218v16M340 218v16" fill="none"/><path d="M290 204h66v14h-66z" fill="#C45F3F"/><path d="M303 204v14M316 204v14M329 204v14M342 204v14" fill="none" stroke="#FFF8EE" stroke-width="1.5"/></g>` },
+  { nazwa: "Leżak", z: 4, svg: `<ellipse cx="290" cy="158" rx="24" ry="3" fill="#898E46" opacity=".55"/><g ${INK}><path d="M276 132l-8 26M286 150l-4 8M306 148l4 10" fill="none"/><path d="M268 118l7-2l12 30l23-3v6l-27 3z" fill="#FFC0C0"/><path d="M272 124l7-2M277 136l7-2M292 145v6M300 144v6" fill="none" stroke="#C45F3F" stroke-width="2"/></g>` },
+  { nazwa: "Parasol", z: 3, anim: "a-sway d2", svg: `<ellipse cx="326" cy="158" rx="9" ry="2.5" fill="#898E46" opacity=".55"/><g ${INK}><path d="M326 158V82" fill="none"/><path d="M296 98q30-34 60 0q-7.5 6-15 0q-7.5 6-15 0q-7.5 6-15 0q-7.5 6-15 0z" fill="#F29CC3"/><path d="M326 81l-8 17q4 3 8 0q4 3 8 0z" fill="#FFF8EE" stroke-width="2"/><circle cx="326" cy="79" r="3" fill="#F4D242"/></g>` },
+  { nazwa: "Papierowa łódka", z: 6, anim: "a-rock", svg: `<g ${INK}><path d="M262 266v-24l15 24" fill="#FFF8EE"/><path d="M244 266h40l-8 10h-24z" fill="#FFF8EE"/><path d="M252 271h22" fill="none" stroke="#80B0E8" stroke-width="1.5"/></g>` },
+  { nazwa: "Lampki", z: 2, svg: `<g ${INK}><path d="M84 10q133 34 266 0" fill="none" stroke-width="2"/>${LAMPKI.map(([x, y, c]) => `<path d="M${x - 2.5} ${y}h5v4h-5z" fill="#008471" stroke-width="1.5" class="ink"/><ellipse cx="${x}" cy="${y + 10}" rx="4.5" ry="6.5" fill="${c}" stroke-width="2" class="bulb" style="animation-delay:-${(x % 7) * .3}s"/>`).join("")}</g>` },
+  { nazwa: "Tęcza", z: 0, svg: `<g fill="none" stroke-width="10" transform="translate(2 2)"><path d="M80 152a90 90 0 0 1 180 0" stroke="#C45F3F"/><path d="M90 152a80 80 0 0 1 160 0" stroke="#F4D242"/><path d="M100 152a70 70 0 0 1 140 0" stroke="#D6D35F"/><path d="M110 152a60 60 0 0 1 120 0" stroke="#80B0E8"/></g><g fill="none" stroke="#008471" stroke-linecap="round"><path d="M75 152a95 95 0 0 1 190 0" stroke-width="2.5"/><path d="M115 152a55 55 0 0 1 110 0" stroke-width="2.5"/></g>` }
+];
+const KWIATKI_EXTRA = [[96,158],[118,146],[132,156],[226,148],[244,158],[260,146],[88,138],[346,170],[10,170],[70,164],[104,140],[352,150]];
+const KOLORY_KWIATKOW = ["#FFF8EE", "#F29CC3", "#F4D242", "#D1CAEA"];
+function kwiatek(x, y, i){
+  const c = KOLORY_KWIATKOW[i % KOLORY_KWIATKOW.length];
+  const platki = [0, 72, 144, 216, 288].map(a => `<circle cx="${(x + 4.6 * Math.sin(a * Math.PI / 180)).toFixed(1)}" cy="${(y - 4.6 * Math.cos(a * Math.PI / 180)).toFixed(1)}" r="3.4" fill="${c}"/>`).join("");
+  return `<g><path d="M${x} ${y + 4}q-1 6 0 11" stroke="#898E46" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M${x} ${y + 11}q5-4 8-2" stroke="#898E46" stroke-width="2" fill="none" stroke-linecap="round"/><g stroke="#008471" stroke-width="1.4">${platki}<circle cx="${x}" cy="${y}" r="2.8" fill="#F4D242"/></g></g>`;
+}
+function doodle(svg){ return `<g class="hl" transform="translate(2 2)">${svg}</g><g class="ln">${svg}</g>`; }
+function stawSVG(n, lv){
+  const odbl = STAW.slice(0, n).sort((a, b) => a.z - b.z);
+  const tyl = odbl.filter(x => x.z === 0).map(x => x.svg).join("");
+  const przod = odbl.filter(x => x.z > 0).map(x => x.anim ? `<g class="${x.anim}">${doodle(x.svg)}</g>` : doodle(x.svg)).join("");
+  const extra = KWIATKI_EXTRA.slice(0, Math.max(0, n - STAW.length)).map(([x, y], i) => doodle(kwiatek(x, y, i))).join("");
+  return `<svg viewBox="0 0 360 320" role="img" aria-label="Staw żabki" style="display:block;width:100%;height:auto">
+    <defs>
+      <pattern id="st-kratka" width="14" height="14" patternUnits="userSpaceOnUse"><path d="M14 0H0V14" fill="none" stroke="#CFE0F5" stroke-width="1"/></pattern>
+      <clipPath id="st-niebo"><path d="M0 0H360V152Q270 160 180 146Q90 132 0 156Z"/></clipPath>
+    </defs>
+    <rect width="360" height="320" fill="#FFF8EE"/>
+    <g clip-path="url(#st-niebo)" class="marker">${tyl}</g>
+    <path d="M0 146q90-24 180-10t180 6v178H0z" fill="#E6E298"/>
+    <path d="M18 236C20 196 96 172 182 174C268 176 344 196 344 238C344 282 262 306 178 306C96 306 16 280 18 236Z" fill="#FFF8EE" transform="translate(3 3)"/>
+    <path d="M18 236C20 196 96 172 182 174C268 176 344 196 344 238C344 282 262 306 178 306C96 306 16 280 18 236Z" fill="#80B0E8" transform="translate(3 3)"/>
+    <path d="M18 236C20 196 96 172 182 174C268 176 344 196 344 238C344 282 262 306 178 306C96 306 16 280 18 236Z" fill="none" ${INK}/>
+    <path d="M200 206q12-4 24 0M300 290q-12 4-24 0M160 296q10-3 20 0M60 250q8-3 16 0" fill="none" stroke="#008471" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>
+    ${przod}${extra}
+    ${doodle(`<ellipse cx="180" cy="262" rx="44" ry="12" fill="#898E46" ${INK}/>`)}
+    <g class="a-hop">${zabaPet(lv, "", 'x="132" y="150" width="96" height="112"')}</g>
+  </svg>`;
+}
+const ICO_STAW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="16" rx="9" ry="4"/><path d="M8 12q-2-5 0-8M12 12V5M16 12q2-5 0-8"/></svg>';
+const ICO_PLAY ='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5l12 7-12 7z"/></svg>';
+const ICO_CAL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>';
+
+/* ostatni wynik każdego zadania w temacie: klucz -> true/false */
+function ostatnieWyniki(temat){
+  const m = {};
+  for (const r of Zapis.rundy) if (r.temat === temat) for (const z of r.zadania) m[z.klucz] = z.dobrze;
+  return m;
+}
+function opanowanie(t){
+  const all = t.zadania(), m = ostatnieWyniki(t.id);
+  const ok = all.filter(z => m[z.klucz] === true).length;
+  return all.length ? ok / all.length : 0;
+}
+function gwiazdki(p){ const n = p >= 1 ? 3 : p >= .67 ? 2 : p >= .34 ? 1 : 0; return "★".repeat(n) + "☆".repeat(3 - n); }
+/* Dobór zadań do rundy:
+   - w jednej rundzie żadne zadanie (ani jego odwrotność, np. 3×7 i 7×3) się nie powtarza,
+   - zadania z ostatniej i przedostatniej rundy, zrobione dobrze, prawie nie wracają od razu,
+   - błędne wracają często, a dobrze opanowane (3× z rzędu dobrze) rzadko, ale nigdy całkiem nie znikają. */
+function historiaZadan(temat){
+  const rundy = Zapis.rundy.filter(r => r.temat === temat);
+  const h = {};
+  rundy.forEach((r, idx) => {
+    const ileTemu = rundy.length - 1 - idx;
+    for (const z of r.zadania) {
+      const x = h[z.klucz] || (h[z.klucz] = { seria: 0, ostatnio: null, ileTemu: 99 });
+      x.seria = z.dobrze ? x.seria + 1 : 0;
+      x.ostatnio = z.dobrze;
+      x.ileTemu = ileTemu;
+    }
+  });
+  return h;
+}
+function wagaZadania(z, x){
+  let w = !x ? 3 : x.ostatnio === false ? 6 : x.seria >= 3 ? 0.4 : x.seria === 2 ? 1 : 2;
+  if (x && x.ostatnio) w *= x.ileTemu === 0 ? 0.1 : x.ileTemu === 1 ? 0.4 : 1;
+  return w * (z.waga || 1);
+}
+function wybierzZadania(t, n){
+  const h = historiaZadan(t.id);
+  let bag = t.zadania().map(z => ({ z, w: wagaZadania(z, h[z.klucz]) }));
+  const out = [];
+  while (out.length < n && bag.length) {
+    const tot = bag.reduce((s, x) => s + x.w, 0); let r = Math.random() * tot, i = 0;
+    for (; i < bag.length - 1; i++) { r -= bag[i].w; if (r <= 0) break; }
+    const wybrane = bag.splice(i, 1)[0].z;
+    out.push(wybrane);
+    if (wybrane.grupa) bag = bag.filter(x => x.z.grupa !== wybrane.grupa);
+  }
+  return out;
+}
+const PROG_STAWU = 12; // ile dobrych odpowiedzi (z 15) trzeba, żeby dzień dał nową rzecz w stawie
+const zaliczona = r => r.rodzaj === "runda" && r.dobre >= PROG_STAWU;
+function dniStawu(){ return new Set(Zapis.rundy.filter(zaliczona).map(r => r.dzien)); }
+function dniZCwiczeniem(temat){ return new Set(Zapis.rundy.filter(r => !temat || r.temat === temat).map(r => r.dzien)); }
+function seria(temat){
+  const s = dniZCwiczeniem(temat); const d = new Date(); let n = 0;
+  if (!s.has(dzienKlucz(d))) d.setDate(d.getDate() - 1);
+  while (s.has(dzienKlucz(d))) { n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+function rekord(temat){
+  const dni = [...dniZCwiczeniem(temat)].sort(); let best = 0, cur = 0, prev = null;
+  for (const k of dni) {
+    const d = new Date(k + "T12:00:00");
+    if (prev && (d - prev) / 864e5 === 1) cur++; else cur = 1;
+    best = Math.max(best, cur); prev = d;
+  }
+  return best;
+}
+const dniSlowo = n => n === 1 ? "dzień" : "dni";
+function opisZapisu(){
+  if (Zapis.stan === "chmura") return "Wyniki zapisują się same w chmurze.";
+  if (Zapis.stan === "czeka") return "Wyniki są na tym urządzeniu. Wyślą się do chmury, gdy wróci internet.";
+  return "Wyniki zapisują się same na tym urządzeniu.";
+}
+
+/* ===================== stan ekranu ===================== */
+let ekran = "start";
+let R = null;            // trwająca runda
+let ostatnia = null;     // runda do podsumowania
+let kal = null;          // { r, m, sel }
+let pytanieOWyjscie = false;
+const app = document.getElementById("app");
+let gotowe = false;
+function loader(){
+  return `<div class="loader" role="status">
+    <svg class="lmucha" viewBox="0 0 70 56" aria-hidden="true">
+      <g stroke="#008471" stroke-width="2.5" stroke-linejoin="round">
+        <g transform="rotate(-25 24 30)"><ellipse class="wing" cx="24" cy="18" rx="11" ry="14" fill="#FFF8EE"/></g>
+        <g transform="rotate(25 44 30)"><ellipse class="wing" cx="44" cy="18" rx="11" ry="14" fill="#FFF8EE"/></g>
+        <ellipse cx="34" cy="36" rx="12" ry="13" fill="#008471"/>
+        <path d="M26 34h16M27 40h14" stroke="#D6D35F" stroke-width="2" fill="none"/>
+        <circle cx="34" cy="22" r="8" fill="#008471"/>
+      </g>
+      <circle cx="30" cy="20" r="3.4" fill="#fff"/><circle cx="38" cy="20" r="3.4" fill="#fff"/>
+      <circle cx="31" cy="21" r="1.5" fill="#008471"/><circle cx="39" cy="21" r="1.5" fill="#008471"/>
+    </svg>
+    <span class="mega">Łapię muchy…</span>
+  </div>`;
+}
+
+function render(){
+  if (!gotowe) { app.innerHTML = loader(); return; }
+  app.innerHTML = ekran === "start" ? start() : ekran === "zadanie" ? zadanie() : ekran === "podsumowanie" ? podsumowanie() : ekran === "staw" ? staw() : ekran === "tematy" ? tematy() : kalendarz();
+  const inp = document.getElementById("odp-tekst");
+  if (inp) { inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }
+  const chip = app.querySelector('.filtry [aria-pressed="true"]');
+  if (chip) { const box = chip.parentElement; box.scrollLeft = chip.offsetLeft - (box.clientWidth - chip.offsetWidth) / 2; }
+}
+Zapis.onChange = () => { gotowe = true; if (ekran !== "zadanie") render(); };
+setTimeout(() => { if (!gotowe) { gotowe = true; render(); } }, 4000);
+
+function naglowek(){
+  return `<div class="top"><span class="logo">${frog("luz", "")}</span><span class="mega">Skumaj to!</span></div>`;
+}
+function zakladki(akt){
+  return `<nav class="tabs" aria-label="Menu">
+    <button data-act="ekran" data-to="start" ${akt === "start" ? 'aria-current="page"' : ""}><i>${ICO_PLAY}</i>Ćwiczę</button>
+    <button data-act="ekran" data-to="staw" ${akt === "staw" ? 'aria-current="page"' : ""}><i>${ICO_STAW}</i>Staw</button>
+    <button data-act="ekran" data-to="kalendarz" ${akt === "kalendarz" ? 'aria-current="page"' : ""}><i>${ICO_CAL}</i>Kalendarz</button>
+  </nav>`;
+}
+
+function start(){
+  const dzis = dniZCwiczeniem().has(dzienKlucz(new Date()));
+  const s = seria();
+  const pill = dzis ? "Dziś już poćwiczone ✓" : s ? `Seria: ${s} ${dniSlowo(s)}` : "Zacznij serię!";
+  const lv = najedzenie(), muchy = wszystkieMuchy();
+  const last = Zapis.rundy.filter(r => r.rodzaj === "runda").slice(-1)[0];
+  const tiles = TEMATY.map((t, i) => {
+    if (Zapis.archiwum[t.id]) return "";
+    const [bg, fg] = kolorTematu(t, i); const p = opanowanie(t);
+    return `<button class="tile" style="background:${bg};color:${fg}" data-act="runda" data-t="${t.id}" aria-label="${esc(t.nazwa)}: zacznij rundę">
+      <span class="mega">${esc(t.nazwa)}</span>
+      <span class="foot"><span>${Math.round(p * 100)}%</span><span aria-label="${gwiazdki(p).split("★").length - 1} z 3 gwiazdek">${gwiazdki(p)}</span></span>
+    </button>`;
+  }).join("");
+  return `${naglowek()}
+  <main class="screen">
+    <section class="hero">
+      <h1 class="mega">Co dziś kumamy?</h1>
+      <p class="stan">${Zapis.rundy.length ? STAN_ZABY[lv] : "Żabka czeka na pierwsze muchy. Każda dobra odpowiedź to jedna mucha!"}</p>
+      <div class="pills"><span class="pill">${pill}</span><span class="pill">${ICO_MUCHA}${muchy} ${muchSlowo(muchy)}</span></div>
+      ${zabaPet(lv)}
+    </section>
+    ${tiles.trim() ? `<div class="tiles">${tiles}</div>` : `<div class="strip" style="background:var(--slonko);color:var(--staw)"><span class="mega">Wszystko skumane!</span><span>Przywróć temat albo poproś o nowy.</span></div>`}
+    <button class="btn ghost" style="height:48px;font-size:14px" data-act="ekran" data-to="tematy">Tematy i skumane${Object.keys(Zapis.archiwum).length ? " (" + Object.keys(Zapis.archiwum).length + ")" : ""} ›</button>
+    ${last ? `<div class="strip"><span class="mega">Ostatnio</span><span>${last.dobre}/${last.wszystkie} w ${czas(last.ms)} · ${esc((tematById(last.temat) || {}).nazwa || "")}</span></div>` : ""}
+  </main>
+  ${zakladki("start")}`;
+}
+
+function zacznijRunde(tematId, zadaniaPoprawki){
+  const t = tematById(tematId); if (!t) return;
+  const lista = zadaniaPoprawki ? shuffle(zadaniaPoprawki) : wybierzZadania(t, DLUGOSC_RUNDY);
+  R = { temat: t, rodzaj: zadaniaPoprawki ? "poprawa" : "runda", lista, i: 0, input: "", odpowiedzi: [], start: Date.now(), tZad: Date.now() };
+  pytanieOWyjscie = false; ekran = "zadanie"; render(); window.scrollTo({ top: 0 });
+}
+
+function zadanie(){
+  const t = R.temat, z = R.lista[R.i], n = R.lista.length;
+  setTimeout(() => { if (R) R.pokazane = R.i; }, 0);
+  const dots = R.lista.map((_, k) => `<i class="${k < R.i ? "done" : k === R.i ? "now" : ""}"></i>`).join("");
+  const dlugie = t.typ === "tekst" && z.pytanie.length > 4;
+  const odp = t.typ === "liczby"
+    ? `<span class="ans" aria-live="polite" aria-label="Twoja odpowiedź">${esc(R.input) || "?"}</span>`
+    : `<input class="ans" id="odp-tekst" enterkeyhint="done" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Twoja odpowiedź" value="${esc(R.input)}">`;
+  return `
+  <div class="qhead">
+    <span class="mega" style="font-size:14px">${R.i + 1} / ${n}</span>
+    <button class="x" data-act="wyjdz">✕ Przerwij</button>
+  </div>
+  <main class="screen" style="padding-top:10px">
+    <div class="dots" style="grid-template-columns:repeat(${n},minmax(0,1fr))" aria-hidden="true">${dots}</div>
+    ${pytanieOWyjscie ? `<div class="confirm"><span>Przerwać rundę? Wynik się nie zapisze.</span><div><button data-act="zostan">Zostaję</button><button class="go" data-act="przerwij">Przerwij</button></div></div>` : ""}
+    <section class="card${R.pokazane !== R.i ? " pop" : ""}">
+      <span class="mega label">${esc(t.polecenie)}</span>
+      <div class="mega q${dlugie ? " long" : ""}">${esc(z.pytanie)}</div>
+      <div class="ansrow">${t.typ === "liczby" ? '<span class="mega eq">=</span>' : ""}${odp}</div>
+      ${frog("skup")}
+    </section>
+    <p class="hint">${t.typ === "liczby" ? "Wpisz wynik i naciśnij OK." : "Wpisz słówko i naciśnij OK."} Wyniki zobaczysz na końcu rundy.</p>
+    ${t.typ === "liczby"
+      ? `<div class="pad">${[1,2,3,4,5,6,7,8,9].map(d => `<button data-act="cyfra" data-d="${d}">${d}</button>`).join("")}
+         <button class="del" data-act="usun" aria-label="Usuń cyfrę">⌫</button><button data-act="cyfra" data-d="0">0</button><button class="ok" data-act="ok" aria-label="Zatwierdź">OK</button></div>`
+      : `<button class="btn" data-act="ok">OK</button>`}
+  </main>`;
+}
+
+function zatwierdz(){
+  const z = R.lista[R.i]; const wpis = R.input.trim(); if (!wpis) return;
+  const dobre = z.odp.split("/").map(norm).filter(Boolean);
+  const ok = dobre.includes(norm(wpis)) || norm(wpis) === norm(z.odp);
+  const teraz = Date.now();
+  R.odpowiedzi.push({ klucz: z.klucz, pytanie: z.pytanie, odp: z.odp, wpis, dobrze: ok, ms: teraz - R.tZad });
+  R.tZad = teraz; R.input = ""; R.i++;
+  if (R.i >= R.lista.length) return zakonczRunde();
+  render();
+}
+
+function zakonczRunde(){
+  const teraz = new Date();
+  const runda = {
+    id: teraz.getTime().toString(36) + Math.random().toString(36).slice(2, 7),
+    data: teraz.toISOString(), dzien: dzienKlucz(teraz),
+    temat: R.temat.id, rodzaj: R.rodzaj, zadania: R.odpowiedzi,
+    dobre: R.odpowiedzi.filter(o => o.dobrze).length, wszystkie: R.odpowiedzi.length,
+    ms: teraz.getTime() - R.start
+  };
+  ostatnia = runda; R = null; ekran = "podsumowanie";
+  Zapis.dodaj(runda);
+  render(); window.scrollTo({ top: 0 });
+  if (runda.rodzaj === "runda") setTimeout(() => pokazToast(runda), 350);
+}
+
+const TEKSTY_ZALICZONE = [
+  "Kum kum! Ale z ciebie mistrzyni!",
+  "Żabka aż spadła z liścia z wrażenia!",
+  "Rybka wyskoczyła z wody, żeby to zobaczyć!",
+  "Takiego wyniku nie widziała nawet ważka!",
+  "Muchy drżą, bo żabka dziś ucztuje!",
+  "To było szybsze niż język żabki!",
+  "Mózg na pełnych obrotach! Kum!",
+  "Żabka tańczy na pomoście z radości!",
+  "Łódka zatrąbiła na twoją cześć! Tut, tut!",
+  "Słoneczko mrugnęło: dobra robota!",
+  "Trzciny klaszczą, aż szumi w całym stawie!",
+  "Żabka zapisuje to w swoim zeszycie w kratkę!",
+  "Ważka zrobiła ze szczęścia trzy fikołki!",
+  "Brawo! Żabka puszcza z radości bańki w wodzie!"
+];
+const TEKSTY_PERFEKCYJNE = [
+  "15 na 15! Żabka robi salto na liściu!",
+  "Komplet! Żabka zakłada złote okulary!",
+  "Zero błędów! Nawet słoneczko się zarumieniło!",
+  "Perfekcyjnie! Rybki ułożyły się w napis WOW!",
+  "Bez jednej pomyłki! Żabka dzwoni do babci, żeby się pochwalić!"
+];
+const TEKSTY_NIEZALICZONE = [
+  "Ups! Mucha uciekła, ale żabka już ostrzy język!",
+  "Nawet żabki czasem nie trafią w muchę. Jeszcze raz?",
+  "Spokojnie! Rybka też najpierw chlapie, zanim skoczy.",
+  "Prawie, prawie! Do nowości w stawie brakuje kawałeczka.",
+  "Kum… kum? Jeszcze trochę i będzie wielkie KUM!",
+  "Żabka mówi: każda mucha się liczy. Próbujemy dalej!",
+  "Hop! Żabka poślizgnęła się na liściu, ale już wstaje.",
+  "Ważka też uczyła się latać. Następnym razem polecisz!",
+  "Żabka zje drugie śniadanie i spróbujecie razem jeszcze raz.",
+  "Nic straconego! Błędy to tylko muchy, które jeszcze nie przyleciały.",
+  "Łódka trochę się zakołysała, ale płynie dalej!",
+  "Żabka trzyma kciuki. To znaczy palce. Wszystkie cztery!"
+];
+/* Losowanie bez powtórek: każdy tekst pojawi się raz, zanim któryś wróci. */
+function losuj(nazwa, lista){
+  const klucz = "skumaj-teksty-" + nazwa;
+  let uzyte = [];
+  try { uzyte = JSON.parse(localStorage.getItem(klucz) || "[]"); } catch (e) {}
+  let wolne = lista.map((_, i) => i).filter(i => !uzyte.includes(i));
+  if (!wolne.length) { const ostatni = uzyte[uzyte.length - 1]; uzyte = []; wolne = lista.map((_, i) => i).filter(i => i !== ostatni); }
+  const i = wolne[Math.floor(Math.random() * wolne.length)];
+  uzyte.push(i);
+  try { localStorage.setItem(klucz, JSON.stringify(uzyte)); } catch (e) {}
+  return lista[i];
+}
+function pokazToast(r){
+  const stary = document.querySelector(".toast"); if (stary) stary.remove();
+  const ok = r.dobre >= PROG_STAWU;
+  const tekst = r.dobre === r.wszystkie ? losuj("perfekt", TEKSTY_PERFEKCYJNE) : ok ? losuj("ok", TEKSTY_ZALICZONE) : losuj("nie", TEKSTY_NIEZALICZONE);
+  const el = document.createElement("button");
+  el.className = "toast " + (ok ? "ok" : "nie");
+  el.setAttribute("role", "status");
+  el.setAttribute("aria-label", tekst + " Stuknij, aby zamknąć.");
+  el.innerHTML = `${frog(ok ? "aha" : "zakr", "tfrog")}<span><b>${ok ? "Zaliczone!" : "Tym razem nie wyszło"}</b>${esc(tekst)}</span>`;
+  el.addEventListener("click", () => el.remove());
+  document.body.appendChild(el);
+  setTimeout(() => { el.classList.add("out"); setTimeout(() => el.remove(), 400); }, 5000);
+}
+
+function podsumowanie(){
+  const r = ostatnia, t = tematById(r.temat) || { nazwa: "" };
+  const proc = r.dobre / r.wszystkie;
+  const tytul = r.dobre === r.wszystkie ? "Perfekcyjnie!" : proc >= .8 ? "Skumane!" : proc >= .5 ? "Dobra robota!" : "Ćwiczymy dalej!";
+  const zaba = proc >= .8 ? "aha-slonko" : "zakr";
+  const poprzednia = Zapis.rundy.filter(x => x.temat === r.temat && x.rodzaj === r.rodzaj && x.id !== r.id && x.data < r.data).slice(-1)[0];
+  let porownanie = "pierwsza taka runda";
+  if (poprzednia) {
+    const d = poprzednia.ms - r.ms;
+    porownanie = Math.abs(d) < 1000 ? "tak samo jak ostatnio" : d > 0 ? `o ${czas(d)} szybciej niż ostatnio` : `ostatnio: ${czas(poprzednia.ms)}`;
+  }
+  const bledy = r.zadania.filter(z => !z.dobrze);
+  const zaliczoneDzis = Zapis.rundy.filter(x => x.dzien === r.dzien && zaliczona(x));
+  const nrDnia = dniStawu().size;
+  const nowosc = zaliczona(r) && zaliczoneDzis.length === 1 && zaliczoneDzis[0].id === r.id ? (STAW[nrDnia - 1] ? STAW[nrDnia - 1].nazwa : "Kwiatek na trawie") : "";
+  const brak = r.rodzaj === "runda" && !zaliczoneDzis.length ? PROG_STAWU - r.dobre : 0;
+  const pierwszaOdp = o => o.split("/")[0].trim();
+  return `
+  <div class="qhead"><span class="mega" style="font-size:14px">${r.rodzaj === "poprawa" ? "Koniec poprawy" : "Koniec rundy"}</span><span style="font-size:13px;color:var(--szary)">${esc(t.nazwa)}</span></div>
+  <main class="screen" style="padding-top:12px">
+    <section class="score pop">
+      <span class="mega" style="font-size:13px">${tytul}</span>
+      <div style="display:flex;flex-direction:column;gap:6px"><span class="mega big">${r.dobre}/${r.wszystkie}</span><span style="font-weight:700;font-size:14px">dobrych odpowiedzi</span></div>
+      ${frog(zaba)}
+    </section>
+    <div class="strip" style="background:var(--staw)"><span class="mega" style="color:var(--zakreslacz);display:flex;align-items:center;gap:6px">${ICO_MUCHA}+${r.dobre} ${muchSlowo(r.dobre)}</span><span>${r.dobre ? "Żabka już zajada! " + STAN_ZABY[najedzenie()] : "Tym razem bez much, ale następna runda na pewno coś złapie."}</span></div>
+    ${brak > 0 ? `<div class="strip" style="background:var(--lawenda);color:var(--fiolet-ink)"><span class="mega" style="color:var(--pomidor)">Staw czeka</span><span>Do nowej rzeczy w stawie zabrakło ${brak} ${brak === 1 ? "punktu" : "punktów"}. Potrzeba ${PROG_STAWU}/15. Spróbujesz jeszcze raz?</span></div>` : ""}
+    ${nowosc ? `<button class="strip" style="background:var(--slonko);color:var(--staw);text-align:left" data-act="ekran" data-to="staw"><span class="mega" style="color:var(--pomidor)">Nowość w stawie!</span><span>${esc(nowosc)} · zobacz staw ›</span></button>` : ""}
+    <div class="stats">
+      <div class="stat" style="background:var(--lawenda);color:var(--pomidor)"><span class="mega">Czas</span><span class="v">${czas(r.ms)}</span><small style="color:var(--fiolet-ink)">${porownanie}</small></div>
+      <div class="stat" style="background:var(--piwonia);color:var(--pomidor)"><span class="mega">Na zadanie</span><span class="v">${Math.round(r.ms / r.wszystkie / 1000)} s</span><small style="color:#7A2E1A">średnio</small></div>
+    </div>
+    ${bledy.length ? `<section class="errs"><span class="mega t">Do poprawy</span>
+      ${bledy.map(z => `<div class="err"><b>${esc(z.pytanie)} = ${esc(pierwszaOdp(z.odp))}</b><span>wpisane: <s>${esc(z.wpis)}</s></span></div>`).join("")}
+    </section>` : `<div class="strip"><span class="mega">Zero błędów</span><span>Żabka zakłada okulary. Pełen luz!</span></div>`}
+    <div class="spacer"></div>
+    ${bledy.length ? `<button class="btn" data-act="popraw">Popraw błędy</button>` : ""}
+    <button class="btn ghost" data-act="runda" data-t="${r.temat}">Nowa runda</button>
+    <button class="btn ghost" style="box-shadow:none;height:44px" data-act="ekran" data-to="start">Wróć do menu</button>
+  </main>`;
+}
+
+let pytanieArchiwum = null;
+function tematy(){
+  const wiersz = (t, i, arch) => {
+    const [bg, fg] = kolorTematu(t, i); const p = Math.round(opanowanie(t) * 100);
+    const kiedy = arch ? new Date(Zapis.archiwum[t.id]) : null;
+    const pyta = pytanieArchiwum === t.id;
+    return `<div class="trow" style="--tb:${bg};--tf:${fg}">
+      <span class="tdot" aria-hidden="true"></span>
+      <span class="tinfo"><b>${esc(t.nazwa)}</b><small>${arch ? `Skumane ${kiedy.getDate()} ${MIESIACE_D[kiedy.getMonth()]} · ` : ""}umiesz ${p}%</small></span>
+      ${arch
+        ? `<button class="tbtn" data-act="przywroc" data-t="${t.id}">Przywróć</button>`
+        : pyta
+          ? `<span class="tconf"><button class="tbtn go" data-act="archiwizuj" data-t="${t.id}">Tak, skumane</button><button class="tbtn" data-act="nie-archiwizuj">Nie</button></span>`
+          : `<button class="tbtn" data-act="pytaj-archiwum" data-t="${t.id}">Skumane ✓</button>`}
+    </div>`;
+  };
+  const akt = TEMATY.map((t, i) => Zapis.archiwum[t.id] ? "" : wiersz(t, i, false)).join("");
+  const arch = TEMATY.map((t, i) => Zapis.archiwum[t.id] ? wiersz(t, i, true) : "").join("");
+  return `${naglowek()}
+  <main class="screen">
+    <h1 class="mega" style="margin:4px 0 0;font-size:22px">Tematy</h1>
+    <p class="hint" style="margin:0">Temat, który już dobrze umiesz, odłóż do skumanych. Zniknie z ekranu ćwiczeń, ale wyniki zostaną. W każdej chwili możesz go przywrócić.</p>
+    <section class="tlist"><span class="mega tl">Ćwiczę</span>${akt || '<p class="hint" style="margin:0">Wszystkie tematy są skumane.</p>'}</section>
+    <section class="tlist"><span class="mega tl">Skumane</span>${arch || '<p class="hint" style="margin:0">Na razie pusto. Tu trafią opanowane tematy.</p>'}</section>
+  </main>
+  ${zakladki("start")}`;
+}
+
+function staw(){
+  const n = dniStawu().size, lv = najedzenie();
+  const nast = STAW[n];
+  const info = n === 0
+    ? `Staw jest jeszcze pusty. Runda na co najmniej ${PROG_STAWU}/15 przyniesie pierwszą rzecz.`
+    : nast ? `Każdy dzień z rundą na co najmniej ${PROG_STAWU}/15 dodaje nową rzecz.`
+    : `Staw jest kompletny! Każdy kolejny dzień z wynikiem ${PROG_STAWU}/15 dosadza kwiatek na trawie (już ${Math.min(n - STAW.length, KWIATKI_EXTRA.length)}).`;
+  const chips = STAW.map((x, i) => i < n
+    ? `<span class="chip on">${esc(x.nazwa)}</span>`
+    : `<span class="chip" aria-label="Zablokowane, dzień ${i + 1}">? <small>dzień ${i + 1}</small></span>`).join("");
+  return `${naglowek()}
+  <main class="screen">
+    <h1 class="mega" style="margin:4px 0 0;font-size:20px">Staw żabki</h1>
+    <section class="pond">${stawSVG(n, lv)}</section>
+    <div class="strip" style="background:var(--staw)"><span class="mega" style="color:var(--zakreslacz)">${Math.min(n, STAW.length)}/${STAW.length}</span><span>${STAN_ZABY[lv]} ${info}</span></div>
+    <section class="chips" aria-label="Wyposażenie stawu">${chips}</section>
+  </main>
+  ${zakladki("staw")}`;
+}
+
+function kalendarz(){
+  const dzis = new Date();
+  if (!kal) kal = { r: dzis.getFullYear(), m: dzis.getMonth(), sel: null };
+  if (!kal.filtr || !tematById(kal.filtr)) kal.filtr = (TEMATY.find(t => !Zapis.archiwum[t.id]) || TEMATY[0]).id;
+  const F = kal.filtr;
+  const tF = F ? tematById(F) : null;
+  const [fBg, fFg] = tF ? kolorTematu(tF, TEMATY.indexOf(tF)) : [null, null];
+  const s = seria(F), best = rekord(F);
+  const zrobione = dniZCwiczeniem(F);
+  const tematyDnia = {};
+  for (const r of Zapis.rundy) (tematyDnia[r.dzien] = tematyDnia[r.dzien] || new Set()).add(r.temat);
+  const kropki = k => { const set = tematyDnia[k]; if (!set) return ""; return TEMATY.map((t, i) => set.has(t.id) ? `<i style="background:${kolorTematu(t, i)[0]}"></i>` : "").join(""); };
+  const nazwyDnia = k => { const set = tematyDnia[k]; return set ? TEMATY.filter(t => set.has(t.id)).map(t => t.nazwa).join(", ") : ""; };
+  const pierwszy = new Date(kal.r, kal.m, 1);
+  const dniWMies = new Date(kal.r, kal.m + 1, 0).getDate();
+  const offset = (pierwszy.getDay() + 6) % 7;
+  const dzisK = dzienKlucz(dzis);
+  const biezacy = kal.r === dzis.getFullYear() && kal.m === dzis.getMonth();
+  const dotad = biezacy ? dzis.getDate() : (pierwszy > dzis ? 0 : dniWMies);
+  let wMies = 0, cells = "";
+  for (let i = 0; i < offset; i++) cells += "<span></span>";
+  for (let d = 1; d <= dniWMies; d++) {
+    const k = kal.r + "-" + pad2(kal.m + 1) + "-" + pad2(d);
+    const przyszly = k > dzisK, done = zrobione.has(k);
+    const przedStartem = !Zapis.rundy.length || k < Zapis.rundy[0].dzien;
+    if (done) wMies++;
+    const cls = ["day", przyszly || (przedStartem && !done) ? "future" : done ? "done" : (k === dzisK ? "" : "miss"), k === dzisK ? "today" : "", k === kal.sel ? "sel" : ""].join(" ");
+    const opis = `${d} ${MIESIACE_D[kal.m]}: ${przyszly ? "jeszcze przed nami" : done ? "ćwiczenie zrobione" : przedStartem ? "przed pierwszą rundą" : "bez ćwiczenia"}`;
+    const opisPelny = done ? opis + " (" + nazwyDnia(k) + ")" : opis;
+    const kolko = przyszly || (przedStartem && !done) ? `<span class="${cls}" aria-label="${opis}">${d}</span>` : `<button class="${cls}" data-act="dzien" data-k="${k}" aria-label="${esc(opisPelny)}">${d}</button>`;
+    cells += `<div class="dcell">${kolko}<span class="kropki" aria-hidden="true">${F ? "" : kropki(k)}</span></div>`;
+  }
+  const minR = Zapis.rundy.length ? new Date(Zapis.rundy[0].data) : dzis;
+  const moznaWstecz = kal.r > minR.getFullYear() || (kal.r === minR.getFullYear() && kal.m > minR.getMonth());
+  const moznaDalej = !biezacy && pierwszy < dzis;
+  // szczegóły wybranego dnia
+  const rDnia = Zapis.rundy.filter(r => r.dzien === kal.sel && (!F || r.temat === F));
+  const selD = new Date((kal.sel || dzisK) + "T12:00:00");
+  const godz = r => { const d = new Date(r.data); return d.getHours() + ":" + pad2(d.getMinutes()); };
+  const det = rDnia.length ? rDnia.map(r => {
+    const otwarta = kal.otwarta === r.id;
+    const zadania = otwarta ? `<ul class="zad">${r.zadania.map(z => `<li class="${z.dobrze ? "ok" : "zle"}"><span>${esc(z.pytanie)} = ${esc(z.dobrze ? z.wpis : z.odp.split("/")[0].trim())}</span><span>${z.dobrze ? "✓" : "✗ wpisane: " + esc(z.wpis)}</span></li>`).join("")}</ul>` : "";
+    return `<div class="runda-dnia">
+      <button data-act="rozwin" data-id="${r.id}" aria-expanded="${otwarta}">
+        <span class="rd-nazwa">${esc((tematById(r.temat) || {}).nazwa || r.temat)}${r.rodzaj === "poprawa" ? " · poprawa" : ""}</span>
+        <span class="rd-wynik">${r.dobre}/${r.wszystkie}</span>
+        <span class="rd-meta">${godz(r)} · ${czas(r.ms)} ${otwarta ? "▲" : "▼"}</span>
+      </button>${zadania}
+    </div>`;
+  }).join("") : `<p>${kal.sel === dzisK ? "Dziś jeszcze nie było ćwiczeń." : "Tego dnia nie było ćwiczeń."}</p>`;
+  return `${naglowek()}
+  <main class="screen">
+    <h1 class="mega" style="margin:4px 0 0;font-size:20px">Kalendarz</h1>
+    <div class="filtry" role="group" aria-label="Pokaż ćwiczenie">
+      ${TEMATY.map((t, i) => `<button data-act="filtr" data-t="${t.id}" aria-pressed="${F === t.id}" style="--fb:${kolorTematu(t, i)[0]};--ff:${kolorTematu(t, i)[1]}">${esc(t.nazwa)}</button>`).join("")}
+    </div>
+    <div class="stats">
+      <div class="stat" style="background:var(--slonko);color:var(--staw)"><span class="mega">Seria</span><span class="v">${s} ${dniSlowo(s)}</span><small>Rekord: ${best} ${dniSlowo(best)}</small></div>
+      <div class="stat" style="background:var(--staw);color:var(--zakreslacz)"><span class="mega">W tym miesiącu</span><span class="v">${wMies}/${dotad}</span><small style="color:var(--kartka)">dni z ćwiczeniem</small></div>
+    </div>
+    <section class="cal">
+      <div class="calhead">
+        <button data-act="mies" data-d="-1" aria-label="Poprzedni miesiąc" ${moznaWstecz ? "" : "disabled"}>‹</button>
+        <span class="mega">${MIESIACE[kal.m]} ${kal.r}</span>
+        <button data-act="mies" data-d="1" aria-label="Następny miesiąc" ${moznaDalej ? "" : "disabled"}>›</button>
+      </div>
+      <div class="grid7 wd" aria-hidden="true"><span>PN</span><span>WT</span><span>ŚR</span><span>CZ</span><span>PT</span><span>SB</span><span>ND</span></div>
+      <div class="grid7">${cells}</div>
+      <div class="legend"><span><i style="background:var(--niebo)"></i>${F ? esc(tF.nazwa) + ": zrobione" : "ćwiczenie zrobione"}</span><span><i style="background:var(--piwonia)"></i>${F ? "nie ćwiczone" : "bez ćwiczenia"}</span></div>
+      ${F ? "" : `<div class="legend"><span style="font-weight:700">Tematy:</span>${TEMATY.map((t, i) => `<span><i class="kr" style="background:${kolorTematu(t, i)[0]}"></i>${esc(t.nazwa)}</span>`).join("")}</div>`}
+      ${kal.sel ? `<div class="detail" id="szczegoly">
+        <div class="dethead"><span class="mega">${DNI[selD.getDay()]}, ${selD.getDate()} ${MIESIACE_D[selD.getMonth()]}</span><button class="tbtn" data-act="zamknij-dzien" aria-label="Zamknij szczegóły dnia">✕</button></div>
+        ${det}
+      </div>` : `<p class="hint" style="margin:0;text-align:center;font-size:13px">Stuknij w dzień, żeby zobaczyć wyniki.</p>`}
+    </section>
+  </main>
+  ${zakladki("kalendarz")}`;
+}
+
+/* ===================== zdarzenia ===================== */
+app.addEventListener("click", e => {
+  const b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
+  const a = b.dataset.act;
+  if (a === "ekran") { ekran = b.dataset.to; if (ekran === "kalendarz") kal = null; render(); window.scrollTo({ top: 0 }); }
+  else if (a === "runda") zacznijRunde(b.dataset.t);
+  else if (a === "cyfra") { if (R.input.length < 3) { R.input += b.dataset.d; render(); } }
+  else if (a === "usun") { R.input = R.input.slice(0, -1); render(); }
+  else if (a === "ok") zatwierdz();
+  else if (a === "wyjdz") { pytanieOWyjscie = true; render(); }
+  else if (a === "zostan") { pytanieOWyjscie = false; render(); }
+  else if (a === "przerwij") { R = null; pytanieOWyjscie = false; ekran = "start"; render(); }
+  else if (a === "popraw") {
+    const t = tematById(ostatnia.temat);
+    const klucze = new Set(ostatnia.zadania.filter(z => !z.dobrze).map(z => z.klucz));
+    zacznijRunde(ostatnia.temat, t.zadania().filter(z => klucze.has(z.klucz)));
+  }
+  else if (a === "mies") { let m = kal.m + Number(b.dataset.d), r = kal.r; if (m < 0) { m = 11; r--; } if (m > 11) { m = 0; r++; } kal = { r, m, sel: kal.sel, filtr: kal.filtr }; render(); }
+  else if (a === "filtr") { kal.filtr = b.dataset.t; kal.otwarta = null; render(); }
+  else if (a === "pytaj-archiwum") { pytanieArchiwum = b.dataset.t; render(); }
+  else if (a === "nie-archiwizuj") { pytanieArchiwum = null; render(); }
+  else if (a === "archiwizuj") { pytanieArchiwum = null; Zapis.ustawArchiwum(b.dataset.t, true); }
+  else if (a === "przywroc") { Zapis.ustawArchiwum(b.dataset.t, false); }
+  else if (a === "dzien") { kal.sel = b.dataset.k; kal.otwarta = null; render(); const d = document.getElementById("szczegoly"); if (d) d.scrollIntoView({ behavior: "smooth", block: "nearest" }); }
+  else if (a === "zamknij-dzien") { kal.sel = null; kal.otwarta = null; render(); }
+  else if (a === "rozwin") { kal.otwarta = kal.otwarta === b.dataset.id ? null : b.dataset.id; render(); }
+});
+let ukryteOd = 0;
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) { ukryteOd = Date.now(); return; }
+  if (R && ukryteOd) { const d = Date.now() - ukryteOd; R.start += d; R.tZad += d; }
+  ukryteOd = 0;
+});
+app.addEventListener("input", e => { if (e.target.id === "odp-tekst" && R) R.input = e.target.value; });
+document.addEventListener("keydown", e => {
+  if (ekran !== "zadanie" || !R) return;
+  if (R.temat.typ === "liczby") {
+    if (/^[0-9]$/.test(e.key)) { if (R.input.length < 3) { R.input += e.key; render(); } }
+    else if (e.key === "Backspace") { R.input = R.input.slice(0, -1); render(); }
+    else if (e.key === "Enter") { e.preventDefault(); zatwierdz(); }
+  } else if (e.key === "Enter") { e.preventDefault(); zatwierdz(); }
+});
+
+render();
+Zapis.start();
+</script>
+
+<script>try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}</script>
+</body>
+</html>

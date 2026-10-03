@@ -1,0 +1,23 @@
+{
+  "name": "Skumaj to!",
+  "short_name": "Skumaj to!",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#FFF8EE",
+  "theme_color": "#008471",
+  "lang": "pl",
+  "icons": [
+    {
+      "src": "ikona-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "ikona-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
