@@ -45,7 +45,15 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .hero .frog{width:132px;height:152px}
 svg.mucha{width:16px;height:16px;flex:none}
 .tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:8px}
-.tile{aspect-ratio:1;border-radius:18px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;transition:transform .15s}
+.tile{position:relative;aspect-ratio:1;border-radius:18px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;transition:transform .15s;cursor:pointer;overflow:hidden}
+.tile.arch{opacity:.75}
+.tile.arch.open{opacity:1}
+.tmenu{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;align-items:stretch;gap:8px;padding:14px;background:var(--tb)}
+.tile.open .tmenu{display:flex;animation:pop .25s ease}
+.tb{min-height:44px;border-radius:99px;font-weight:700;font-size:14px;background:transparent;color:var(--tf);box-shadow:inset 0 0 0 2px var(--tf);padding:0 10px}
+.tb.go{background:var(--tf);color:var(--tb);box-shadow:none}
+.tq{font-weight:700;font-size:14px;text-align:center}
+@media (hover:hover){.tile:hover .tmenu{display:flex}}
 .tile:hover{transform:translateY(-2px)}
 .tile .mega{font-size:15px;line-height:1.25;overflow-wrap:anywhere}
 .tile .foot{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;font-size:13px;letter-spacing:.06em}
@@ -677,14 +685,22 @@ function start(){
   const pill = dzis ? "Dziś już poćwiczone ✓" : s ? `Seria: ${s} ${dniSlowo(s)}` : "Zacznij serię!";
   const lv = najedzenie(), muchy = wszystkieMuchy();
   const last = Zapis.rundy.filter(r => r.rodzaj === "runda").slice(-1)[0];
-  const tiles = TEMATY.map((t, i) => {
-    if (Zapis.archiwum[t.id]) return "";
+  const kafel = (t, i, arch) => {
     const [bg, fg] = kolorTematu(t, i); const p = opanowanie(t);
-    return `<button class="tile" style="background:${bg};color:${fg}" data-act="runda" data-t="${t.id}" aria-label="${esc(t.nazwa)}: zacznij rundę">
+    const open = wybranyTemat === t.id, pyta = pytanieArchiwum === t.id;
+    const menu = pyta
+      ? `<span class="tq">Odłożyć do skumanych?</span><button class="tb go" data-act="archiwizuj" data-t="${t.id}">Tak</button><button class="tb" data-act="nie-archiwizuj">Nie</button>`
+      : arch
+        ? `<button class="tb go" data-act="przywroc" data-t="${t.id}">Przywróć do ćwiczeń</button><button class="tb" data-act="runda" data-t="${t.id}">Zacznij ▶</button>`
+        : `<button class="tb go" data-act="runda" data-t="${t.id}">Zacznij ▶</button><button class="tb" data-act="pytaj-archiwum" data-t="${t.id}">Skumane ✓</button>`;
+    return `<div class="tile${open ? " open" : ""}${arch ? " arch" : ""}" style="background:${bg};color:${fg};--tb:${bg};--tf:${fg}" data-act="wybierz" data-t="${t.id}" tabindex="0" role="button" aria-expanded="${open}" aria-label="${esc(t.nazwa)}${arch ? ", skumane" : ""}">
       <span class="mega">${esc(t.nazwa)}</span>
-      <span class="foot"><span>${Math.round(p * 100)}%</span><span aria-label="${gwiazdki(p).split("★").length - 1} z 3 gwiazdek">${gwiazdki(p)}</span></span>
-    </button>`;
-  }).join("");
+      <span class="foot"><span>${arch ? "skumane ✓" : Math.round(p * 100) + "%"}</span><span aria-hidden="true">${gwiazdki(p)}</span></span>
+      <div class="tmenu">${menu}</div>
+    </div>`;
+  };
+  const tiles = TEMATY.map((t, i) => Zapis.archiwum[t.id] ? "" : kafel(t, i, false)).join("");
+  const tilesArch = TEMATY.map((t, i) => Zapis.archiwum[t.id] ? kafel(t, i, true) : "").join("");
   return `${naglowek()}
   <main class="screen">
     <section class="hero">
@@ -693,8 +709,8 @@ function start(){
       <div class="pills"><span class="pill">${pill}</span><span class="pill">${ICO_MUCHA}${muchy} ${muchSlowo(muchy)}</span></div>
       ${zabaPet(lv)}
     </section>
-    ${tiles.trim() ? `<div class="tiles">${tiles}</div>` : `<div class="strip" style="background:var(--slonko);color:var(--staw)"><span class="mega">Wszystko skumane!</span><span>Przywróć temat albo poproś o nowy.</span></div>`}
-    <button class="btn ghost" style="height:48px;font-size:14px" data-act="ekran" data-to="tematy">Tematy i skumane${Object.keys(Zapis.archiwum).length ? " (" + Object.keys(Zapis.archiwum).length + ")" : ""} ›</button>
+    ${tiles.trim() ? `<div class="tiles">${tiles}</div>` : `<div class="strip" style="background:var(--slonko);color:var(--staw)"><span class="mega">Wszystko skumane!</span><span>Przywróć temat ze skumanych poniżej.</span></div>`}
+    ${tilesArch.trim() ? `<h2 class="mega" style="margin:8px 0 0;font-size:17px">Skumane</h2><div class="tiles">${tilesArch}</div>` : ""}
     ${last ? `<div class="strip"><span class="mega">Ostatnio</span><span>${last.dobre}/${last.wszystkie} w ${czas(last.ms)} · ${esc((tematById(last.temat) || {}).nazwa || "")}</span></div>` : ""}
   </main>
   ${zakladki("start")}`;
@@ -868,7 +884,7 @@ function podsumowanie(){
   </main>`;
 }
 
-let pytanieArchiwum = null;
+let pytanieArchiwum = null, wybranyTemat = null;
 function tematy(){
   const wiersz = (t, i, arch) => {
     const [bg, fg] = kolorTematu(t, i); const p = Math.round(opanowanie(t) * 100);
@@ -999,7 +1015,7 @@ function kalendarz(){
 app.addEventListener("click", e => {
   const b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
   const a = b.dataset.act;
-  if (a === "ekran") { ekran = b.dataset.to; if (ekran === "kalendarz") kal = null; render(); window.scrollTo({ top: 0 }); }
+  if (a === "ekran") { wybranyTemat = null; pytanieArchiwum = null; ekran = b.dataset.to; if (ekran === "kalendarz") kal = null; render(); window.scrollTo({ top: 0 }); }
   else if (a === "runda") zacznijRunde(b.dataset.t);
   else if (a === "cyfra") { if (R.input.length < 3) { R.input += b.dataset.d; render(); } }
   else if (a === "usun") { R.input = R.input.slice(0, -1); render(); }
@@ -1014,10 +1030,11 @@ app.addEventListener("click", e => {
   }
   else if (a === "mies") { let m = kal.m + Number(b.dataset.d), r = kal.r; if (m < 0) { m = 11; r--; } if (m > 11) { m = 0; r++; } kal = { r, m, sel: kal.sel, filtr: kal.filtr }; render(); }
   else if (a === "filtr") { kal.filtr = b.dataset.t; kal.otwarta = null; render(); }
-  else if (a === "pytaj-archiwum") { pytanieArchiwum = b.dataset.t; render(); }
+  else if (a === "wybierz") { wybranyTemat = wybranyTemat === b.dataset.t ? null : b.dataset.t; pytanieArchiwum = null; render(); }
+  else if (a === "pytaj-archiwum") { wybranyTemat = b.dataset.t; pytanieArchiwum = b.dataset.t; render(); }
   else if (a === "nie-archiwizuj") { pytanieArchiwum = null; render(); }
-  else if (a === "archiwizuj") { pytanieArchiwum = null; Zapis.ustawArchiwum(b.dataset.t, true); }
-  else if (a === "przywroc") { Zapis.ustawArchiwum(b.dataset.t, false); }
+  else if (a === "archiwizuj") { pytanieArchiwum = null; wybranyTemat = null; Zapis.ustawArchiwum(b.dataset.t, true); }
+  else if (a === "przywroc") { wybranyTemat = null; Zapis.ustawArchiwum(b.dataset.t, false); }
   else if (a === "dzien") { kal.sel = b.dataset.k; kal.otwarta = null; render(); const d = document.getElementById("szczegoly"); if (d) d.scrollIntoView({ behavior: "smooth", block: "nearest" }); }
   else if (a === "zamknij-dzien") { kal.sel = null; kal.otwarta = null; render(); }
   else if (a === "rozwin") { kal.otwarta = kal.otwarta === b.dataset.id ? null : b.dataset.id; render(); }
@@ -1030,6 +1047,7 @@ document.addEventListener("visibilitychange", () => {
 });
 app.addEventListener("input", e => { if (e.target.id === "odp-tekst" && R) R.input = e.target.value; });
 document.addEventListener("keydown", e => {
+  if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("tile")) { e.preventDefault(); e.target.click(); return; }
   if (ekran !== "zadanie" || !R) return;
   if (R.temat.typ === "liczby") {
     if (/^[0-9]$/.test(e.key)) { if (R.input.length < 3) { R.input += e.key; render(); } }
