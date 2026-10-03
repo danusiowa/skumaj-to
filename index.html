@@ -63,6 +63,8 @@ svg.mucha{width:16px;height:16px;flex:none}
 .tq{font-weight:700;font-size:14px;text-align:center}
 @media (hover:hover){.tile:hover .tmenu{display:flex}}
 .tile:hover{transform:translateY(-2px)}
+.tile .tname{display:flex;flex-direction:column;gap:4px}
+.tile .tname small{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.85}
 .tile .mega{font-size:17px;line-height:1.25;overflow-wrap:anywhere}
 .tile .foot{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;font-size:13px;letter-spacing:.06em}
 .strip{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--rzesa);color:var(--kartka);font-size:14px;flex-wrap:wrap}
@@ -881,7 +883,7 @@ function start(){
         ? `<button class="tb go" data-act="przywroc" data-t="${t.id}">Przywróć do ćwiczeń</button><button class="tb" data-act="runda" data-t="${t.id}">Zacznij ▶</button>`
         : `<button class="tb go" data-act="runda" data-t="${t.id}">Zacznij ▶</button><button class="tb" data-act="pytaj-archiwum" data-t="${t.id}">Skumane ✓</button>`;
     return `<div class="tile${open ? " open" : ""}${arch ? " arch" : ""}" style="background:${bg};color:${fg};--tb:${bg};--tf:${fg}" data-act="wybierz" data-t="${t.id}" tabindex="0" role="button" aria-expanded="${open}" aria-label="${esc(t.nazwa)}${arch ? ", skumane" : ""}">
-      <span class="mega">${esc(t.nazwa)}</span>
+      <span class="tname">${t.nazwa.includes(": ") ? `<small>${esc(t.nazwa.split(": ")[0])}</small>` : ""}<span class="mega">${esc(t.nazwa.includes(": ") ? t.nazwa.split(": ").slice(1).join(": ").replace(/^./, c => c.toUpperCase()) : t.nazwa)}</span></span>
       <span class="foot"><span>${arch ? "skumane ✓" : Math.round(p * 100) + "%"}</span><span aria-hidden="true">${gwiazdki(p)}</span></span>
       <div class="tmenu">${menu}</div>
     </div>`;
