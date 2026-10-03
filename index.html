@@ -39,6 +39,9 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .top .mega{font-size:17px;color:var(--zakreslacz)}
 .top .wyloguj{margin-left:auto;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:99px;background:rgba(255,248,238,.14);color:var(--kartka);font-weight:700;font-size:13px}
 .top .wyloguj svg{width:16px;height:16px}
+.top .wyloguj + .wyloguj{margin-left:0}
+.top .wyloguj.zapr{background:var(--zakreslacz);color:var(--staw)}
+@media (max-width:420px){.top .wyloguj.zapr span{display:none}.top .wyloguj.zapr{padding:0 12px}}
 .screen{display:flex;flex-direction:column;gap:14px;flex-grow:1;padding-bottom:18px}
 .hero{position:relative;border-radius:24px;background:var(--lawenda);padding:20px 18px;min-height:150px;display:flex;flex-direction:column;justify-content:space-between;gap:14px}
 .hero h1{margin:0;max-width:60%;font-size:23px;line-height:1.15;text-wrap:balance}
@@ -853,7 +856,7 @@ Zapis.onChange = () => { gotowe = true; if (ekran !== "zadanie") render(); };
 setTimeout(() => { if (!gotowe) { gotowe = true; render(); } }, 4000);
 
 function naglowek(){
-  return `<div class="top"><span class="logo">${frog("luz", "")}</span><span class="mega">Skumaj to!</span>${Zapis.uid ? `<button class="wyloguj" data-act="wyloguj" aria-label="${pytamWyloguj ? "Potwierdź wylogowanie" : "Wyloguj się"}">${pytamWyloguj ? "Na pewno? Wyloguj" : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M9 8l-4 4 4 4M5 12h11"/></svg>Wyloguj`}</button>` : ""}</div>`;
+  return `<div class="top"><span class="logo">${frog("luz", "")}</span><span class="mega">Skumaj to!</span>${Zapis.jestAdminem() && !pytamWyloguj ? `<button class="wyloguj zapr" data-act="ekran" data-to="zapros" aria-label="Zaproś do stawu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="3.5"/><path d="M3.5 19.5c.8-3.4 3.3-5.5 6.5-5.5 1.6 0 3 .5 4.1 1.4M18 13v6M15 16h6"/></svg><span>Zaproś</span></button>` : ""}${Zapis.uid ? `<button class="wyloguj" data-act="wyloguj" aria-label="${pytamWyloguj ? "Potwierdź wylogowanie" : "Wyloguj się"}">${pytamWyloguj ? "Na pewno? Wyloguj" : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M9 8l-4 4 4 4M5 12h11"/></svg>Wyloguj`}</button>` : ""}</div>`;
 }
 function zakladki(akt){
   return `<nav class="tabs" aria-label="Menu">
@@ -1144,7 +1147,7 @@ function noweHaslo(){
     </form>
   </main>`;
 }
-let zaproszenieWynik = null, bladZaproszenia = "", tworzeLink = false;
+let zaproszenieWynik = null, bladZaproszenia = "", tworzeLink = false, zaprosEmail = "";
 function zapros(){
   return `${naglowek()}
   <main class="screen">
@@ -1152,12 +1155,12 @@ function zapros(){
     <p class="hint" style="margin:0">Wpisz e-mail osoby. Powstanie link, który wyślesz SMS-em albo komunikatorem. Po otwarciu linku osoba ustawi sobie hasło i będzie miała własną żabkę.</p>
     <form id="zapros" class="login" novalidate>
       <label for="z-email">E-mail osoby</label>
-      <input id="z-email" type="email" inputmode="email" autocomplete="off" placeholder="np. ola@poczta.pl" required>
+      <input id="z-email" type="email" inputmode="email" autocomplete="off" autocapitalize="off" placeholder="np. ola@poczta.pl" required value="${esc(zaprosEmail)}">
       ${bladZaproszenia ? `<p class="blad" role="alert">${esc(bladZaproszenia)}</p>` : ""}
       <button class="btn" type="submit" ${tworzeLink ? "disabled" : ""}>${tworzeLink ? "Tworzę link…" : "Utwórz link"}</button>
     </form>
     ${zaproszenieWynik ? `<section class="detail" style="border:0;background:var(--bialy);box-shadow:inset 0 0 0 1.5px var(--linia);border-radius:20px;padding:14px">
-      <span class="mega">${zaproszenieWynik.existing ? "Link do nowego hasła gotowy" : "Zaproszenie gotowe"}</span>
+      <span class="mega">${zaproszenieWynik.existing ? "Link do nowego hasła gotowy" : "Zaproszenie gotowe"}</span><p style="margin:0">Dla: <b>${esc(zaprosEmail)}</b></p>
       <input class="zlink" id="z-link" readonly value="${esc(zaproszenieWynik.link)}" aria-label="Link z zaproszeniem">
       <p>${zaproszenieWynik.existing ? "To konto już istnieje. Link pozwoli ustawić nowe hasło." : "Link działa raz i wygasa po około dobie."}</p>
       <div class="tconf"><button class="tbtn go" data-act="kopiuj-link">Kopiuj link</button>${navigator.share ? '<button class="tbtn" data-act="udostepnij-link">Udostępnij</button>' : ""}</div>
@@ -1319,7 +1322,7 @@ app.addEventListener("submit", async e => {
   }
   if (e.target.id === "zapros") {
     e.preventDefault();
-    const email = document.getElementById("z-email").value.trim();
+    const email = document.getElementById("z-email").value.trim(); zaprosEmail = email;
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { bladZaproszenia = "Wpisz poprawny adres e-mail."; render(); return; }
     tworzeLink = true; bladZaproszenia = ""; zaproszenieWynik = null; render();
     try { zaproszenieWynik = await Zapis.zapros(email); }
