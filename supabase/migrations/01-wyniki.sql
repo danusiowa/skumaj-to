@@ -39,3 +39,11 @@ create policy "ustawienia: swoje" on public.ustawienia
   for all to authenticated
   using (user_id = auth.uid())
   with check (user_id = auth.uid());
+
+-- Dostęp dla zalogowanych (potrzebne, gdy „Automatically expose new tables” jest wyłączone).
+-- Kto co widzi, i tak decydują reguły powyżej.
+grant usage on schema public to authenticated;
+grant select, insert, update, delete on public.rundy to authenticated;
+grant select, insert, update, delete on public.ustawienia to authenticated;
+revoke all on public.rundy from anon;
+revoke all on public.ustawienia from anon;
