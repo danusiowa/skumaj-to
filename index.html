@@ -1296,7 +1296,7 @@ app.addEventListener("click", async e => {
   else if (a === "nie-archiwizuj") { pytanieArchiwum = null; render(); }
   else if (a === "archiwizuj") { pytanieArchiwum = null; wybranyTemat = null; Zapis.ustawArchiwum(b.dataset.t, true); }
   else if (a === "przywroc") { wybranyTemat = null; Zapis.ustawArchiwum(b.dataset.t, false); }
-  else if (a === "wyloguj") { if (!pytamWyloguj) { pytamWyloguj = true; render(); setTimeout(() => { if (pytamWyloguj) { pytamWyloguj = false; render(); } }, 4000); } else { pytamWyloguj = false; ekran = "start"; Zapis.wyloguj(); } }
+  else if (a === "wyloguj") { pytamWyloguj = false; ekran = "start"; Zapis.wyloguj(); }
   else if (a === "pokaz-haslo") {
     const inp = document.getElementById("l-haslo"); const pokaz = inp.type === "password";
     inp.type = pokaz ? "text" : "password"; b.textContent = pokaz ? "Ukryj" : "Pokaż";
