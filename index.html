@@ -46,6 +46,26 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .hero{position:relative;border-radius:24px;background:var(--lawenda);padding:20px 18px;min-height:150px;display:flex;flex-direction:column;justify-content:space-between;gap:14px}
 .hero h1{margin:0;max-width:60%;font-size:23px;line-height:1.15;text-wrap:balance}
 .hero .frog{position:absolute;right:10px;bottom:16px;width:120px;height:157px;z-index:1}
+.hero{--mx:73px;--my:84px}
+.h-mucha,.h-jezyk{display:none}
+@media (prefers-reduced-motion:no-preference){
+  .h-mucha{display:block;position:absolute;right:calc(var(--mx) - 9px);bottom:calc(var(--my) - 9px);width:18px;height:18px;z-index:3;opacity:0;animation:muchaLot 12s linear infinite}
+  .h-mucha .h-skrz{transform-box:fill-box;transform-origin:50% 100%;animation:flap .1s linear infinite alternate}
+  .h-jezyk{display:block;position:absolute;right:var(--mx);bottom:calc(var(--my) - 3px);width:72px;height:7px;border-radius:7px;background:#F29CC3;box-shadow:inset 0 0 0 1.5px #C45F7F;transform-origin:100% 50%;transform:scaleX(0);z-index:2;animation:jezyk 12s linear infinite}
+}
+@keyframes muchaLot{
+  0%{transform:translate(30px,-118px);opacity:0}
+  5%{opacity:1}
+  22%{transform:translate(-55px,-98px)}
+  40%{transform:translate(-82px,-52px)}
+  55%{transform:translate(-30px,-80px)}
+  66%{transform:translate(-84px,-22px)}
+  72.5%{transform:translate(-68px,0);opacity:1}
+  75.5%{transform:translate(-4px,0) scale(.45);opacity:1}
+  76.5%{transform:translate(0,0) scale(.3);opacity:0}
+  100%{transform:translate(0,0) scale(.3);opacity:0}
+}
+@keyframes jezyk{0%,72%{transform:scaleX(0)}73%{transform:scaleX(1)}75.5%{transform:scaleX(.08)}76.5%,100%{transform:scaleX(0)}}
 .hero .cien{position:absolute;right:32px;bottom:24px;width:84px;height:14px;border-radius:50%;background:rgba(74,63,107,.28);filter:blur(1.5px)}
 .pill{align-self:flex-start;padding:5px 12px;border-radius:99px;background:var(--kartka);color:var(--pomidor);font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px}
 .pills{display:flex;flex-direction:column;gap:6px;align-items:flex-start;max-width:60%}
@@ -233,6 +253,9 @@ ul.zad li span:last-child{white-space:nowrap}
 .w-lilia{position:absolute;bottom:22px;left:50%;width:120px;height:30px;margin-left:-60px;border-radius:50%;background:var(--rzesa);box-shadow:inset 0 0 0 3px var(--staw)}
 .w-cien{position:absolute;bottom:34px;left:50%;width:76px;height:12px;margin-left:-38px;border-radius:50%;background:rgba(0,60,50,.3);filter:blur(1.5px);z-index:1}
 .w-zaba{position:relative;z-index:2;width:118px;height:136px;margin-bottom:34px}
+.w-staw .w-zam{position:absolute;bottom:0;left:50%;margin-left:-59px;opacity:0}
+.wejscie.oczy-zamkniete .w-otw{opacity:0}
+.wejscie.oczy-zamkniete .w-zam{opacity:1}
 .w-tytul{margin:0;font-size:34px;line-height:1.05}
 .w-lead{margin:0;max-width:30ch;color:var(--szary);font-size:16px}
 .w-karta{width:100%;max-width:400px;text-align:left;background:var(--bialy);border-radius:24px;padding:18px;box-shadow:inset 0 0 0 1.5px var(--linia),0 10px 30px rgba(0,60,50,.08)}
@@ -262,6 +285,7 @@ ul.zad li span:last-child{white-space:nowrap}
   .hero h1{font-size:34px}
   .hero .stan{font-size:16px}
   .hero .frog{width:150px;height:174px;right:32px}
+  .hero{--mx:108px;--my:100px}
   .hero .cien{right:62px;width:96px}
   #app[data-ekran="kalendarz"] .screen,
   #app[data-ekran="staw"] .screen,
@@ -661,7 +685,7 @@ const STAN_ZABY = [
   "Żabka jest najedzona i zadowolona!",
   "Żabka jest pełniutka i przeszczęśliwa!"
 ];
-function zabaPet(lv, cls, attrs){
+function zabaPet(lv, cls, attrs, mina){
   const S = [[.7, .9], [1, 1], [1.3, 1.12], [1.65, 1.25]][lv];
   const T = `translate(102 150) scale(${S[0]} ${S[1]}) translate(-102 -150)`;
   const ax = (S[0] - 1) * 28, fx = (S[0] - 1) * 18, fy = (S[1] - 1) * 20;
@@ -682,6 +706,12 @@ function zabaPet(lv, cls, attrs){
      <path d="M80 100q20 26 40 0Z" fill="#F29CC3"/>
      <path d="M30 70l-10-4M28 84l-10 2M170 70l10-4M172 84l10 2"/>`
   ][lv];
+  const twarzMina = mina === "zamkniete"
+    ? `<path d="M57 58q13 10 26 0M117 58q13 10 26 0"/>
+       <path d="M60 63l-4 5M70 66v6M80 63l4 5M120 63l-4 5M130 66v6M140 63l4 5" stroke-width="2.4"/>
+       <circle cx="54" cy="94" r="6" fill="#F29CC3" stroke="none"/><circle cx="146" cy="94" r="6" fill="#F29CC3" stroke="none"/>
+       <path d="M90 106q10 6 20 0"/>`
+    : null;
   const zzz = lv === 0 ? `<text x="150" y="34" font-family="Playpen Sans, sans-serif" font-weight="800" font-size="18" fill="#008471">z</text><text x="166" y="18" font-family="Playpen Sans, sans-serif" font-weight="800" font-size="13" fill="#008471">z</text>` : "";
   return `<svg class="${cls || "frog"}" ${attrs || ""} viewBox="14 -2 176 202" aria-hidden="true">
     <g transform="translate(5 4)"><use href="#cialo" fill="#D6D35F" transform="${T}"/></g>
@@ -691,7 +721,7 @@ function zabaPet(lv, cls, attrs){
       <use href="#glowa"/>
       <path transform="translate(${-ax} 0)" d="M80 141q-13 6-17 17"/><path transform="translate(${ax} 0)" d="M120 141q12 5 16 15"/>
       <path transform="translate(${-fx} ${fy})" d="M84 167q-8 5-16 4M86 169q-4 7-12 10"/><path transform="translate(${fx} ${fy})" d="M116 167q8 5 16 4M114 169q4 7 12 10"/>
-      ${twarz}
+      ${twarzMina || twarz}
     </g>${zzz}</svg>`;
 }
 const ICO_MUCHA = '<svg class="mucha" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="8" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="currentColor" stroke-width="1.6" transform="rotate(-25 8 8)"/><ellipse cx="16" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="currentColor" stroke-width="1.6" transform="rotate(25 16 8)"/><ellipse cx="12" cy="14.5" rx="3.6" ry="5" fill="currentColor"/><circle cx="12" cy="9" r="2.6" fill="currentColor"/></svg>';
@@ -903,6 +933,8 @@ function start(){
       <div class="pills"><span class="pill">${pill}</span><span class="pill">${ICO_MUCHA}${muchy} ${muchSlowo(muchy)}</span></div>
       <span class="cien" aria-hidden="true"></span>
       ${zabaPet(lv)}
+      <span class="h-jezyk" aria-hidden="true"></span>
+      <svg class="h-mucha" viewBox="0 0 24 24" aria-hidden="true"><g class="h-skrz"><ellipse cx="8" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="#008471" stroke-width="1.6" transform="rotate(-25 8 8)"/><ellipse cx="16" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="#008471" stroke-width="1.6" transform="rotate(25 16 8)"/></g><ellipse cx="12" cy="14.5" rx="3.6" ry="5" fill="#008471"/><circle cx="12" cy="9" r="2.6" fill="#008471"/></svg>
     </section>
     ${tiles.trim() ? `<div class="tiles">${tiles}</div>` : `<div class="strip" style="background:var(--slonko);color:var(--staw)"><span class="mega">Wszystko skumane!</span><span>Przywróć temat ze skumanych poniżej.</span></div>`}
     ${tilesArch.trim() ? `<h2 class="mega" style="margin:8px 0 0;font-size:17px">Skumane</h2><div class="tiles">${tilesArch}</div>` : ""}
@@ -1114,7 +1146,7 @@ function logowanie(){
   return `<main class="wejscie">
     <div class="w-staw" aria-hidden="true">
       <span class="w-cien"></span>
-      ${zabaPet(2, "w-zaba")}
+      ${zabaPet(2, "w-zaba w-otw")}${zabaPet(2, "w-zaba w-zam", "", "zamkniete")}
       <span class="w-lilia"></span>
     </div>
     <h1 class="mega w-tytul">Skumaj to!</h1>
@@ -1138,7 +1170,7 @@ function noweHaslo(){
   return `<main class="wejscie">
     <div class="w-staw" aria-hidden="true">
       <span class="w-cien"></span>
-      ${zabaPet(3, "w-zaba")}
+      ${zabaPet(3, "w-zaba w-otw")}${zabaPet(2, "w-zaba w-zam", "", "zamkniete")}
       <span class="w-lilia"></span>
     </div>
     <h1 class="mega w-tytul">Witaj w stawie!</h1>
@@ -1306,6 +1338,7 @@ app.addEventListener("click", async e => {
     const inp = document.getElementById("l-haslo"); const pokaz = inp.type === "password";
     inp.type = pokaz ? "text" : "password"; b.textContent = pokaz ? "Ukryj" : "Pokaż";
     b.setAttribute("aria-pressed", String(pokaz)); b.setAttribute("aria-label", pokaz ? "Ukryj hasło" : "Pokaż hasło");
+    inp.focus(); oczyZaby();
   }
   else if (a === "kopiuj-link") {
     const inp = document.getElementById("z-link");
@@ -1345,6 +1378,14 @@ app.addEventListener("submit", async e => {
   catch (err) { bladLogowania = /invalid/i.test(err.message || "") ? "Nieprawidłowy e-mail albo hasło. Spróbuj jeszcze raz." : "Nie udało się zalogować. Sprawdź internet i spróbuj ponownie."; }
   logujeSie = false; render();
 });
+function oczyZaby(){
+  const w = app.querySelector(".wejscie"); if (!w) return;
+  const el = document.activeElement;
+  const zamknij = !!el && el.type === "password" && w.contains(el);
+  w.classList.toggle("oczy-zamkniete", zamknij);
+}
+app.addEventListener("focusin", oczyZaby);
+app.addEventListener("focusout", () => setTimeout(oczyZaby, 0));
 let ukryteOd = 0;
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) { ukryteOd = Date.now(); return; }
