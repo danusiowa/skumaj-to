@@ -1349,7 +1349,7 @@ function kalendarz(){
       </div>
       <div class="grid7 wd" aria-hidden="true"><span>PN</span><span>WT</span><span>ŚR</span><span>CZ</span><span>PT</span><span>SB</span><span>ND</span></div>
       <div class="grid7">${cells}</div>
-      <div class="legend"><span><i style="background:var(--niebo)"></i>${F ? esc(tF.nazwa) + ": zrobione" : "ćwiczenie zrobione"}</span><span><i style="background:var(--piwonia)"></i>${F ? "nie ćwiczone" : "bez ćwiczenia"}</span></div>
+      <div class="legend"><span><i style="background:var(--niebo)"></i>ćwiczone</span><span><i style="background:var(--piwonia)"></i>nie ćwiczone</span></div>
       ${F ? "" : `<div class="legend"><span style="font-weight:700">Tematy:</span>${TEMATY.map((t, i) => `<span><i class="kr" style="background:${kolorTematu(t, i)[0]}"></i>${esc(t.nazwa)}</span>`).join("")}</div>`}
       ${kal.sel ? `<div class="detail" id="szczegoly">
         <div class="dethead"><span class="mega">${DNI[selD.getDay()]}, ${selD.getDate()} ${MIESIACE_D[selD.getMonth()]}</span><button class="tbtn" data-act="zamknij-dzien" aria-label="Zamknij szczegóły dnia">✕</button></div>

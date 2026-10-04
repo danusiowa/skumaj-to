@@ -4,7 +4,7 @@ Apka do powtórek szkolnego materiału dla 4 klasy. Za każdą dobrą odpowiedź
 
 **Zagraj:** https://danusiowa.github.io/skumaj-to/
 
-![Ekran startowy i staw żabki](docs/zrzut-ekranu.png)
+![Logowanie, start i runda na telefonie](docs/makiety-telefon-1.png)
 
 ## Co jest w środku
 
@@ -16,6 +16,14 @@ Apka do powtórek szkolnego materiału dla 4 klasy. Za każdą dobrą odpowiedź
 - **Wymowa.** W angielskich słówkach z rodziny po rundzie można odsłuchać wymowę (głos wbudowany w urządzenie).
 - **Skumane.** Opanowany temat można odłożyć do archiwum i w każdej chwili przywrócić.
 - **Działa wszędzie:** na telefonie, tablecie i komputerze. Można ją dodać do ekranu głównego jak zwykłą apkę.
+
+## Jak wygląda
+
+![Podsumowanie rundy, staw żabki i kalendarz](docs/makiety-telefon-2.png)
+
+Na komputerze i tablecie kafelki układają się szerzej, cztery w rzędzie:
+
+![Ekran startowy na komputerze](docs/makieta-komputer.png)
 
 ## Tematy
 
