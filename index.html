@@ -121,9 +121,13 @@ nav.tabs button[aria-current="page"] i{background:var(--zakreslacz)}
 .card .ansrow{display:flex;align-items:center;gap:10px;max-width:62%}
 .card .eq{font-size:40px}
 .ans{min-width:104px;height:64px;padding:0 14px;border-radius:16px;background:var(--kartka);color:var(--staw);display:grid;place-items:center;font-family:var(--mega);font-weight:800;font-size:36px;box-shadow:inset 0 0 0 3px var(--zakreslacz)}
+.ans2{min-width:76px;font:inherit;font-family:var(--mega);font-weight:800;font-size:34px;cursor:pointer;opacity:.75;box-shadow:inset 0 0 0 2px var(--zakreslacz)}
+.ans2.akt{opacity:1;box-shadow:inset 0 0 0 4px var(--zakreslacz),0 0 0 3px var(--kartka)}
 input.ans{font-size:22px;text-transform:none;width:100%;min-width:0;border:0;text-align:center}
 input.ans:focus,input.ans:focus-visible{outline:none;box-shadow:inset 0 0 0 3px var(--slonko)}
 .card .frog{position:absolute;right:12px;bottom:12px;width:104px;height:113px;filter:drop-shadow(0 6px 6px rgba(0,40,30,.3))}
+.card.z-reszta .ansrow{max-width:none}
+.card.z-reszta .frog{top:16px;bottom:auto}
 .hint{margin:6px 0 0;font-size:15px;color:var(--szary)}
 .pad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .pad button{height:60px;border-radius:18px;background:var(--bialy);box-shadow:inset 0 0 0 1.5px var(--linia);font-family:var(--mega);font-weight:800;font-size:24px;color:var(--staw)}
@@ -463,6 +467,20 @@ const TEMATY = [
         out.push({ klucz: (a * b) + ":" + b, pytanie: (a * b) + " : " + b, odp: String(a),
           grupa: Math.min(a, b) + "x" + Math.max(a, b),           // 56 : 7 i 56 : 8 nie w jednej rundzie
           waga: (a === 1 || b === 1 || a === 10 || b === 10) ? 0.5 : 1 }); // łatwe rzadziej
+      return out;
+    }
+  },
+  {
+    id: "reszta", nazwa: "Matematyka: dzielenie z resztą do 100", typ: "liczby", reszta: true, polecenie: "Podziel z resztą",
+    tlo: "#C45F3F", napis: "#FFF8EE",
+    zadania(){
+      const out = [];
+      for (let b = 2; b <= 10; b++) for (let q = 1; q <= 10; q++) for (let r = 1; r < b; r++) {
+        const a = b * q + r; if (a > 100) continue;
+        out.push({ klucz: a + ":" + b, pytanie: a + " : " + b, odp: q + " r. " + r,
+          grupa: b + "|" + q,                                      // 17 : 5 i 18 : 5 nie w jednej rundzie
+          waga: (q === 1 || b === 2 || b === 10) ? 0.5 : 1 });     // łatwe rzadziej
+      }
       return out;
     }
   },
@@ -1010,7 +1028,10 @@ function zadanie(){
   setTimeout(() => { if (R) R.pokazane = R.i; }, 0);
   const dots = R.lista.map((_, k) => `<i class="${k < R.i ? "done" : k === R.i ? "now" : ""}"></i>`).join("");
   const dlugie = t.typ === "tekst" && z.pytanie.length > 4;
-  const odp = t.typ === "liczby"
+  const pole = R.pole || 0;
+  const odp = t.reszta
+    ? `<button class="ans ans2${pole === 0 ? " akt" : ""}" data-act="pole" data-p="0" aria-label="Wynik" aria-pressed="${pole === 0}">${esc(R.input) || "?"}</button><span class="mega eq">r.</span><button class="ans ans2${pole === 1 ? " akt" : ""}" data-act="pole" data-p="1" aria-label="Reszta" aria-pressed="${pole === 1}">${esc(R.reszta || "") || "?"}</button>`
+    : t.typ === "liczby"
     ? `<span class="ans" aria-live="polite" aria-label="Twoja odpowiedź">${esc(R.input) || "?"}</span>`
     : `<input class="ans" id="odp-tekst" enterkeyhint="done" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Twoja odpowiedź" value="${esc(R.input)}">`;
   return `
@@ -1021,27 +1042,33 @@ function zadanie(){
   <main class="screen" style="padding-top:10px">
     <div class="dots" style="grid-template-columns:repeat(${n},minmax(0,1fr))" aria-hidden="true">${dots}</div>
     ${pytanieOWyjscie ? `<div class="confirm"><span>Przerwać rundę? Wynik się nie zapisze.</span><div><button data-act="zostan">Zostaję</button><button class="go" data-act="przerwij">Przerwij</button></div></div>` : ""}
-    <section class="card${R.pokazane !== R.i ? " pop" : ""}">
+    <section class="card${t.reszta ? " z-reszta" : ""}${R.pokazane !== R.i ? " pop" : ""}">
       <span class="mega label">${esc(t.polecenie)}</span>
       <div class="mega q${dlugie ? " long" : ""}">${esc(z.pytanie)}</div>
       <div class="ansrow">${t.typ === "liczby" ? '<span class="mega eq">=</span>' : ""}${odp}</div>
       ${frog("skup")}
     </section>
-    <p class="hint">${t.typ === "liczby" ? "Wpisz wynik i naciśnij OK." : "Wpisz słówko i naciśnij OK."} Wyniki zobaczysz na końcu rundy.</p>
+    <p class="hint">${t.reszta ? "Wpisz wynik, potem resztę (r.)." : t.typ === "liczby" ? "Wpisz wynik i naciśnij OK." : "Wpisz słówko i naciśnij OK."} Wyniki zobaczysz na końcu rundy.</p>
     ${t.typ === "liczby"
       ? `<div class="pad">${[1,2,3,4,5,6,7,8,9].map(d => `<button data-act="cyfra" data-d="${d}">${d}</button>`).join("")}
-         <button class="del" data-act="usun" aria-label="Usuń cyfrę">⌫</button><button data-act="cyfra" data-d="0">0</button><button class="ok" data-act="ok" aria-label="Zatwierdź">OK</button></div>`
+         <button class="del" data-act="usun" aria-label="Usuń cyfrę">⌫</button><button data-act="cyfra" data-d="0">0</button><button class="ok" data-act="ok" aria-label="${t.reszta && pole === 0 ? "Dalej do reszty" : "Zatwierdź"}">${t.reszta && pole === 0 ? "Dalej" : "OK"}</button></div>`
       : `<button class="btn" data-act="ok">OK</button>`}
   </main>`;
 }
 
 function zatwierdz(){
-  const z = R.lista[R.i]; const wpis = R.input.trim(); if (!wpis) return;
+  const z = R.lista[R.i];
+  if (R.temat.reszta) {
+    if ((R.pole || 0) === 0) { if (R.input) { R.pole = 1; render(); } return; }
+    if (!R.input) { R.pole = 0; render(); return; }
+    if (!R.reszta) return;
+  }
+  const wpis = R.temat.reszta ? R.input + " r. " + R.reszta : R.input.trim(); if (!wpis) return;
   const dobre = z.odp.split("/").map(norm).filter(Boolean);
   const ok = dobre.includes(norm(wpis)) || norm(wpis) === norm(z.odp);
   const teraz = Date.now();
   R.odpowiedzi.push({ klucz: z.klucz, pytanie: z.pytanie, odp: z.odp, wpis, dobrze: ok, ms: teraz - R.tZad });
-  R.tZad = teraz; R.input = ""; R.i++;
+  R.tZad = teraz; R.input = ""; R.reszta = ""; R.pole = 0; R.i++;
   if (R.i >= R.lista.length) return zakonczRunde();
   render();
 }
@@ -1378,8 +1405,9 @@ app.addEventListener("click", async e => {
   if (a === "ekran") { wybranyTemat = null; pytanieArchiwum = null; ekran = b.dataset.to; if (ekran === "kalendarz") kal = null; render(); window.scrollTo({ top: 0 }); }
   else if (a === "runda") zacznijRunde(b.dataset.t);
   else if (a === "mow") { mow(b.dataset.txt, b.dataset.lang); b.classList.remove("gra"); void b.offsetWidth; b.classList.add("gra"); }
-  else if (a === "cyfra") { if (R.input.length < 3) { R.input += b.dataset.d; render(); } }
-  else if (a === "usun") { R.input = R.input.slice(0, -1); render(); }
+  else if (a === "cyfra") wpiszCyfre(b.dataset.d);
+  else if (a === "usun") usunCyfre();
+  else if (a === "pole") { R.pole = +b.dataset.p; render(); }
   else if (a === "ok") zatwierdz();
   else if (a === "wyjdz") { pytanieOWyjscie = true; render(); }
   else if (a === "zostan") { pytanieOWyjscie = false; render(); }
@@ -1456,12 +1484,24 @@ document.addEventListener("visibilitychange", () => {
   ukryteOd = 0;
 });
 app.addEventListener("input", e => { if (e.target.id === "odp-tekst" && R) R.input = e.target.value; });
+/* Cyfry trafiają do aktywnego okienka: wynik albo (przy dzieleniu z resztą) reszta. */
+function wpiszCyfre(d){
+  if (R.temat.reszta && R.pole === 1) { if ((R.reszta || "").length < 2) R.reszta = (R.reszta || "") + d; }
+  else if (R.input.length < 3) R.input += d;
+  render();
+}
+function usunCyfre(){
+  if (R.temat.reszta && R.pole === 1) { if (R.reszta) R.reszta = R.reszta.slice(0, -1); else R.pole = 0; }
+  else R.input = R.input.slice(0, -1);
+  render();
+}
 document.addEventListener("keydown", e => {
   if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("tile")) { e.preventDefault(); e.target.click(); return; }
   if (ekran !== "zadanie" || !R) return;
   if (R.temat.typ === "liczby") {
-    if (/^[0-9]$/.test(e.key)) { if (R.input.length < 3) { R.input += e.key; render(); } }
-    else if (e.key === "Backspace") { R.input = R.input.slice(0, -1); render(); }
+    if (/^[0-9]$/.test(e.key)) wpiszCyfre(e.key);
+    else if (e.key === "Backspace") usunCyfre();
+    else if (R.temat.reszta && (e.key === "r" || e.key === "R" || e.key === "Tab" || e.key === "ArrowRight" || e.key === "ArrowLeft")) { e.preventDefault(); R.pole = e.key === "ArrowLeft" ? 0 : e.key === "ArrowRight" || e.key === "r" || e.key === "R" ? 1 : 1 - (R.pole || 0); render(); }
     else if (e.key === "Enter") { e.preventDefault(); zatwierdz(); }
   } else if (e.key === "Enter") { e.preventDefault(); zatwierdz(); }
 });

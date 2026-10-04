@@ -31,6 +31,7 @@ Na komputerze i tablecie kafelki układają się szerzej, cztery w rzędzie:
 |---|---|
 | Matematyka | Mnożenie do 100 |
 | Matematyka | Dzielenie do 100 |
+| Matematyka | Dzielenie z resztą do 100 (wynik i reszta w osobnych okienkach) |
 | Angielski | Liczby do 100 (słowami) |
 | Angielski | Rodzina |
 
@@ -43,6 +44,7 @@ Tematy są w `index.html`, na liście `TEMATY`. Nowy temat to jeden obiekt:
   id: "ang-kolory",                      // unikalny, nie zmieniać po dodaniu (po nim zapisują się wyniki)
   nazwa: "Angielski: kolory",            // "Przedmiot: temat"
   typ: "tekst",                          // "liczby" = klawiatura z cyframi, "tekst" = zwykła klawiatura
+  // reszta: true,                      // przy "liczby": dwa okienka, wynik i reszta (odp: "3 r. 2")
   polecenie: "Napisz po angielsku",
   tlo: "#80B0E8", napis: "#16324F",      // kolor kafelka i napisu
   wymowa: "en-GB",                       // opcjonalnie: głośniczki z wymową w podsumowaniu
