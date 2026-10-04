@@ -8,7 +8,7 @@ Apka do powtórek szkolnego materiału dla 4 klasy. Za każdą dobrą odpowiedź
 
 ## Co jest w środku
 
-- **Rundy po 15 zadań.** Odpowiedź wpisuje się samodzielnie. Dobrze czy źle widać dopiero w podsumowaniu, razem z czasem.
+- **Rundy po 15 zadań.** Odpowiedź wpisuje się samodzielnie na klawiaturze apki (z cyframi albo z literami), więc klawiatura telefonu nie zasłania ekranu. Dobrze czy źle widać dopiero w podsumowaniu, razem z czasem.
 - **Mądre losowanie.** Zadanie nie powtarza się w rundzie (3×7 i 7×3 liczą się jako jedno). Błędne wracają częściej, opanowane rzadziej.
 - **Żabka i muchy.** Za każdą dobrą odpowiedź żabka dostaje muchę. Muchy „trawią się” z dnia na dzień, więc bez ćwiczeń żabka chudnie i robi się śpiąca.
 - **Staw.** Każdy dzień z rundą na co najmniej 12/15 dodaje do stawu nową rzecz: lilię, domek, łódkę, tęczę…
@@ -43,7 +43,7 @@ Tematy są w `index.html`, na liście `TEMATY`. Nowy temat to jeden obiekt:
 {
   id: "ang-kolory",                      // unikalny, nie zmieniać po dodaniu (po nim zapisują się wyniki)
   nazwa: "Angielski: kolory",            // "Przedmiot: temat"
-  typ: "tekst",                          // "liczby" = klawiatura z cyframi, "tekst" = zwykła klawiatura
+  typ: "tekst",                          // "liczby" = klawiatura z cyframi, "tekst" = klawiatura z literami
   // reszta: true,                      // przy "liczby": dwa okienka, wynik i reszta (odp: "3 r. 2")
   polecenie: "Napisz po angielsku",
   tlo: "#80B0E8", napis: "#16324F",      // kolor kafelka i napisu

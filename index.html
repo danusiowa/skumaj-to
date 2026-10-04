@@ -126,13 +126,27 @@ nav.tabs button[aria-current="page"] i{background:var(--zakreslacz)}
 input.ans{font-size:22px;text-transform:none;width:100%;min-width:0;border:0;text-align:center}
 input.ans:focus,input.ans:focus-visible{outline:none;box-shadow:inset 0 0 0 3px var(--slonko)}
 .card .frog{position:absolute;right:12px;bottom:12px;width:104px;height:113px;filter:drop-shadow(0 6px 6px rgba(0,40,30,.3))}
-.card.z-reszta .ansrow{max-width:none}
-.card.z-reszta .frog{top:16px;bottom:auto}
+.card.szeroka .ansrow{max-width:none}
+.card.szeroka .frog{top:16px;bottom:auto}
 .hint{margin:6px 0 0;font-size:15px;color:var(--szary)}
 .pad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .pad button{height:60px;border-radius:18px;background:var(--bialy);box-shadow:inset 0 0 0 1.5px var(--linia);font-family:var(--mega);font-weight:800;font-size:24px;color:var(--staw)}
 .pad button.ok{background:var(--pomidor);color:var(--kartka);box-shadow:none;font-size:20px}
 .pad button.del{background:var(--kartka);font-size:22px}
+.pad,.klaw{touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.ans.txt{min-width:120px;max-width:100%;height:auto;min-height:56px;padding:8px 14px;font-size:24px;line-height:1.15;display:inline-flex;align-items:center;justify-content:flex-start;overflow-wrap:break-word;word-break:normal}
+.kursor{display:inline-block;width:3px;height:1.1em;margin-left:2px;border-radius:2px;background:var(--pomidor);flex:none}
+@media (prefers-reduced-motion:no-preference){.kursor{animation:kursor 1s steps(1) infinite}}
+@keyframes kursor{50%{opacity:0}}
+.klaw{display:flex;flex-direction:column;gap:7px}
+.kr{display:flex;gap:5px;justify-content:center}
+.klaw button{flex:1 1 0;min-width:0;max-width:46px;height:52px;padding:0;border-radius:12px;background:var(--bialy);box-shadow:inset 0 0 0 1.5px var(--linia);font-family:var(--mega);font-weight:800;font-size:21px;color:var(--staw)}
+.klaw button:active,.pad button:active{transform:translateY(1px);filter:brightness(.94)}
+.klaw button.del{flex:1.7 1 0;max-width:78px;background:var(--kartka)}
+.klaw .dol button{max-width:none;height:54px}
+.klaw .dol button:first-child{flex:1 1 0;max-width:64px}
+.klaw button.spacja{flex:4 1 0;font-size:15px;font-weight:700}
+.klaw button.ok{flex:2 1 0;background:var(--pomidor);color:var(--kartka);box-shadow:none;font-size:19px}
 .confirm{border-radius:16px;background:var(--lawenda);color:var(--fiolet-ink);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;font-weight:500}
 .confirm div{display:flex;gap:8px}
 .confirm button{padding:8px 14px;border-radius:99px;font-weight:700;background:var(--kartka)}
@@ -334,6 +348,10 @@ ul.zad li span:first-child{display:flex;align-items:center;gap:6px}
   #app[data-ekran="zadanie"] .hint{grid-column:2;margin:0;align-self:end}
   #app[data-ekran="zadanie"] .pad,#app[data-ekran="zadanie"] .screen>.btn{grid-column:2;align-self:start}
   #app[data-ekran="zadanie"] .pad button{height:72px;font-size:28px}
+  #app[data-ekran="zadanie"] .klaw{grid-column:2;align-self:start}
+  #app[data-ekran="zadanie"] .klaw button{height:58px;max-width:52px}
+  #app[data-ekran="zadanie"] .klaw .dol button{height:60px;max-width:none}
+  #app[data-ekran="zadanie"] .klaw .dol button:first-child{max-width:70px}
   .card .q{font-size:clamp(48px,6vw,72px)}
   .wejscie{padding-block:48px}
   .w-karta{padding:24px}
@@ -956,8 +974,6 @@ function render(){
   if (Zapis.potrzebneLogowanie) { app.innerHTML = logowanie(); return; }
   if (Zapis.ustawHaslo) { app.innerHTML = noweHaslo(); return; }
   app.innerHTML = ekran === "start" ? start() : ekran === "zadanie" ? zadanie() : ekran === "podsumowanie" ? podsumowanie() : ekran === "staw" ? staw() : ekran === "tematy" ? tematy() : ekran === "zapros" ? zapros() : kalendarz();
-  const inp = document.getElementById("odp-tekst");
-  if (inp) { inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }
   const chip = app.querySelector('.filtry [aria-pressed="true"]');
   if (chip) { const box = chip.parentElement; box.scrollLeft = chip.offsetLeft - (box.clientWidth - chip.offsetWidth) / 2; }
 }
@@ -1033,7 +1049,7 @@ function zadanie(){
     ? `<button class="ans ans2${pole === 0 ? " akt" : ""}" data-act="pole" data-p="0" aria-label="Wynik" aria-pressed="${pole === 0}">${esc(R.input) || "?"}</button><span class="mega eq">r.</span><button class="ans ans2${pole === 1 ? " akt" : ""}" data-act="pole" data-p="1" aria-label="Reszta" aria-pressed="${pole === 1}">${esc(R.reszta || "") || "?"}</button>`
     : t.typ === "liczby"
     ? `<span class="ans" aria-live="polite" aria-label="Twoja odpowiedź">${esc(R.input) || "?"}</span>`
-    : `<input class="ans" id="odp-tekst" enterkeyhint="done" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Twoja odpowiedź" value="${esc(R.input)}">`;
+    : `<span class="ans txt" aria-live="polite" aria-label="Twoja odpowiedź">${esc(R.input)}<i class="kursor" aria-hidden="true"></i></span>`;
   return `
   <div class="qhead">
     <span class="mega" style="font-size:14px">${R.i + 1} / ${n}</span>
@@ -1042,7 +1058,7 @@ function zadanie(){
   <main class="screen" style="padding-top:10px">
     <div class="dots" style="grid-template-columns:repeat(${n},minmax(0,1fr))" aria-hidden="true">${dots}</div>
     ${pytanieOWyjscie ? `<div class="confirm"><span>Przerwać rundę? Wynik się nie zapisze.</span><div><button data-act="zostan">Zostaję</button><button class="go" data-act="przerwij">Przerwij</button></div></div>` : ""}
-    <section class="card${t.reszta ? " z-reszta" : ""}${R.pokazane !== R.i ? " pop" : ""}">
+    <section class="card${t.reszta || t.typ === "tekst" ? " szeroka" : ""}${R.pokazane !== R.i ? " pop" : ""}">
       <span class="mega label">${esc(t.polecenie)}</span>
       <div class="mega q${dlugie ? " long" : ""}">${esc(z.pytanie)}</div>
       <div class="ansrow">${t.typ === "liczby" ? '<span class="mega eq">=</span>' : ""}${odp}</div>
@@ -1052,8 +1068,25 @@ function zadanie(){
     ${t.typ === "liczby"
       ? `<div class="pad">${[1,2,3,4,5,6,7,8,9].map(d => `<button data-act="cyfra" data-d="${d}">${d}</button>`).join("")}
          <button class="del" data-act="usun" aria-label="Usuń cyfrę">⌫</button><button data-act="cyfra" data-d="0">0</button><button class="ok" data-act="ok" aria-label="${t.reszta && pole === 0 ? "Dalej do reszty" : "Zatwierdź"}">${t.reszta && pole === 0 ? "Dalej" : "OK"}</button></div>`
-      : `<button class="btn" data-act="ok">OK</button>`}
+      : klawiatura()}
   </main>`;
+}
+
+/* Własna klawiatura z literami: telefon nie wysuwa swojej, a układ jest zawsze ten sam. */
+const RZEDY = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
+function klawiatura(){
+  const k = l => `<button data-act="litera" data-l="${l}" aria-label="${l}">${l}</button>`;
+  return `<div class="klaw" role="group" aria-label="Klawiatura">
+    <div class="kr">${[...RZEDY[0]].map(k).join("")}</div>
+    <div class="kr">${[...RZEDY[1]].map(k).join("")}</div>
+    <div class="kr">${[...RZEDY[2]].map(k).join("")}<button class="del" data-act="usun" aria-label="Usuń literę">⌫</button></div>
+    <div class="kr dol"><button data-act="litera" data-l="-" aria-label="Myślnik">-</button><button class="spacja" data-act="litera" data-l=" " aria-label="Spacja">spacja</button><button class="ok" data-act="ok" aria-label="Zatwierdź">OK</button></div>
+  </div>`;
+}
+function wpiszLitere(l){
+  if (R.input.length >= 30) return;
+  if (l === " " && (!R.input || R.input.endsWith(" "))) return;
+  R.input += l; render();
 }
 
 function zatwierdz(){
@@ -1407,6 +1440,7 @@ app.addEventListener("click", async e => {
   else if (a === "mow") { mow(b.dataset.txt, b.dataset.lang); b.classList.remove("gra"); void b.offsetWidth; b.classList.add("gra"); }
   else if (a === "cyfra") wpiszCyfre(b.dataset.d);
   else if (a === "usun") usunCyfre();
+  else if (a === "litera") wpiszLitere(b.dataset.l);
   else if (a === "pole") { R.pole = +b.dataset.p; render(); }
   else if (a === "ok") zatwierdz();
   else if (a === "wyjdz") { pytanieOWyjscie = true; render(); }
@@ -1483,7 +1517,6 @@ document.addEventListener("visibilitychange", () => {
   if (R && ukryteOd) { const d = Date.now() - ukryteOd; R.start += d; R.tZad += d; }
   ukryteOd = 0;
 });
-app.addEventListener("input", e => { if (e.target.id === "odp-tekst" && R) R.input = e.target.value; });
 /* Cyfry trafiają do aktywnego okienka: wynik albo (przy dzieleniu z resztą) reszta. */
 function wpiszCyfre(d){
   if (R.temat.reszta && R.pole === 1) { if ((R.reszta || "").length < 2) R.reszta = (R.reszta || "") + d; }
@@ -1503,7 +1536,12 @@ document.addEventListener("keydown", e => {
     else if (e.key === "Backspace") usunCyfre();
     else if (R.temat.reszta && (e.key === "r" || e.key === "R" || e.key === "Tab" || e.key === "ArrowRight" || e.key === "ArrowLeft")) { e.preventDefault(); R.pole = e.key === "ArrowLeft" ? 0 : e.key === "ArrowRight" || e.key === "r" || e.key === "R" ? 1 : 1 - (R.pole || 0); render(); }
     else if (e.key === "Enter") { e.preventDefault(); zatwierdz(); }
-  } else if (e.key === "Enter") { e.preventDefault(); zatwierdz(); }
+  } else {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (/^[a-zA-Z\- ]$/.test(e.key)) { e.preventDefault(); wpiszLitere(e.key.toLowerCase()); }
+    else if (e.key === "Backspace") { e.preventDefault(); usunCyfre(); }
+    else if (e.key === "Enter") { e.preventDefault(); zatwierdz(); }
+  }
 });
 
 render();
