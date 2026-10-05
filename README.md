@@ -62,7 +62,7 @@ Temat potrzebuje co najmniej 15 zadań, żeby runda nie miała powtórek.
 
 ## Logowanie i wyniki
 
-- Konta są **tylko na zaproszenie**. Każdy zalogowany może zaprosić nową osobę przyciskiem „Zaproś do stawu”, który tworzy jednorazowy link. Link do ustawienia nowego hasła dla istniejącego konta może utworzyć tylko administratorka. Kod jest w części adresu po `#`, więc podgląd linku w WhatsAppie go nie zużyje.
+- Konta są **tylko na zaproszenie**. Każdy zalogowany może zaprosić nową osobę przyciskiem „Zaproś” w nagłówku, który tworzy jednorazowy link. Link do ustawienia nowego hasła dla istniejącego konta może utworzyć tylko administratorka. Kod jest w części adresu po `#`, więc podgląd linku w WhatsAppie go nie zużyje.
 - Wyniki zapisują się same: od razu w telefonie, a w tle w bazie Supabase. Bez internetu czekają i wysyłają się później.
 - W bazie każdy widzi tylko swoje wyniki (RLS).
 
