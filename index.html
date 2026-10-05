@@ -596,13 +596,21 @@ function glosDla(lang){
     || g.find(v => v.lang.toLowerCase().startsWith(jezyk));
 }
 if (MOWA) { speechSynthesis.getVoices(); speechSynthesis.addEventListener?.("voiceschanged", () => speechSynthesis.getVoices()); }
+/* Tempo: zwykłe 0.85, „wolniej” 0.35. Safari na iPhonie/iPadzie spłaszcza skalę
+   (mnoży przez swoje domyślne tempo), więc różnica musi być duża, żeby było ją słychać. */
+const TEMPO_ZWYKLE = 0.85, TEMPO_WOLNE = 0.35;
 function mow(tekst, lang, tempo){
   if (!MOWA || !tekst) return;
-  speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(tekst);
-  u.lang = lang; u.rate = tempo || 0.8; u.pitch = 1.05;
-  const g = glosDla(lang); if (g) u.voice = g;
-  speechSynthesis.speak(u);
+  const powiedz = () => {
+    const u = new SpeechSynthesisUtterance(tekst);
+    u.lang = lang; u.rate = tempo || TEMPO_ZWYKLE; u.pitch = 1.05;
+    const g = glosDla(lang); if (g) u.voice = g;
+    speechSynthesis.speak(u);
+  };
+  // iPhone gubi nowe zdanie, gdy przerwie się poprzednie i od razu zacznie kolejne.
+  // Dlatego po przerwaniu chwila oddechu; gdy nic nie gra, mówimy od razu (wciąż w geście stuknięcia).
+  if (speechSynthesis.speaking || speechSynthesis.pending) { speechSynthesis.cancel(); setTimeout(powiedz, 120); }
+  else powiedz();
 }
 const ICO_GLOSNIK = `<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.2 6.5a8 8 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>`;
 const pierwszeSlowo = o => o.split("/")[0].trim();
@@ -1090,7 +1098,7 @@ function start(){
    bo iPhone i iPad pozwalają mówić stronie dopiero po geście użytkownika. */
 function czytajZadanie(){
   if (!R || !R.temat.dyktando || !MOWA) return;
-  const z = R.lista[R.i]; if (z) setTimeout(() => mow(z.odp, R.temat.wymowa), 250);
+  const z = R.lista[R.i]; if (z) mow(z.odp, R.temat.wymowa);
 }
 function zacznijRunde(tematId, zadaniaPoprawki){
   const t = tematById(tematId); if (!t) return;
@@ -1121,7 +1129,7 @@ function zadanie(){
     <section class="card${t.reszta || t.typ === "tekst" ? " szeroka" : ""}${R.pokazane !== R.i ? " pop" : ""}">
       <span class="mega label">${esc(t.dyktando && !MOWA ? "Napisz po angielsku" : t.polecenie)}</span>
       ${t.dyktando && MOWA
-        ? `<div class="dykt"><button class="dykt-gra" data-act="mow" data-txt="${esc(z.odp)}" data-lang="${t.wymowa}" aria-label="Posłuchaj słowa">${ICO_GLOSNIK}</button><span class="dykt-opis"><b>Stuknij, żeby posłuchać</b><button class="dykt-wolno" data-act="mow" data-txt="${esc(z.odp)}" data-lang="${t.wymowa}" data-tempo="0.55">🐢 wolniej</button></span></div>`
+        ? `<div class="dykt"><button class="dykt-gra" data-act="mow" data-txt="${esc(z.odp)}" data-lang="${t.wymowa}" aria-label="Posłuchaj słowa">${ICO_GLOSNIK}</button><span class="dykt-opis"><b>Stuknij, żeby posłuchać</b><button class="dykt-wolno" data-act="mow" data-txt="${esc(z.odp)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}">🐢 wolniej</button></span></div>`
         : `<div class="mega q${dlugie ? " long" : ""}">${esc(z.pytanie)}</div>`}
       <div class="ansrow">${t.typ === "liczby" ? '<span class="mega eq">=</span>' : ""}${odp}</div>
       ${frog("skup")}
