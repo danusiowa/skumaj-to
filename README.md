@@ -13,7 +13,7 @@ Apka do powtórek szkolnego materiału dla 4 klasy. Za każdą dobrą odpowiedź
 - **Żabka i muchy.** Za każdą dobrą odpowiedź żabka dostaje muchę. Muchy „trawią się” z dnia na dzień, więc bez ćwiczeń żabka chudnie i robi się śpiąca.
 - **Staw.** Każdy dzień z rundą na co najmniej 12/15 dodaje do stawu nową rzecz: lilię, domek, łódkę, tęczę…
 - **Kalendarz.** Dla każdego tematu osobno. Widać serię, rekord, a po stuknięciu dnia rundy ze wszystkimi zadaniami.
-- **Wymowa.** W angielskich słówkach z rodziny po rundzie można odsłuchać wymowę (głos wbudowany w urządzenie).
+- **Wymowa i dyktando.** W angielskich słówkach z rodziny po rundzie można odsłuchać wymowę, a w dyktandzie apka sama czyta słowa (głos wbudowany w urządzenie).
 - **Skumane.** Opanowany temat można odłożyć do archiwum i w każdej chwili przywrócić.
 - **Działa wszędzie:** na telefonie, tablecie i komputerze. Można ją dodać do ekranu głównego jak zwykłą apkę.
 
@@ -34,6 +34,7 @@ Na komputerze i tablecie kafelki układają się szerzej, cztery w rzędzie:
 | Matematyka | Dzielenie z resztą do 100 (wynik i reszta w osobnych okienkach) |
 | Angielski | Liczby do 100 (słowami) |
 | Angielski | Rodzina |
+| Angielski | Rodzina ze słuchu (dyktando: apka czyta słowo, wpisuje się, co słychać) |
 
 ### Jak dodać nowy temat
 
