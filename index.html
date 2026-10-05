@@ -95,6 +95,8 @@ svg.mucha{width:16px;height:16px;flex:none}
 .tile .mega{font-size:17px;line-height:1.25;overflow-wrap:anywhere}
 .tile .foot{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;font-size:13px;letter-spacing:.06em}
 .strip{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:var(--rzesa);color:var(--kartka);font-size:14px;flex-wrap:wrap}
+.zapr-strip{width:100%;text-align:left;background:var(--lawenda);color:var(--fiolet-ink);cursor:pointer}
+.strip.zapr-strip .mega{color:var(--pomidor)}
 .strip .mega{font-size:13px;color:var(--piwonia)}
 .btn{height:56px;border-radius:999px;background:var(--pomidor);color:var(--kartka);font-family:var(--mega);font-weight:800;font-size:16px;width:100%}
 .btn.ghost{background:transparent;color:var(--staw);box-shadow:inset 0 0 0 2px var(--staw)}
@@ -1052,6 +1054,7 @@ function start(){
     ${tiles.trim() ? `<div class="tiles">${tiles}</div>` : `<div class="strip" style="background:var(--slonko);color:var(--staw)"><span class="mega">Wszystko skumane!</span><span>Przywróć temat ze skumanych poniżej.</span></div>`}
     ${tilesArch.trim() ? `<h2 class="mega" style="margin:8px 0 0;font-size:17px">Skumane</h2><div class="tiles">${tilesArch}</div>` : ""}
     ${last ? `<div class="strip"><span class="mega">Ostatnio</span><span>${last.dobre}/${last.wszystkie} w ${czas(last.ms)} · ${esc((tematById(last.temat) || {}).nazwa || "")}</span></div>` : ""}
+    ${Zapis.jestAdminem() ? `<button class="strip zapr-strip" data-act="ekran" data-to="zapros"><span class="mega">Zaproś do stawu</span><span>Stwórz jednorazowy link, żeby ktoś założył konto ›</span></button>` : ""}
   </main>
   ${zakladki("start")}`;
 }
@@ -1349,9 +1352,9 @@ function zapros(){
       <p>${zaproszenieWynik.existing ? "To konto już istnieje. Link pozwoli ustawić nowe hasło." : "Link działa raz i wygasa po około dobie."}</p>
       <div class="tconf"><button class="tbtn go" data-act="kopiuj-link">Kopiuj link</button>${navigator.share ? '<button class="tbtn" data-act="udostepnij-link">Udostępnij</button>' : ""}</div>
     </section>` : ""}
-    <button class="btn ghost" data-act="ekran" data-to="kalendarz">Wróć</button>
+    <button class="btn ghost" data-act="ekran" data-to="start">Wróć</button>
   </main>
-  ${zakladki("kalendarz")}`;
+  ${zakladki("start")}`;
 }
 
 function staw(){
