@@ -1,15 +1,16 @@
 // Skumaj to! · Edge Function „invite-link”
 // Tworzy link z zaproszeniem do Skumaj to!, który można wysłać czymkolwiek
 // (WhatsApp, Messenger, SMS). Nie wysyła żadnego maila.
-// Zapraszać może tylko administratorka z ADMIN_EMAILS.
-// Dla adresu, który już ma konto, tworzy link do ustawienia nowego hasła.
+// Zapraszać nowe osoby może każdy zalogowany.
+// Link do ustawienia nowego hasła dla istniejącego konta tworzy tylko administratorka
+// z ADMIN_EMAILS (inaczej ktoś mógłby przejąć cudze konto).
 //
 // Wejście:    { email: "osoba@poczta.pl" }
 // Link prowadzi do samej aplikacji (#zaproszenie=…), a nie do Supabase: podglądy linków
 // w komunikatorach „otwierają” adres i zużywałyby jednorazowy kod.
 // Fragment po # nie trafia do serwera, a kod zużywa dopiero aplikacja w przeglądarce.
 //
-// Odpowiedź:  { link, existing }  albo { error }
+// Odpowiedź:  { link, existing }  albo { error }  ("exists", gdy konto już jest, a pyta nie-administratorka)
 
 import { createClient } from "npm:@supabase/supabase-js@2";
 
@@ -36,11 +37,11 @@ Deno.serve(async (req) => {
 
   const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
-  // Kto pyta? Tylko zalogowana administratorka.
+  // Kto pyta? Każdy zalogowany może zapraszać nowe osoby.
   const jwt = (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
   const { data: { user } } = await admin.auth.getUser(jwt);
   if (!user) return json(req, { error: "unauthorized" }, 401);
-  if (!ADMIN_EMAILS.includes((user.email ?? "").toLowerCase())) return json(req, { error: "forbidden" }, 403);
+  const jestAdminem = ADMIN_EMAILS.includes((user.email ?? "").toLowerCase());
 
   let email = "";
   try { email = String((await req.json()).email ?? "").trim().toLowerCase(); } catch { /* puste */ }
@@ -50,6 +51,7 @@ Deno.serve(async (req) => {
   let res = await admin.auth.admin.generateLink({ type: "invite", email, options: { redirectTo: APP_URL } });
   let existing = false;
   if (res.error && /already|registered|exists/i.test(res.error.message)) {
+    if (!jestAdminem) return json(req, { error: "exists" }, 409);
     existing = true;
     res = await admin.auth.admin.generateLink({ type: "recovery", email, options: { redirectTo: APP_URL } });
   }

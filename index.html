@@ -688,9 +688,15 @@ const Zapis = {
     this.zmiana();
   },
   jestAdminem(){ return !!this.uid && SUPABASE.ADMINI.includes((this.email || "").toLowerCase()); },
+  // Zapraszać nowe osoby może każdy zalogowany (link do nowego hasła tylko administratorka, pilnuje tego serwer).
+  mozeZapraszac(){ return !!this.uid && !!this.sb; },
   async zapros(email){
     const { data, error } = await this.sb.functions.invoke("invite-link", { body: { email } });
-    if (error) throw error;
+    if (error) {
+      let kod = "";
+      try { kod = (await error.context.json()).error || ""; } catch (e) {}
+      throw new Error(kod || "blad");
+    }
     if (!data || !data.link) throw new Error((data && data.error) || "brak linku");
     return data;
   },
@@ -1007,7 +1013,7 @@ Zapis.onChange = () => { gotowe = true; if (ekran !== "zadanie") render(); };
 setTimeout(() => { if (!gotowe) { gotowe = true; render(); } }, 4000);
 
 function naglowek(){
-  return `<div class="top"><span class="logo">${frog("luz", "")}</span><span class="mega">Skumaj to!</span>${Zapis.jestAdminem() && !pytamWyloguj ? `<button class="wyloguj zapr" data-act="ekran" data-to="zapros" aria-label="Zaproś do stawu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="3.5"/><path d="M3.5 19.5c.8-3.4 3.3-5.5 6.5-5.5 1.6 0 3 .5 4.1 1.4M18 13v6M15 16h6"/></svg><span>Zaproś</span></button>` : ""}${Zapis.uid ? `<button class="wyloguj" data-act="wyloguj" aria-label="${pytamWyloguj ? "Potwierdź wylogowanie" : "Wyloguj się"}">${pytamWyloguj ? "Na pewno? Wyloguj" : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M9 8l-4 4 4 4M5 12h11"/></svg>Wyloguj`}</button>` : ""}</div>`;
+  return `<div class="top"><span class="logo">${frog("luz", "")}</span><span class="mega">Skumaj to!</span>${Zapis.mozeZapraszac() && !pytamWyloguj ? `<button class="wyloguj zapr" data-act="ekran" data-to="zapros" aria-label="Zaproś do stawu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="3.5"/><path d="M3.5 19.5c.8-3.4 3.3-5.5 6.5-5.5 1.6 0 3 .5 4.1 1.4M18 13v6M15 16h6"/></svg><span>Zaproś</span></button>` : ""}${Zapis.uid ? `<button class="wyloguj" data-act="wyloguj" aria-label="${pytamWyloguj ? "Potwierdź wylogowanie" : "Wyloguj się"}">${pytamWyloguj ? "Na pewno? Wyloguj" : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M9 8l-4 4 4 4M5 12h11"/></svg>Wyloguj`}</button>` : ""}</div>`;
 }
 function zakladki(akt){
   return `<nav class="tabs" aria-label="Menu">
@@ -1054,7 +1060,7 @@ function start(){
     ${tiles.trim() ? `<div class="tiles">${tiles}</div>` : `<div class="strip" style="background:var(--slonko);color:var(--staw)"><span class="mega">Wszystko skumane!</span><span>Przywróć temat ze skumanych poniżej.</span></div>`}
     ${tilesArch.trim() ? `<h2 class="mega" style="margin:8px 0 0;font-size:17px">Skumane</h2><div class="tiles">${tilesArch}</div>` : ""}
     ${last ? `<div class="strip"><span class="mega">Ostatnio</span><span>${last.dobre}/${last.wszystkie} w ${czas(last.ms)} · ${esc((tematById(last.temat) || {}).nazwa || "")}</span></div>` : ""}
-    ${Zapis.jestAdminem() ? `<button class="strip zapr-strip" data-act="ekran" data-to="zapros"><span class="mega">Zaproś do stawu</span><span>Stwórz jednorazowy link, żeby ktoś założył konto ›</span></button>` : ""}
+    ${Zapis.mozeZapraszac() ? `<button class="strip zapr-strip" data-act="ekran" data-to="zapros"><span class="mega">Zaproś do stawu</span><span>Stwórz jednorazowy link, żeby ktoś założył konto ›</span></button>` : ""}
   </main>
   ${zakladki("start")}`;
 }
@@ -1453,7 +1459,7 @@ function kalendarz(){
         ${det}
       </div>` : `<p class="hint" style="margin:0;text-align:center;font-size:13px">Stuknij w dzień, żeby zobaczyć wyniki.</p>`}
     </section>
-    ${Zapis.uid ? `<p class="konto">Zalogowano jako ${esc(Zapis.email)}${Zapis.jestAdminem() ? ' · <button data-act="ekran" data-to="zapros">Zaproś do stawu</button>' : ""}</p>` : ""}
+    ${Zapis.uid ? `<p class="konto">Zalogowano jako ${esc(Zapis.email)}${Zapis.mozeZapraszac() ? ' · <button data-act="ekran" data-to="zapros">Zaproś do stawu</button>' : ""}</p>` : ""}
   </main>
   ${zakladki("kalendarz")}`;
 }
@@ -1518,7 +1524,7 @@ app.addEventListener("submit", async e => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { bladZaproszenia = "Wpisz poprawny adres e-mail."; render(); return; }
     tworzeLink = true; bladZaproszenia = ""; zaproszenieWynik = null; render();
     try { zaproszenieWynik = await Zapis.zapros(email); }
-    catch (err) { bladZaproszenia = "Nie udało się utworzyć linku. Sprawdź internet i spróbuj ponownie."; }
+    catch (err) { bladZaproszenia = err && err.message === "exists" ? "Ta osoba ma już konto w Skumaj to! Może się po prostu zalogować." : "Nie udało się utworzyć linku. Sprawdź internet i spróbuj ponownie."; }
     tworzeLink = false; render(); return;
   }
   if (e.target.id !== "logowanie") return;
