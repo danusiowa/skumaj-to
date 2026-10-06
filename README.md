@@ -2,7 +2,7 @@
 
 Apka do powtórek szkolnego materiału dla 4 klasy. Za każdą dobrą odpowiedź żabka dostaje muchę, a za każdy dobry dzień przychodzi nowa nagroda: rzecz do stawu, ubranko albo jesienna niespodzianka.
 
-Powstała na prośbę mojej córki i specjalnie dla niej: żeby powtórki z mnożenia, dzielenia i angielskiego były zabawą. Tematy dochodzą na bieżąco, gdy w szkole pojawia się coś nowego do przećwiczenia.
+Powstała na prośbę mojej córki i na jej potrzeby, żeby powtarzanie materiału szkolnego było zabawą.
 
 **Zagraj:** https://danusiowa.github.io/skumaj-to/
 
