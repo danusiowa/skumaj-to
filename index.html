@@ -540,17 +540,6 @@ ul.zad li span:first-child{display:flex;align-items:center;gap:6px}
 <div id="app"></div>
 
 <script>
-/* Numer wersji: widać go na ekranie „Tematy”, żeby sprawdzić, czy telefon ma już nowy kod. */
-const WERSJA = "2026-10-06 15:55";
-/* Gdy coś się wysypie, pokaż treść błędu na dole ekranu (pomaga szukać usterek na telefonie). */
-function pokazBlad(msg){
-  let el = document.getElementById("blad-js");
-  if (!el) { el = document.createElement("div"); el.id = "blad-js"; el.style.cssText = "position:fixed;left:8px;right:8px;bottom:8px;z-index:9999;padding:10px 12px;border-radius:12px;background:#C45F3F;color:#FFF8EE;font:600 13px/1.35 system-ui;white-space:pre-wrap"; el.onclick = () => el.remove(); document.body.appendChild(el); }
-  el.textContent = "Błąd: " + msg + "  (wersja " + WERSJA + ")";
-}
-window.addEventListener("error", e => pokazBlad((e.message || "nieznany") + (e.lineno ? " · linia " + e.lineno : "")));
-window.addEventListener("unhandledrejection", e => pokazBlad(String(e.reason && e.reason.message || e.reason)));
-
 /* =====================================================================
    ZAGADNIENIA
    Żeby dodać nowe zagadnienie, dopisz obiekt do listy TEMATY.
@@ -690,14 +679,16 @@ if (MOWA) { speechSynthesis.getVoices(); speechSynthesis.addEventListener?.("voi
 /* Tempo: zwykłe 0.85, „wolniej” 0.35. Safari na iPhonie/iPadzie spłaszcza skalę
    (mnoży przez swoje domyślne tempo), więc różnica musi być duża, żeby było ją słychać. */
 const TEMPO_ZWYKLE = 0.85, TEMPO_WOLNE = 0.35;
-function mow(tekst, lang, tempo){
+function mow(tekst, lang, tempo, tekst2){
   if (!MOWA || !tekst) return;
-  const powiedz = () => {
-    const u = new SpeechSynthesisUtterance(tekst);
+  const zdanie = t => {
+    const u = new SpeechSynthesisUtterance(t);
     u.lang = lang; u.rate = tempo || TEMPO_ZWYKLE; u.pitch = 1.05;
     const g = glosDla(lang); if (g) u.voice = g;
-    speechSynthesis.speak(u);
+    return u;
   };
+  // tekst2: druga kwestia dialogu (odpowiedź), czytana zaraz po pierwszej
+  const powiedz = () => { speechSynthesis.speak(zdanie(tekst)); if (tekst2) speechSynthesis.speak(zdanie(tekst2)); };
   // iPhone gubi nowe zdanie, gdy przerwie się poprzednie i od razu zacznie kolejne.
   // Dlatego po przerwaniu chwila oddechu; gdy nic nie gra, mówimy od razu (wciąż w geście stuknięcia).
   if (speechSynthesis.speaking || speechSynthesis.pending) { speechSynthesis.cancel(); setTimeout(powiedz, 120); }
@@ -1584,8 +1575,16 @@ function podsumowanie(){
       </div>`; }).join("")}
       ${bledy.length > 4 && !pokazWszystkieBledy ? `<button class="tbtn" style="align-self:center" data-act="wszystkie-bledy">Pokaż wszystkie (${bledy.length})</button>` : ""}
     </section>` : `<div class="strip"><span class="mega">Zero błędów</span><span>Żabka zakłada okulary. Pełen luz!</span></div>`}
-    ${t.wymowa && MOWA ? `<section class="sluchaj"><span class="mega t">Posłuchaj, jak to brzmi</span>
-      <div class="sl-lista">${[...new Map(r.zadania.map(z => [z.klucz, z])).values()].map(z => `<button class="sl${z.dobrze ? "" : " zle"}" data-act="mow" data-txt="${esc(pierwszeSlowo(z.odp))}" data-lang="${t.wymowa}"><span><small>${esc(z.pytanie)}</small><b>${esc(pierwszeSlowo(z.odp))}</b></span>${ICO_GLOSNIK}</button>`).join("")}</div>
+    ${t.wymowa && MOWA && r.zadania.some(z => z.dobrze) ? `<section class="sluchaj"><span class="mega t">Posłuchaj, jak to brzmi</span>
+      <div class="sl-lista">${[...new Map(r.zadania.filter(z => z.dobrze).map(z => [t.typ === "wybor" ? [z.pytanie.replace(/^🔊\s*/, ""), z.wpis].sort().join("|") : z.klucz, z])).values()].map(z => {
+        if (t.typ === "wybor") {
+          // dialog: najpierw pytanie, potem odpowiedź (przy „jakie to było pytanie?” odwrotnie niż w zadaniu)
+          const odwrotnie = z.klucz.startsWith("z:");
+          const pyt = odwrotnie ? z.wpis : z.pytanie.replace(/^🔊\s*/, ""), odp = odwrotnie ? z.pytanie : z.wpis;
+          return `<button class="sl" data-act="mow" data-txt="${esc(pyt)}" data-txt2="${esc(odp)}" data-lang="${t.wymowa}" aria-label="Posłuchaj: ${esc(pyt)} ${esc(odp)}"><span><small>${esc(pyt)}</small><b>${esc(odp)}</b></span>${ICO_GLOSNIK}</button>`;
+        }
+        return `<button class="sl" data-act="mow" data-txt="${esc(pierwszeSlowo(z.odp))}" data-lang="${t.wymowa}"><span><small>${esc(z.pytanie)}</small><b>${esc(pierwszeSlowo(z.odp))}</b></span>${ICO_GLOSNIK}</button>`;
+      }).join("")}</div>
     </section>` : ""}
     <div class="spacer"></div>
     ${bledy.length ? `<button class="btn" data-act="popraw">Popraw błędy</button>` : ""}
@@ -1618,7 +1617,6 @@ function tematy(){
     <p class="hint" style="margin:0">Temat, który już dobrze umiesz, odłóż do skumanych. Zniknie z ekranu ćwiczeń, ale wyniki zostaną. W każdej chwili możesz go przywrócić.</p>
     <section class="tlist"><span class="mega tl">Ćwiczę</span>${akt || '<p class="hint" style="margin:0">Wszystkie tematy są skumane.</p>'}</section>
     <section class="tlist"><span class="mega tl">Skumane</span>${arch || '<p class="hint" style="margin:0">Na razie pusto. Tu trafią opanowane tematy.</p>'}</section>
-    <p class="hint" style="margin:0;text-align:center;font-size:12px">wersja ${WERSJA}</p>
   </main>
   ${zakladki("start")}`;
 }
@@ -1856,7 +1854,7 @@ app.addEventListener("click", async e => {
     Zapis.ustawStroj(st);
   }
   else if (a === "zdejmij") Zapis.ustawStroj({});
-  else if (a === "mow") { mow(b.dataset.txt, b.dataset.lang, +b.dataset.tempo || 0); b.classList.remove("gra"); void b.offsetWidth; b.classList.add("gra"); }
+  else if (a === "mow") { mow(b.dataset.txt, b.dataset.lang, +b.dataset.tempo || 0, b.dataset.txt2); b.classList.remove("gra"); void b.offsetWidth; b.classList.add("gra"); }
   else if (a === "cyfra") wpiszCyfre(b.dataset.d);
   else if (a === "usun") usunCyfre();
   else if (a === "litera") wpiszLitere(b.dataset.l);
