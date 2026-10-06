@@ -158,8 +158,6 @@ input.ans:focus,input.ans:focus-visible{outline:none;box-shadow:inset 0 0 0 3px 
 .opcja .ti{width:22px;height:22px;flex:none;opacity:.55}
 .opcja.akt{background:var(--zakreslacz);box-shadow:inset 0 0 0 3px var(--staw)}
 .opcja.akt .ti{opacity:1}
-.powiedz{display:flex;flex-direction:column;gap:12px}
-.ocena{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .q-glosy{display:flex;gap:8px;margin-top:-4px;flex-wrap:wrap}
 .q-glos{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;background:rgba(255,248,238,.16);color:var(--kartka);font-size:13px;font-weight:700;cursor:pointer}
 .q-glos .ti{width:20px;height:20px}
@@ -642,9 +640,8 @@ const TEMATY = [
   },
   {
     // Dialogi do scenki na hiszpański (tylko teksty z zeszytu). Nic się tu nie pisze:
-    // - wybór: do pytania wybierz pasującą odpowiedź (pytanie napisane albo tylko słyszane)
-    //   albo do odpowiedzi wybierz pytanie; stuknięta opcja czyta się na głos,
-    // - powiedz: powiedz zdanie na głos, posłuchaj wzoru i sama oceń, czy umiesz.
+    // do pytania wybierz pasującą odpowiedź (pytanie napisane albo tylko słyszane)
+    // albo do odpowiedzi wybierz pytanie. Każdy tekst można odsłuchać, stuknięta opcja czyta się na głos.
     id: "hisz-dialogi", nazwa: "Hiszpański: dialogi", typ: "wybor", dlugosc: 10, wymowa: "es-ES",
     tlo: "#E8483A", napis: "#FFE36E",
     zadania(){
@@ -660,11 +657,9 @@ const TEMATY = [
       for (const d of D) for (const p of d.p) {
         out.push({ klucz: "o:" + p, pytanie: p, odp: d.o.join(" / "), polecenie: "Wybierz odpowiedź", mow: p, opcje: opcje(d, "o"), grupa: "o:" + p });
         out.push({ klucz: "s:" + p, pytanie: "🔊 " + p, odp: d.o.join(" / "), polecenie: "Posłuchaj i wybierz odpowiedź", mow: p, sluch: true, opcje: opcje(d, "o"), grupa: "o:" + p });
-        out.push({ klucz: "m:" + p, pytanie: p, odp: p, polecenie: "Powiedz na głos", mow: p, powiedz: true });
       }
       for (const d of D) for (const o of d.o) {
         out.push({ klucz: "z:" + o, pytanie: o, odp: d.p.join(" / "), polecenie: "Jakie to było pytanie?", mow: o, opcje: opcje(d, "p") });
-        out.push({ klucz: "m:" + o, pytanie: o, odp: o, polecenie: "Powiedz na głos", mow: o, powiedz: true });
       }
       return out;
     }
@@ -1383,8 +1378,7 @@ function zadanie(){
 }
 
 /* Typ "wybor" (dialogi): nic się nie pisze.
-   - zadanie z opcjami: stuknięcie opcji czyta ją na głos i zaznacza, „Dalej” zatwierdza,
-   - zadanie „powiedz”: dziecko mówi zdanie, słucha wzoru i samo ocenia, czy umie. */
+   Stuknięcie opcji czyta ją na głos i zaznacza, „Dalej” zatwierdza. */
 function zadanieWybor(){
   const t = R.temat, z = R.lista[R.i], n = R.lista.length;
   setTimeout(() => { if (R) R.pokazane = R.i; }, 0);
@@ -1393,12 +1387,7 @@ function zadanieWybor(){
   const gora = z.sluch && MOWA
     ? `<div class="dykt"><button class="dykt-gra" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" aria-label="Posłuchaj pytania">${ICO_GLOSNIK}</button><span class="dykt-opis"><b>Stuknij, żeby posłuchać pytania</b><button class="dykt-wolno" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}">🐢 wolniej</button></span></div>`
     : `<div class="mega q long wq">${esc(z.mow)}</div>${glosy(z.mow)}`;
-  const dol = z.powiedz
-    ? `<div class="powiedz">
-        <p class="hint" style="margin:0">${MOWA ? "1. Powiedz to zdanie głośno. 2. Posłuchaj, jak brzmi. 3. Oceń sama:" : "Powiedz to zdanie głośno i oceń sama:"}</p>
-        <div class="ocena"><button class="btn ghost" data-act="ocena" data-ok="0">Jeszcze ćwiczę</button><button class="btn" data-act="ocena" data-ok="1">Umiem ✓</button></div>
-      </div>`
-    : `<div class="opcje" role="radiogroup">${z.opcje.map((o, k) => `<button class="opcja${R.wybor === o ? " akt" : ""}" role="radio" aria-checked="${R.wybor === o}" data-act="wybierz" data-k="${k}"><span>${esc(o)}</span>${MOWA ? ICO_GLOSNIK : ""}</button>`).join("")}</div>
+  const dol = `<div class="opcje" role="radiogroup">${z.opcje.map((o, k) => `<button class="opcja${R.wybor === o ? " akt" : ""}" role="radio" aria-checked="${R.wybor === o}" data-act="wybierz" data-k="${k}"><span>${esc(o)}</span>${MOWA ? ICO_GLOSNIK : ""}</button>`).join("")}</div>
        <button class="btn" data-act="ok" ${R.wybor ? "" : "disabled"}>Dalej</button>`;
   return `
   <div class="qhead">
@@ -1422,7 +1411,7 @@ function wybierzOpcje(k){
 }
 function zatwierdzWybor(ok, wpis){
   const z = R.lista[R.i], teraz = Date.now();
-  R.odpowiedzi.push({ klucz: z.klucz, pytanie: z.sluch ? "🔊 " + z.mow : z.powiedz ? "🗣️ " + z.mow : z.mow, odp: z.odp, wpis, dobrze: ok, ms: teraz - R.tZad });
+  R.odpowiedzi.push({ klucz: z.klucz, pytanie: z.sluch ? "🔊 " + z.mow : z.mow, odp: z.odp, wpis, dobrze: ok, ms: teraz - R.tZad });
   R.tZad = teraz; R.wybor = null; R.i++;
   if (R.i >= R.lista.length) return zakonczRunde();
   render(); czytajZadanie();
@@ -1448,7 +1437,7 @@ function wpiszLitere(l){
 function zatwierdz(){
   const z = R.lista[R.i];
   if (R.temat.typ === "wybor") {
-    if (z.powiedz || !R.wybor) return;
+    if (!R.wybor) return;
     return zatwierdzWybor(z.odp.split("/").map(norm).includes(norm(R.wybor)), R.wybor);
   }
   if (R.temat.reszta) {
@@ -1848,7 +1837,6 @@ app.addEventListener("click", async e => {
   if (a === "ekran") { wybranyTemat = null; pytanieArchiwum = null; widokEtapu = null; ekran = b.dataset.to; if (ekran === "kalendarz") kal = null; render(); window.scrollTo({ top: 0 }); }
   else if (a === "runda") zacznijRunde(b.dataset.t);
   else if (a === "wybierz") wybierzOpcje(Number(b.dataset.k));
-  else if (a === "ocena") zatwierdzWybor(b.dataset.ok === "1", b.dataset.ok === "1" ? "umiem" : "jeszcze ćwiczę");
   else if (a === "etap") { widokEtapu = Number(b.dataset.e); render(); }
   else if (a === "ubierz") {
     const u = UBRANKA.find(x => x.id === b.dataset.u); if (!u) return;
