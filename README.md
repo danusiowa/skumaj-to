@@ -12,6 +12,7 @@ Apka do powtórek szkolnego materiału dla 4 klasy. Za każdą dobrą odpowiedź
 - **Mądre losowanie.** Zadanie nie powtarza się w rundzie (3×7 i 7×3 liczą się jako jedno). Błędne wracają częściej, opanowane rzadziej.
 - **Żabka i muchy.** Za każdą dobrą odpowiedź żabka dostaje muchę. Muchy „trawią się” z dnia na dzień, więc bez ćwiczeń żabka chudnie i robi się śpiąca.
 - **Staw.** Każdy dzień z rundą na co najmniej 12/15 dodaje do stawu nową rzecz: lilię, domek, łódkę, tęczę…
+- **Kolejne nagrody.** Gdy staw jest kompletny (14 rzeczy), pojawia się **garderoba**: każdy dobry dzień daje jedno z 15 ubranek, a strój żabki można dowolnie składać i zmieniać. Potem przychodzi **jesienny staw** (14 jesiennych rzeczy). Ukończone etapy można dalej oglądać przyciskami nad sceną. Strój zapisuje się razem z ustawieniami (w polu `archiwum` pod kluczem `_stroj`), więc baza nie potrzebuje zmian.
 - **Kalendarz.** Dla każdego tematu osobno. Widać serię, rekord, a po stuknięciu dnia rundy ze wszystkimi zadaniami.
 - **Wymowa i dyktando.** W angielskich słówkach z rodziny po rundzie można odsłuchać wymowę, a w dyktandzie apka sama czyta słowa (głos wbudowany w urządzenie).
 - **Skumane.** Opanowany temat można odłożyć do archiwum i w każdej chwili przywrócić.

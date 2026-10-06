@@ -404,6 +404,30 @@ ul.zad li span:first-child{display:flex;align-items:center;gap:6px}
 .chip{padding:6px 12px;border-radius:99px;font-size:13px;font-weight:700;background:var(--puste);color:var(--szary)}
 .chip small{font-weight:500}
 .chip.on{background:var(--zakreslacz);color:var(--staw)}
+/* Etapy nagród (staw → garderoba → jesienny staw) i garderoba */
+.u-ln{--fx:none}.u-hl{--ex:none}
+.etapy{display:flex;flex-wrap:wrap;gap:6px}
+.etapy .tbtn small{font-weight:500;margin-left:4px}
+.gard,.g-lewa,.g-prawa{display:flex;flex-direction:column;gap:12px}
+.gard .pond > svg{display:block;width:100%;height:auto}
+.g-pasek{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14px;font-weight:700;flex-wrap:wrap}
+.ubranka{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.ub{all:unset;box-sizing:border-box;cursor:pointer;min-height:84px;border-radius:14px;background:var(--bialy);box-shadow:inset 0 0 0 1.5px var(--linia);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 2px;color:var(--staw);text-align:center}
+.ub[aria-pressed="true"]{box-shadow:inset 0 0 0 3px var(--staw);background:#E9F1E2}
+.ub svg{width:52px;height:38px;overflow:visible}
+.ub > span{font-size:11px;font-weight:700;line-height:1.1;overflow-wrap:anywhere}
+.ub.zam{background:var(--puste);box-shadow:none;color:var(--szary);cursor:default}
+.ub:focus-visible{outline:3px solid var(--pomidor);outline-offset:2px}
+@media (min-width:760px){
+  #app[data-ekran="staw"] .screen.szeroki{max-width:980px}
+  .gard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:24px;align-items:start}
+  .ubranka{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .ub{min-height:96px}
+  .ub svg{width:58px;height:42px}
+  .ub > span{font-size:12px}
+}
+@media (min-width:1100px){.ubranka{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media (hover:hover){.ub:not(.zam):hover{filter:brightness(.97)}}
 .pop{animation:pop .35s ease}
 @keyframes pop{0%{transform:scale(.94)}60%{transform:scale(1.03)}100%{transform:scale(1)}}
 @media (prefers-reduced-motion:reduce){.pop{animation:none}.tile{transition:none}}
@@ -415,6 +439,25 @@ ul.zad li span:first-child{display:flex;align-items:center;gap:6px}
   <defs>
     <path id="glowa" d="M40 100C38 80 46 66 52 60C44 40 62 30 74 34C84 36 90 44 92 52C98 50 104 50 110 52C112 42 120 34 132 34C146 34 154 46 148 60C158 70 162 86 160 100C158 122 132 132 100 132C66 133 42 122 40 100Z"/>
     <path id="cialo" d="M78 130C70 142 72 160 84 166C94 170 108 170 118 166C130 160 132 142 122 130"/>
+    <!-- Garderoba: ubranka w układzie współrzędnych żabki. Kolor przez var(--fx/--ex), żeby ta sama rzecz dała plamę „zakreślacza” (u-hl) i kontur (u-ln). -->
+    <g id="ub-pompon"><path d="M58 38Q60 0 100 -2Q140 0 142 38Z" style="fill:var(--fx,#C45F3F)"/><path d="M54 36h92v11h-92z" style="fill:var(--fx,#F4D242)"/><circle cx="100" cy="-4" r="10" style="fill:var(--fx,#F4D242)"/><path d="M80 6v30M100 2v34M120 6v30" fill="none" stroke-width="2"/></g>
+    <g id="ub-slomkowy"><path d="M68 40q2-30 32-30t32 30z" style="fill:var(--fx,#F4D242)"/><path d="M30 42q70-18 140 0q-70 14-140 0z" style="fill:var(--fx,#F4D242)"/><path d="M70 32q30-6 60 0" fill="none" stroke-width="5" style="stroke:var(--ex,#C45F3F)"/></g>
+    <g id="ub-beret"><path d="M46 36q6-32 58-32q48 0 50 24q-34 16-108 8z" style="fill:var(--fx,#F29CC3)"/><path d="M104 4q2-8 8-10" fill="none"/></g>
+    <g id="ub-korona"><path d="M62 40l-6-32 20 14 24-22 24 22 20-14-6 32q-38 6-76 0z" style="fill:var(--fx,#F4D242)"/><circle cx="100" cy="30" r="5" style="fill:var(--fx,#F29CC3)"/></g>
+    <g id="ub-kucharska"><path d="M70 46V26q-20-4-14-20q8-12 22-4q8-14 22-2q14-12 22 2q14-8 22 4q6 16-14 20v20z" style="fill:var(--fx,#FFFFFF)"/><path d="M70 38h60" fill="none"/></g>
+    <g id="ub-slonce"><path d="M54 46h32q4 0 4 4v10q0 12-20 12q-20 0-20-12v-10q0-4 4-4zM114 46h32q4 0 4 4v10q0 12-20 12q-20 0-20-12v-10q0-4 4-4z" style="fill:var(--fx,#4A3F6B)"/><path d="M90 52q10-4 20 0" fill="none"/></g>
+    <g id="ub-okragle"><circle cx="70" cy="58" r="18" style="fill:var(--fx,rgba(128,176,232,.35))"/><circle cx="130" cy="58" r="18" style="fill:var(--fx,rgba(128,176,232,.35))"/><path d="M88 56q12-6 24 0" fill="none"/></g>
+    <g id="ub-szalik"><path d="M60 122Q100 144 140 122L146 134Q100 158 54 134Z" style="fill:var(--fx,#F29CC3)"/><path d="M118 140l8 34 16-4-8-32z" style="fill:var(--fx,#F29CC3)"/><path d="M122 152l14-4M125 163l14-4" fill="none" stroke-width="2"/></g>
+    <g id="ub-muszka"><path d="M100 132l-18-10v20zM100 132l18-10v20z" style="fill:var(--fx,#C45F3F)"/><circle cx="100" cy="132" r="4.5" style="fill:var(--fx,#F4D242)"/></g>
+    <g id="ub-korale"><path d="M72 128Q100 162 128 128" fill="none" stroke-width="1.8"/><circle cx="75.4" cy="131.8" r="5.2" stroke-width="2" style="fill:var(--ex,#F29CC3)"/><circle cx="83.8" cy="139.3" r="5.2" stroke-width="2" style="fill:var(--ex,#F4D242)"/><circle cx="92.2" cy="143.7" r="5.2" stroke-width="2" style="fill:var(--ex,#80B0E8)"/><circle cx="100" cy="145" r="7" stroke-width="2" style="fill:var(--ex,#C45F3F)"/><circle cx="107.8" cy="143.7" r="5.2" stroke-width="2" style="fill:var(--ex,#80B0E8)"/><circle cx="116.2" cy="139.3" r="5.2" stroke-width="2" style="fill:var(--ex,#F4D242)"/><circle cx="124.6" cy="131.8" r="5.2" stroke-width="2" style="fill:var(--ex,#F29CC3)"/></g>
+    <g id="ub-plecak"><path d="M64 122h72q10 0 10 10v30q0 8-8 8h-76q-8 0-8-8v-30q0-10 10-10z" style="fill:var(--fx,#80B0E8)"/><path d="M54 150h8M138 150h8" fill="none" stroke-width="2.5"/></g>
+    <g id="ub-plecak-szelki"><path d="M86 130q-6 16-4 30M114 130q6 16 4 30" fill="none" stroke-width="5" style="stroke:var(--ex,#C45F3F)"/><path d="M80 146h8M112 146h8" fill="none" stroke-width="2.5" style="stroke:var(--ex,#F4D242)"/></g>
+    <g id="ub-peleryna"><path d="M66 124q34 14 68 0l34 62q-68 16-136 0z" style="fill:var(--fx,#C45F3F)"/></g>
+    <g id="ub-kalosze-l"><path d="M76 154h16v20q0 6-6 6h-20q-6 0-6-5q0-5 6-6h10z" style="fill:var(--fx,#F4D242)"/></g>
+    <g id="ub-kalosze-p"><path d="M124 154h-16v20q0 6 6 6h20q6 0 6-5q0-5-6-6h-10z" style="fill:var(--fx,#F4D242)"/></g>
+    <g id="ub-trampki-l"><path d="M72 164h20v12q0 4-4 4h-24q-6 0-6-5q0-5 6-5h8z" style="fill:var(--fx,#80B0E8)"/><path d="M70 176h20" fill="none" stroke-width="2" style="stroke:var(--ex,#FFF8EE)"/></g>
+    <g id="ub-trampki-p"><path d="M128 164h-20v12q0 4 4 4h24q6 0 6-5q0-5-6-5h-8z" style="fill:var(--fx,#80B0E8)"/><path d="M110 176h20" fill="none" stroke-width="2" style="stroke:var(--ex,#FFF8EE)"/></g>
+    <g id="ub-parasolka"><path d="M172 40v120q0 8-6 8t-6-6" fill="none"/><path d="M142 44q30-40 60 0q-7.5 6-15 0q-7.5 6-15 0q-7.5 6-15 0q-7.5 6-15 0z" style="fill:var(--fx,#F29CC3)"/><circle cx="172" cy="8" r="3.5" style="fill:var(--fx,#F4D242)"/><path d="M136 156q16-2 30 4" fill="none" stroke-width="3.6"/></g>
     <g id="baza">
       <use href="#cialo" fill="#D6D35F" transform="translate(5 4)"/>
       <use href="#glowa" fill="#D6D35F" transform="translate(6 5)"/>
@@ -642,18 +685,26 @@ const ZAPROSZENIE = (() => {
 })();
 
 const Zapis = {
-  rundy: [], oczekujace: [], archiwum: {}, archDoWyslania: false, stan: "urzadzenie", onChange: null,
+  rundy: [], oczekujace: [], archiwum: {}, stroj: null, archDoWyslania: false, stan: "urzadzenie", onChange: null,
   chmura: null,               // { zapiszRunde(r), zapiszArchiwum(a) } – Claude albo Supabase
   sb: null, uid: null, email: "", potrzebneLogowanie: false, ustawHaslo: false, bladZaproszenia: "",
   KLUCZ: "skumaj-to-v1",
   wczytajLokalnie(){
     try {
       const raw = JSON.parse(localStorage.getItem(this.KLUCZ) || "null");
-      if (raw) { this.rundy = raw.rundy || []; this.oczekujace = raw.oczekujace || []; this.archiwum = raw.archiwum || {}; this.archDoWyslania = !!raw.archDoWyslania; }
+      if (raw) { this.rundy = raw.rundy || []; this.oczekujace = raw.oczekujace || []; this.archiwum = raw.archiwum || {}; this.stroj = raw.stroj || null; this.archDoWyslania = !!raw.archDoWyslania; }
     } catch (e) {}
   },
   zapiszLokalnie(){
-    try { localStorage.setItem(this.KLUCZ, JSON.stringify({ rundy: this.rundy, oczekujace: this.oczekujace, archiwum: this.archiwum, archDoWyslania: this.archDoWyslania })); } catch (e) {}
+    try { localStorage.setItem(this.KLUCZ, JSON.stringify({ rundy: this.rundy, oczekujace: this.oczekujace, archiwum: this.archiwum, stroj: this.stroj, archDoWyslania: this.archDoWyslania })); } catch (e) {}
+  },
+  // Strój żabki jedzie do chmury razem z archiwum (w tym samym polu, pod kluczem "_stroj"), więc baza nie potrzebuje nowej kolumny.
+  doChmury(){ return this.stroj ? { ...this.archiwum, _stroj: this.stroj } : { ...this.archiwum }; },
+  zChmury(a){
+    a = { ...(a || {}) };
+    if (a._stroj && typeof a._stroj === "object") this.stroj = a._stroj;
+    delete a._stroj;
+    this.archiwum = a;
   },
   scal(zSerwera){
     const ids = new Set(zSerwera.map(r => r.id));
@@ -675,7 +726,7 @@ const Zapis = {
     };
     this.stan = this.oczekujace.length ? "czeka" : "chmura";
     db.doc("ustawienia/archiwum").onSnapshot(d => {
-      if (d.exists && !this.archDoWyslania) { this.archiwum = { ...(d.data().tematy || {}) }; this.zapiszLokalnie(); this.zmiana(); }
+      if (d.exists && !this.archDoWyslania) { this.zChmury(d.data().tematy); this.zapiszLokalnie(); this.zmiana(); }
     }, () => {});
     db.collection("rundy").onSnapshot(snap => {
       this.scal(snap.docs.map(d => d.data()));
@@ -752,8 +803,8 @@ const Zapis = {
       if (error) throw error;
       this.scal(data.map(r => ({ ...r, data: new Date(r.data).toISOString() })));
       const u = await sb.from("ustawienia").select("archiwum").maybeSingle();
-      if (u.data && !this.archDoWyslania) this.archiwum = { ...(u.data.archiwum || {}) };
-      else if (!u.data && Object.keys(this.archiwum).length) this.archDoWyslania = true;
+      if (u.data && !this.archDoWyslania) this.zChmury(u.data.archiwum);
+      else if (!u.data && (Object.keys(this.archiwum).length || this.stroj)) this.archDoWyslania = true;
       this.zapiszLokalnie();
       this.stan = "chmura";
     } catch (e) {
@@ -777,12 +828,19 @@ const Zapis = {
     this.zmiana();
     this.wyslij();
   },
+  ustawStroj(stroj){
+    this.stroj = { ...stroj };
+    this.archDoWyslania = true;
+    this.zapiszLokalnie();
+    this.zmiana();
+    this.wyslij();
+  },
   async wyslij(){
     if (!this.chmura || this.wysylanie) return;
     this.wysylanie = true;
     try {
       if (this.archDoWyslania) {
-        await this.chmura.zapiszArchiwum(this.archiwum);
+        await this.chmura.zapiszArchiwum(this.doChmury());
         this.archDoWyslania = false;
         this.zapiszLokalnie();
       }
@@ -865,7 +923,10 @@ function zabaPet(lv, cls, attrs, mina){
        <path d="M90 106q10 6 20 0"/>`
     : null;
   const zzz = lv === 0 ? `<text x="150" y="34" font-family="Playpen Sans, sans-serif" font-weight="800" font-size="18" fill="#008471">z</text><text x="166" y="18" font-family="Playpen Sans, sans-serif" font-weight="800" font-size="13" fill="#008471">z</text>` : "";
-  return `<svg class="${cls || "frog"}" ${attrs || ""} viewBox="14 -2 176 202" aria-hidden="true">
+  // Strój z garderoby (nie na ekranie logowania). Ubranka na tułowiu rosną razem z najedzoną żabką.
+  const U = (cls || "").includes("w-zaba") ? { tyl: "", przod: "" } : ubranieSVG(aktualnyStroj(), T, ax, fx, fy);
+  return `<svg class="${cls || "frog"}" ${attrs || ""} viewBox="14 -2 176 202" overflow="visible" aria-hidden="true">
+    ${U.tyl}
     <g transform="translate(5 4)"><use href="#cialo" fill="#D6D35F" transform="${T}"/></g>
     <use href="#glowa" fill="#D6D35F" transform="translate(6 5)"/>
     <g fill="none" stroke="#008471" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
@@ -874,7 +935,7 @@ function zabaPet(lv, cls, attrs, mina){
       <path transform="translate(${-ax} 0)" d="M80 141q-13 6-17 17"/><path transform="translate(${ax} 0)" d="M120 141q12 5 16 15"/>
       <path transform="translate(${-fx} ${fy})" d="M84 167q-8 5-16 4M86 169q-4 7-12 10"/><path transform="translate(${fx} ${fy})" d="M116 167q8 5 16 4M114 169q4 7 12 10"/>
       ${twarzMina || twarz}
-    </g>${zzz}</svg>`;
+    </g>${U.przod}${zzz}</svg>`;
 }
 const ICO_MUCHA = '<svg class="mucha" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="8" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="currentColor" stroke-width="1.6" transform="rotate(-25 8 8)"/><ellipse cx="16" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="currentColor" stroke-width="1.6" transform="rotate(25 16 8)"/><ellipse cx="12" cy="14.5" rx="3.6" ry="5" fill="currentColor"/><circle cx="12" cy="9" r="2.6" fill="currentColor"/></svg>';
 /* STAW: za każdy dzień z ćwiczeniem w stawie pojawia się nowa rzecz.
@@ -928,6 +989,137 @@ function stawSVG(n, lv){
   </svg>`;
 }
 const ICO_STAW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="16" rx="9" ry="4"/><path d="M8 12q-2-5 0-8M12 12V5M16 12q2-5 0-8"/></svg>';
+const ICO_WIESZAK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7q0-3 2.5-3T17 6.5q0 2.5-5 5L3 18q-1 1.5 1 2h16q2-.5 1-2z"/></svg>';
+
+/* GARDEROBA: po skompletowaniu stawu każdy kolejny dobry dzień daje jedno ubranko (kolejność = kolejność odblokowania).
+   Na każde miejsce (slot) żabka nosi jedną rzecz; córka zmienia strój, kiedy chce. vb = kadr ikonki w układzie żabki. */
+const UBRANKA = [
+  { id: "pompon",    nazwa: "Czapka z pomponem", slot: "glowa", vb: "48 -18 104 70" },
+  { id: "kalosze",   nazwa: "Kalosze",           slot: "stopy", vb: "54 150 92 34" },
+  { id: "szalik",    nazwa: "Szalik",            slot: "szyja", vb: "48 116 104 64" },
+  { id: "slonce",    nazwa: "Okulary słoneczne", slot: "oczy",  vb: "46 40 108 36" },
+  { id: "slomkowy",  nazwa: "Kapelusz słomkowy", slot: "glowa", vb: "26 2 148 56" },
+  { id: "plecak",    nazwa: "Plecak",            slot: "plecy", vb: "48 118 104 56" },
+  { id: "muszka",    nazwa: "Muszka",            slot: "szyja", vb: "74 116 52 32" },
+  { id: "parasolka", nazwa: "Parasolka",         slot: "reka",  vb: "138 -8 68 64" },
+  { id: "beret",     nazwa: "Beret",             slot: "glowa", vb: "40 -10 120 56" },
+  { id: "trampki",   nazwa: "Trampki",           slot: "stopy", vb: "54 158 92 26" },
+  { id: "okragle",   nazwa: "Okrągłe okulary",   slot: "oczy",  vb: "46 34 108 48" },
+  { id: "korale",    nazwa: "Korale",            slot: "szyja", vb: "62 118 76 40" },
+  { id: "peleryna",  nazwa: "Peleryna",          slot: "plecy", vb: "30 120 140 72" },
+  { id: "kucharska", nazwa: "Czapka kucharza",   slot: "glowa", vb: "48 -14 104 66" },
+  { id: "korona",    nazwa: "Korona",            slot: "glowa", vb: "50 -6 100 54" }
+];
+const UB_LINIA = 'fill="none" stroke="#008471" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"';
+// Jeden element doodle: plama koloru przesunięta o 4 px + kontur. bezPlamy = tylko kontur (szkła, szelki).
+function ubCzesc(ref, tr, bezPlamy){
+  return `<g transform="${tr || ""}">${bezPlamy ? "" : `<use href="#ub-${ref}" class="u-hl" stroke="none" transform="translate(4 4)"/>`}<use href="#ub-${ref}" class="u-ln"/></g>`;
+}
+// Co żabka ma na sobie: tylko zebrane ubranka. Dopóki córka nic nie zmieniła, nosi wszystko, co ma (najnowsze na każde miejsce).
+function aktualnyStroj(){
+  const n = postepNagrod()[1], out = {};
+  if (!n) return out;
+  if (!Zapis.stroj) { UBRANKA.slice(0, n).forEach(u => { out[u.slot] = u.id; }); return out; }
+  for (const [slot, id] of Object.entries(Zapis.stroj)) {
+    const i = UBRANKA.findIndex(u => u.id === id && u.slot === slot);
+    if (i >= 0 && i < n) out[slot] = id;
+  }
+  return out;
+}
+function ubranieSVG(stroj, T, ax, fx, fy){
+  let tyl = "", przod = "";
+  const s = stroj || {};
+  if (s.plecy) tyl += ubCzesc(s.plecy, T);
+  if (s.glowa) tyl += ubCzesc(s.glowa, "");
+  if (s.stopy) przod += ubCzesc(s.stopy + "-l", `translate(${-fx} ${fy})`) + ubCzesc(s.stopy + "-p", `translate(${fx} ${fy})`);
+  if (s.plecy === "plecak") przod += ubCzesc("plecak-szelki", T, true);
+  if (s.szyja) przod += ubCzesc(s.szyja, T);
+  if (s.oczy) przod += ubCzesc(s.oczy, "", s.oczy === "okragle");
+  if (s.reka) przod += ubCzesc(s.reka, `translate(${ax} 0)`);
+  return { tyl: tyl ? `<g ${UB_LINIA}>${tyl}</g>` : "", przod: przod ? `<g ${UB_LINIA}>${przod}</g>` : "" };
+}
+function ikonaUbranka(u){
+  const czesci = u.slot === "stopy" ? ubCzesc(u.id + "-l", "") + ubCzesc(u.id + "-p", "")
+    : u.id === "plecak" ? ubCzesc("plecak", "") : ubCzesc(u.id, "", u.id === "okragle");
+  return `<svg viewBox="${u.vb}" aria-hidden="true"><g ${UB_LINIA}>${czesci}</g></svg>`;
+}
+
+/* JESIENNY STAW: trzeci etap, po garderobie. Te same zasady co w stawie (1 rzecz za dobry dzień, potem drobiazgi na trawie). */
+const INK_C = INK.replace('stroke-width="2.5"', 'stroke-width="2.2"'), INK_2 = INK.replace('stroke-width="2.5"', 'stroke-width="2"');
+const LISCIE_JESIENI = [[112,22,-30,"#C45F3F"],[196,16,20,"#F4D242"],[318,22,-15,"#E8A04A"],[334,98,35,"#C45F3F"],[152,120,-20,"#E8A04A"],[252,104,12,"#F4D242"],
+  [60,228,15,"#F4D242"],[98,276,-10,"#C45F3F"],[236,278,25,"#E8A04A"],[316,262,-20,"#F4D242"],[118,208,30,"#E8A04A"],[300,214,-8,"#C45F3F"]];
+const lisc = (x, y, r, c, sk) => `<g transform="translate(${x} ${y}) rotate(${r})${sk ? ` scale(${sk})` : ""}"><path d="M-11 0q11-11 22 0q-11 11-22 0z" fill="${c}"/><path d="M-11 0h22M-11 0l-5 2" fill="none" stroke-width="1.8"/></g>`;
+const JESIEN = [
+  { nazwa: "Wrzosy", z: 5, svg: `<g ${INK}>${[[14,300],[30,308],[44,298]].map(([x, y]) => `<path d="M${x} ${y + 10}V${y}" fill="none" stroke-width="2"/>${[[0,-7],[-4,-2],[4,-2],[-3,4],[3,4]].map(([dx, dy]) => `<circle cx="${x + dx}" cy="${y + dy}" r="3.4" fill="#B48BD6" stroke-width="1.6"/>`).join("")}`).join("")}</g>` },
+  { nazwa: "Liście", z: 6, svg: `<g ${INK_2}>${LISCIE_JESIENI.map(([x, y, r, c]) => lisc(x, y, r, c)).join("")}</g>` },
+  { nazwa: "Dynia", z: 5, svg: `<ellipse cx="32" cy="165" rx="26" ry="3" fill="#898E46" opacity=".55"/><g ${INK}><ellipse cx="20" cy="154" rx="10" ry="10" fill="#C45F3F"/><ellipse cx="44" cy="154" rx="10" ry="10" fill="#C45F3F"/><ellipse cx="32" cy="152" rx="14" ry="12" fill="#C45F3F"/><path d="M32 140q0-6 4-9" fill="none"/><path d="M36 136q8-4 10 2" fill="#898E46"/></g>` },
+  { nazwa: "Grzybki", z: 5, svg: `<ellipse cx="116" cy="163" rx="18" ry="3" fill="#898E46" opacity=".55"/><g ${INK}><path d="M104 160v-12h8v12z" fill="#FFF8EE"/><path d="M96 149q12-20 24 0z" fill="#C45F3F"/><path d="M122 162v-8h6v8z" fill="#FFF8EE"/><path d="M117 155q8-14 16 0z" fill="#C45F3F"/></g>` },
+  { nazwa: "Latawiec", z: 3, anim: "a-sway d2", svg: `<g ${INK}><path d="M286 44l18 22-18 28-18-28z" fill="#F4D242"/><path d="M268 66h36M286 44v50" fill="none"/><path d="M286 94q-6 14 4 22t-2 20" fill="none"/><path d="M284 108l-6 2 2 5zM291 124l6 0-3 5z" fill="#F29CC3"/></g>` },
+  { nazwa: "Drzewo", z: 2, svg: `<ellipse cx="58" cy="164" rx="22" ry="3" fill="#898E46" opacity=".55"/><g ${INK}><path d="M50 164q4-34 2-62h12q-2 28 2 62z" fill="#B9835A"/><path d="M62 112q18-6 32-4" fill="none" stroke-width="3"/><circle cx="38" cy="80" r="22" fill="#C45F3F"/><circle cx="74" cy="76" r="22" fill="#F4D242"/><circle cx="56" cy="54" r="22" fill="#E8A04A"/></g>` },
+  { nazwa: "Wiewiórka", z: 3, anim: "a-bob", svg: `<g ${INK_C}><path d="M94 104q-16-2-14-22q2-14 16-10q-6 6-2 12q4 8-2 20z" fill="#C45F3F"/><ellipse cx="102" cy="98" rx="7" ry="10" fill="#E8A04A"/><circle cx="106" cy="86" r="6.5" fill="#E8A04A"/><path d="M104 80l2-6 3 6" fill="#E8A04A"/><circle cx="109" cy="99" r="3.5" fill="#F4D242"/><circle cx="108" cy="85" r="1.6" fill="#008471" stroke="none" class="ink"/></g>` },
+  { nazwa: "Chmurka z deszczykiem", z: 1, svg: `<g ${INK} transform="translate(0 14)"><path d="M124 64q-12 0-12-10t12-10q2-14 18-12q8-10 22-2q14-2 16 12q10 2 8 12q-2 10-12 10z" fill="#E9EEF7"/><path d="M132 74l-4 9M148 76l-4 9M164 74l-4 9M178 74l-3 7" fill="none" stroke="#80B0E8"/></g>` },
+  { nazwa: "Odlatujące ptaki", z: 1, anim: "a-fly", svg: `<g ${INK_C}><path d="M200 58q5-5 10 0q5-5 10 0M224 48q4-4 8 0q4-4 8 0M232 66q4-4 8 0q4-4 8 0" fill="none"/></g>` },
+  { nazwa: "Kasztany", z: 5, svg: `<ellipse cx="237" cy="167" rx="15" ry="2.5" fill="#898E46" opacity=".55"/><g ${INK_C}><ellipse cx="230" cy="160" rx="7" ry="6" fill="#9C5B3B"/><ellipse cx="243" cy="162" rx="6" ry="5" fill="#9C5B3B"/><path d="M227 157q3-2 6 0M240 160q2-2 5 0" fill="none" stroke="#FFF8EE" stroke-width="1.5"/></g>` },
+  { nazwa: "Kosz jabłek", z: 5, svg: `<ellipse cx="268" cy="163" rx="20" ry="3" fill="#898E46" opacity=".55"/><g ${INK_C}><circle cx="258" cy="144" r="5.5" fill="#C45F3F"/><circle cx="268" cy="141" r="5.5" fill="#D6D35F"/><circle cx="278" cy="144" r="5.5" fill="#C45F3F"/><path d="M252 132q16-18 32 0" fill="none"/><path d="M250 146h36l-5 16h-26z" fill="#D9B26F"/><path d="M256 152h24" fill="none" stroke-width="1.5"/></g>` },
+  { nazwa: "Jeżyk", z: 5, svg: `<ellipse cx="326" cy="164" rx="28" ry="3" fill="#898E46" opacity=".55"/><g ${INK_C}><path d="M300 162l2-8-4-6 7-2 0-8 7 2 4-7 5 6 6-4 2 7 7 0-2 7 6 4-4 5z" fill="#9C7A54"/><path d="M334 162q0-12 8-13q8 1 12 11z" fill="#FFF8EE"/><circle cx="354" cy="159" r="2.2" fill="#008471" stroke="none" class="ink"/><circle cx="342" cy="154" r="1.6" fill="#008471" stroke="none" class="ink"/><circle cx="316" cy="138" r="5" fill="#C45F3F"/></g>` },
+  { nazwa: "Łódka z liścia", z: 6, anim: "a-rock", svg: `<g ${INK_C}><path d="M262 244q22 14 44 0q-22-8-44 0z" fill="#C45F3F"/><path d="M266 244h36" fill="none" stroke-width="1.5"/><path d="M284 242V218" fill="none"/><path d="M284 220l12 16h-12z" fill="#FFF8EE"/></g>` },
+  { nazwa: "Strach na wróble", z: 4, svg: `<ellipse cx="222" cy="143" rx="14" ry="2.5" fill="#898E46" opacity=".55"/><g ${INK_C}><path d="M222 142V84M200 98h44" fill="none" stroke-width="3"/><path d="M210 94h24l5 28h-34z" fill="#C45F3F"/><path d="M214 104h6v6h-6z" fill="#F4D242"/><path d="M200 98l-6-4M200 98l-6 4M244 98l6-4M244 98l6 4M212 122l-2 6M222 122v6M232 122l2 6" fill="none" stroke="#D9A441" stroke-width="2"/><circle cx="222" cy="82" r="10" fill="#E9CF8E"/><path d="M218 82h1M226 82h1M218 87q4 3 8 0" fill="none" stroke-width="2"/><path d="M212 74q10-18 20 0z" fill="#898E46"/><path d="M206 74h32" fill="none"/></g>` }
+];
+// Po skompletowaniu jesiennego stawu każdy dobry dzień dosypuje liść albo kasztan na trawę.
+const JESIEN_EXTRA = [[88,168,10],[140,148,-20],[200,146,25],[292,170,-10],[352,170,15],[8,170,30],[160,170,-30],[300,142,20],[250,170,0],[124,168,40],[70,142,-15],[214,170,10]];
+function jesienSVG(n, lv){
+  const odbl = JESIEN.slice(0, n).sort((a, b) => a.z - b.z);
+  const przod = odbl.map(x => x.anim ? `<g class="${x.anim}">${doodle(x.svg)}</g>` : doodle(x.svg)).join("");
+  const extra = JESIEN_EXTRA.slice(0, Math.max(0, n - JESIEN.length)).map(([x, y, r], i) => doodle(i % 3 === 2
+    ? `<g ${INK_2}><ellipse cx="${x}" cy="${y}" rx="5.5" ry="4.5" fill="#9C5B3B"/></g>`
+    : `<g ${INK_2}>${lisc(x, y, r, ["#C45F3F", "#F4D242", "#E8A04A"][i % 3], .7)}</g>`)).join("");
+  return `<svg viewBox="0 0 360 320" role="img" aria-label="Jesienny staw żabki" style="display:block;width:100%;height:auto">
+    <defs><pattern id="js-kratka" width="14" height="14" patternUnits="userSpaceOnUse"><path d="M14 0H0V14" fill="none" stroke="#F1DCC4" stroke-width="1"/></pattern></defs>
+    <rect width="360" height="320" fill="#FFF8EE"/><rect width="360" height="160" fill="url(#js-kratka)"/>
+    <path d="M0 146q90-24 180-10t180 6v178H0z" fill="#EFCB8C"/>
+    <path d="M18 236C20 196 96 172 182 174C268 176 344 196 344 238C344 282 262 306 178 306C96 306 16 280 18 236Z" fill="#FFF8EE" transform="translate(3 3)"/>
+    <path d="M18 236C20 196 96 172 182 174C268 176 344 196 344 238C344 282 262 306 178 306C96 306 16 280 18 236Z" fill="#80B0E8" transform="translate(3 3)"/>
+    <path d="M18 236C20 196 96 172 182 174C268 176 344 196 344 238C344 282 262 306 178 306C96 306 16 280 18 236Z" fill="none" ${INK}/>
+    <path d="M200 206q12-4 24 0M300 290q-12 4-24 0M160 296q10-3 20 0M60 250q8-3 16 0" fill="none" stroke="#008471" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>
+    ${przod}${extra}
+    ${doodle(`<ellipse cx="180" cy="262" rx="44" ry="12" fill="#898E46" ${INK}/>`)}
+    <g class="a-hop">${zabaPet(lv, "", 'x="132" y="150" width="96" height="112"')}</g>
+  </svg>`;
+}
+
+/* ETAPY NAGRÓD: dni z rundą ≥ 12/15 liczone po kolei. Najpierw staw (14), potem garderoba (15), potem jesienny staw (14).
+   Kolejny etap pokazuje się dopiero po skompletowaniu poprzedniego; stare komplety można dalej oglądać. */
+const ETAPY = [
+  { id: "staw", nazwa: "Staw", ile: STAW.length },
+  { id: "garderoba", nazwa: "Garderoba", ile: UBRANKA.length },
+  { id: "jesien", nazwa: "Jesienny staw", ile: JESIEN.length }
+];
+function postepNagrod(){
+  let n = dniStawu().size;
+  return ETAPY.map((e, i) => { const m = i === ETAPY.length - 1 ? n : Math.min(e.ile, n); n = Math.max(0, n - e.ile); return Math.max(0, m); });
+}
+function biezacyEtap(){
+  const p = postepNagrod();
+  const i = ETAPY.findIndex((e, k) => p[k] < e.ile);
+  return i === -1 ? ETAPY.length - 1 : i;
+}
+// Co przyniósł k-ty dobry dzień (do podsumowania rundy).
+function nagrodaDnia(k){
+  let i = k - 1;
+  for (const [e, lista] of [["staw", STAW], ["garderoba", UBRANKA], ["jesien", JESIEN]]) {
+    if (i < lista.length) {
+      const ost = i === lista.length - 1;
+      const tytul = e === "staw" ? (ost ? "Staw kompletny!" : "Nowość w stawie!")
+        : e === "garderoba" ? (ost ? "Garderoba kompletna!" : "Nowe ubranko!")
+        : (ost ? "Jesienny staw kompletny!" : "Nowość w jesiennym stawie!");
+      const dalej = !ost ? "" : e === "staw" ? " Teraz zbierasz ubranka dla żabki." : e === "garderoba" ? " Do stawu przychodzi jesień." : "";
+      return { tytul, nazwa: lista[i].nazwa + (dalej ? "." + dalej : ""), link: (e === "garderoba" && !ost) || (e === "staw" && ost) ? "zobacz garderobę ›" : "zobacz staw ›" };
+    }
+    i -= lista.length;
+  }
+  return { tytul: "Nowość w jesiennym stawie!", nazwa: i % 3 === 2 ? "Kasztan na trawie" : "Liść na trawie", link: "zobacz staw ›" };
+}
+
 const ICO_PLAY ='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5l12 7-12 7z"/></svg>';
 const ICO_CAL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>';
 
@@ -1048,7 +1240,7 @@ function naglowek(){
 function zakladki(akt){
   return `<nav class="tabs" aria-label="Menu">
     <button data-act="ekran" data-to="start" ${akt === "start" ? 'aria-current="page"' : ""}><i>${ICO_PLAY}</i>Ćwiczę</button>
-    <button data-act="ekran" data-to="staw" ${akt === "staw" ? 'aria-current="page"' : ""}><i>${ICO_STAW}</i>Staw</button>
+    <button data-act="ekran" data-to="staw" ${akt === "staw" ? 'aria-current="page"' : ""}>${biezacyEtap() === 1 ? `<i>${ICO_WIESZAK}</i>Garderoba` : `<i>${ICO_STAW}</i>Staw`}</button>
     <button data-act="ekran" data-to="kalendarz" ${akt === "kalendarz" ? 'aria-current="page"' : ""}><i>${ICO_CAL}</i>Kalendarz</button>
   </nav>`;
 }
@@ -1269,7 +1461,7 @@ function podsumowanie(){
   const bledy = r.zadania.filter(z => !z.dobrze);
   const zaliczoneDzis = Zapis.rundy.filter(x => x.dzien === r.dzien && zaliczona(x));
   const nrDnia = dniStawu().size;
-  const nowosc = zaliczona(r) && zaliczoneDzis.length === 1 && zaliczoneDzis[0].id === r.id ? (STAW[nrDnia - 1] ? STAW[nrDnia - 1].nazwa : "Kwiatek na trawie") : "";
+  const nowosc = zaliczona(r) && zaliczoneDzis.length === 1 && zaliczoneDzis[0].id === r.id ? nagrodaDnia(nrDnia) : null;
   const brak = r.rodzaj === "runda" && !zaliczoneDzis.length ? PROG_STAWU - r.dobre : 0;
   const pierwszaOdp = o => o.split("/")[0].trim();
   return `
@@ -1281,8 +1473,8 @@ function podsumowanie(){
       ${frog(zaba)}
     </section>
     <div class="strip" style="background:var(--staw)"><span class="mega" style="color:var(--zakreslacz);display:flex;align-items:center;gap:6px">${ICO_MUCHA}+${r.dobre} ${muchSlowo(r.dobre)}</span><span>${r.dobre ? "Żabka już zajada! " + STAN_ZABY[najedzenie()] : "Tym razem bez much, ale następna runda na pewno coś złapie."}</span></div>
-    ${brak > 0 ? `<div class="strip" style="background:var(--lawenda);color:var(--fiolet-ink)"><span class="mega" style="color:var(--pomidor)">Staw czeka</span><span>Do nowej rzeczy w stawie zabrakło ${brak} ${brak === 1 ? "punktu" : "punktów"}. Potrzeba ${PROG_STAWU}/15. Spróbujesz jeszcze raz?</span></div>` : ""}
-    ${nowosc ? `<button class="strip" style="background:var(--slonko);color:var(--staw);text-align:left" data-act="ekran" data-to="staw"><span class="mega" style="color:var(--pomidor)">Nowość w stawie!</span><span>${esc(nowosc)} · zobacz staw ›</span></button>` : ""}
+    ${brak > 0 ? `<div class="strip" style="background:var(--lawenda);color:var(--fiolet-ink)"><span class="mega" style="color:var(--pomidor)">${["Staw czeka", "Garderoba czeka", "Staw czeka"][biezacyEtap()]}</span><span>Do nowej nagrody zabrakło ${brak} ${brak === 1 ? "punktu" : "punktów"}. Potrzeba ${PROG_STAWU}/15. Spróbujesz jeszcze raz?</span></div>` : ""}
+    ${nowosc ? `<button class="strip" style="background:var(--slonko);color:var(--staw);text-align:left" data-act="ekran" data-to="staw"><span class="mega" style="color:var(--pomidor)">${nowosc.tytul}</span><span>${esc(nowosc.nazwa)} · ${nowosc.link}</span></button>` : ""}
     <div class="stats">
       <div class="stat" style="background:var(--lawenda);color:var(--pomidor)"><span class="mega">Czas</span><span class="v">${czas(r.ms)}</span><small style="color:var(--fiolet-ink)">${porownanie}</small></div>
       <div class="stat" style="background:var(--piwonia);color:var(--pomidor)"><span class="mega">Na zadanie</span><span class="v">${Math.round(r.ms / r.wszystkie / 1000)} s</span><small style="color:#7A2E1A">średnio</small></div>
@@ -1401,24 +1593,73 @@ function zapros(){
   ${zakladki("start")}`;
 }
 
+let widokEtapu = null; // który etap nagród oglądamy (null = bieżący)
 function staw(){
-  const n = dniStawu().size, lv = najedzenie();
-  const nast = STAW[n];
-  const info = n === 0
-    ? `Staw jest jeszcze pusty. Runda na co najmniej ${PROG_STAWU}/15 przyniesie pierwszą rzecz.`
-    : nast ? `Każdy dzień z rundą na co najmniej ${PROG_STAWU}/15 dodaje nową rzecz.`
-    : `Staw jest kompletny! Każdy kolejny dzień z wynikiem ${PROG_STAWU}/15 dosadza kwiatek na trawie (już ${Math.min(n - STAW.length, KWIATKI_EXTRA.length)}).`;
-  const chips = STAW.map((x, i) => i < n
-    ? `<span class="chip on">${esc(x.nazwa)}</span>`
-    : `<span class="chip" aria-label="Zablokowane, dzień ${i + 1}">? <small>dzień ${i + 1}</small></span>`).join("");
+  const p = postepNagrod(), cur = biezacyEtap(), lv = najedzenie();
+  const e = widokEtapu !== null && widokEtapu <= cur ? widokEtapu : cur;
+  const etapy = cur > 0 ? `<nav class="etapy" aria-label="Zebrane nagrody">${ETAPY.slice(0, cur + 1).map((x, i) => {
+    const pelny = p[i] >= x.ile;
+    return `<button class="tbtn${i === e ? " go" : ""}" data-act="etap" data-e="${i}" aria-pressed="${i === e}">${esc(x.nazwa)}<small>${pelny ? "✓" : `${p[i]}/${x.ile}`}</small></button>`;
+  }).join("")}</nav>` : "";
+  const tresc = e === 1 ? garderoba(p[1], lv) : e === 2 ? jesiennyStaw(p[2], lv) : letniStaw(p[0], lv);
   return `${naglowek()}
-  <main class="screen">
-    <h1 class="mega" style="margin:4px 0 0;font-size:20px">Staw żabki</h1>
-    <section class="pond">${stawSVG(n, lv)}</section>
-    <div class="strip" style="background:var(--staw)"><span class="mega" style="color:var(--zakreslacz)">${Math.min(n, STAW.length)}/${STAW.length}</span><span>${STAN_ZABY[lv]} ${info}</span></div>
-    <section class="chips" aria-label="Wyposażenie stawu">${chips}</section>
+  <main class="screen${e === 1 ? " szeroki" : ""}">
+    ${etapy}
+    ${tresc}
   </main>
   ${zakladki("staw")}`;
+}
+function zablokowane(lista, n){
+  return lista.map((x, i) => i < n
+    ? `<span class="chip on">${esc(x.nazwa)}</span>`
+    : `<span class="chip" aria-label="Zablokowane, dzień ${i + 1}">? <small>dzień ${i + 1}</small></span>`).join("");
+}
+function letniStaw(n, lv){
+  const info = n === 0
+    ? `Staw jest jeszcze pusty. Runda na co najmniej ${PROG_STAWU}/15 przyniesie pierwszą rzecz.`
+    : n < STAW.length ? `Każdy dzień z rundą na co najmniej ${PROG_STAWU}/15 dodaje nową rzecz.`
+    : `Staw jest kompletny! Teraz każdy dzień z rundą na ${PROG_STAWU}/15 daje nowe ubranko w garderobie.`;
+  return `<h1 class="mega" style="margin:4px 0 0;font-size:20px">Staw żabki</h1>
+    <section class="pond">${stawSVG(n, lv)}</section>
+    <div class="strip" style="background:var(--staw)"><span class="mega" style="color:var(--zakreslacz)">${n}/${STAW.length}</span><span>${STAN_ZABY[lv]} ${info}</span></div>
+    <section class="chips" aria-label="Wyposażenie stawu">${zablokowane(STAW, n)}</section>`;
+}
+function garderoba(n, lv){
+  const stroj = aktualnyStroj(), ile = Object.keys(stroj).length;
+  const info = n === 0
+    ? `Staw jest kompletny! Teraz zbierasz ubranka dla żabki. Pierwsze przyjdzie po rundzie na co najmniej ${PROG_STAWU}/15.`
+    : n < UBRANKA.length ? `Każdy dzień z rundą na co najmniej ${PROG_STAWU}/15 to nowe ubranko. Stuknij ubranko, żeby je założyć albo zdjąć.`
+    : "Komplet! Wszystkie ubranka zebrane. Strój można zmieniać, kiedy tylko się chce.";
+  const kafle = UBRANKA.map((u, i) => i < n
+    ? `<button class="ub" data-act="ubierz" data-u="${u.id}" aria-pressed="${stroj[u.slot] === u.id}">${ikonaUbranka(u)}<span>${esc(u.nazwa)}</span></button>`
+    : `<span class="ub zam" role="img" aria-label="Zablokowane, dzień ${i + 1}"><span class="mega" style="font-size:22px;line-height:1">?</span><span>dzień ${i + 1}</span></span>`).join("");
+  return `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><h1 class="mega" style="margin:4px 0 0;font-size:20px">Garderoba żabki</h1><span class="chip on">${n}/${UBRANKA.length}</span></div>
+    <div class="gard">
+      <div class="g-lewa">
+        <section class="pond"><svg viewBox="0 0 360 236" role="img" aria-label="Żabka w wybranym stroju">
+          <defs><pattern id="g-kratka" width="14" height="14" patternUnits="userSpaceOnUse"><path d="M14 0H0V14" fill="none" stroke="#E6DDF2" stroke-width="1"/></pattern></defs>
+          <rect width="360" height="236" fill="url(#g-kratka)"/>
+          <ellipse cx="183" cy="118" rx="100" ry="106" fill="#D1CAEA"/><ellipse cx="180" cy="115" rx="100" ry="106" fill="none" stroke="#008471" stroke-width="2.5"/>
+          <ellipse cx="180" cy="222" rx="56" ry="6" fill="#898E46" opacity=".45"/>
+          ${zabaPet(lv, "", 'x="92" y="20" width="176" height="202"')}
+        </svg></section>
+        <div class="g-pasek"><span>${ile ? `Ma na sobie: ${ile}` : "Żabka bez ubranek"}</span>${ile ? `<button class="tbtn" data-act="zdejmij">Zdejmij wszystko</button>` : ""}</div>
+      </div>
+      <div class="g-prawa">
+        <section class="ubranka" aria-label="Zebrane ubranka">${kafle}</section>
+        <div class="strip" style="background:var(--staw)"><span class="mega" style="color:var(--zakreslacz)">${n}/${UBRANKA.length}</span><span>${info}</span></div>
+      </div>
+    </div>`;
+}
+function jesiennyStaw(n, lv){
+  const info = n === 0
+    ? `Garderoba jest kompletna! Teraz do stawu przychodzi jesień. Runda na co najmniej ${PROG_STAWU}/15 przyniesie pierwszą jesienną rzecz.`
+    : n < JESIEN.length ? `Jesień przyszła do stawu! Każdy dzień z rundą na co najmniej ${PROG_STAWU}/15 dodaje nową jesienną rzecz.`
+    : `Jesienny staw jest kompletny! Każdy kolejny dzień z wynikiem ${PROG_STAWU}/15 dosypuje liść albo kasztan na trawę (już ${Math.min(n - JESIEN.length, JESIEN_EXTRA.length)}).`;
+  return `<h1 class="mega" style="margin:4px 0 0;font-size:20px">Jesienny staw</h1>
+    <section class="pond">${jesienSVG(n, lv)}</section>
+    <div class="strip" style="background:var(--staw)"><span class="mega" style="color:var(--zakreslacz)">${Math.min(n, JESIEN.length)}/${JESIEN.length}</span><span>${STAN_ZABY[lv]} ${info}</span></div>
+    <section class="chips" aria-label="Jesienne rzeczy">${zablokowane(JESIEN, n)}</section>`;
 }
 
 function kalendarz(){
@@ -1506,8 +1747,16 @@ function kalendarz(){
 app.addEventListener("click", async e => {
   const b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
   const a = b.dataset.act;
-  if (a === "ekran") { wybranyTemat = null; pytanieArchiwum = null; ekran = b.dataset.to; if (ekran === "kalendarz") kal = null; render(); window.scrollTo({ top: 0 }); }
+  if (a === "ekran") { wybranyTemat = null; pytanieArchiwum = null; widokEtapu = null; ekran = b.dataset.to; if (ekran === "kalendarz") kal = null; render(); window.scrollTo({ top: 0 }); }
   else if (a === "runda") zacznijRunde(b.dataset.t);
+  else if (a === "etap") { widokEtapu = Number(b.dataset.e); render(); }
+  else if (a === "ubierz") {
+    const u = UBRANKA.find(x => x.id === b.dataset.u); if (!u) return;
+    const st = { ...aktualnyStroj() };
+    if (st[u.slot] === u.id) delete st[u.slot]; else st[u.slot] = u.id;
+    Zapis.ustawStroj(st);
+  }
+  else if (a === "zdejmij") Zapis.ustawStroj({});
   else if (a === "mow") { mow(b.dataset.txt, b.dataset.lang, +b.dataset.tempo || 0); b.classList.remove("gra"); void b.offsetWidth; b.classList.add("gra"); }
   else if (a === "cyfra") wpiszCyfre(b.dataset.d);
   else if (a === "usun") usunCyfre();
