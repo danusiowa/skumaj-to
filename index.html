@@ -1048,7 +1048,9 @@ function naGlowie(rodzaj, kapelusz){
   const y = kapelusz ? (SZCZYT_KAPELUSZA[kapelusz] ?? 0) : 46;
   if (rodzaj === "snieg") {
     if (kapelusz) return `<g transform="translate(100 ${y + 14})"><g class="nag-snieg"><path d="M-26 4q2-10 26-10q24 0 26 10q-13-4-26-3q-13-1-26 3z" fill="#fff" stroke="#B8AEDB" stroke-width="1.5" stroke-linejoin="round"/></g></g>`;
-    return `<g class="nag-snieg"><path d="M58 50C52 38 62 30 74 32C84 34 90 42 91 50C84 45 78 44 72 45C66 46 61 48 58 50Z M110 50C113 40 122 33 134 34C146 35 151 44 147 54C141 47 134 44 127 45C120 46 114 48 110 50Z" fill="#fff" stroke="#B8AEDB" stroke-width="1.5" stroke-linejoin="round"/></g>`;
+    // Dwie czapki śniegu na czubkach głowy (nad oczami, na obrysie), żeby nie zasłaniały oczu.
+    const kopka = cx => `<path d="M${cx - 15} 37q1-13 15-13q14 0 15 13q-6-3-10-2q-3-3-6 0q-4-2-7 0q-4-1-7 2z" fill="#fff" stroke="#B8AEDB" stroke-width="1.5" stroke-linejoin="round"/>`;
+    return `<g class="nag-snieg">${kopka(73)}${kopka(131)}</g>`;
   }
   const lisc = rodzaj === "momiji"
     ? `<path d="M0 -11L3 -4L10 -6L6 1L11 5L4 5L5 11L0 6L-5 11L-4 5L-11 5L-6 1L-10 -6L-3 -4Z" fill="#D9472B" stroke="#008471" stroke-width="1.6" stroke-linejoin="round"/><path d="M0 6V13" stroke="#008471" stroke-width="1.6" stroke-linecap="round"/>`
