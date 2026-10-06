@@ -47,6 +47,24 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .hero h1{margin:0;max-width:60%;font-size:23px;line-height:1.15;text-wrap:balance}
 .hero .frog{position:absolute;right:10px;bottom:16px;width:120px;height:157px;z-index:1}
 .hero{--mx:73px;--my:84px}
+/* Akcenty sezonowe: tło karty, rzeczy obok żabki, konfetti. Tekst zostaje nad tłem. */
+.hero > h1,.hero > .stan,.hero > .pills,.hero > .podpis{position:relative;z-index:2}
+.hero .podpis{margin:-10px 0 0;font-size:14px;font-weight:700;color:var(--pomidor);max-width:60%}
+.h-tlo{position:absolute;inset:0;border-radius:inherit;overflow:hidden;z-index:0;pointer-events:none}
+.h-fuji{position:absolute;right:58px;bottom:0;width:150px;height:63px}
+.spad{display:none;position:absolute;top:-30px;width:calc(18px * var(--k))}
+.spad i{display:block}
+.spad svg{display:block;width:100%;height:auto}
+.spad.snieg b{display:block;width:calc(9px * var(--k));height:calc(9px * var(--k));border-radius:50%;background:#fff;box-shadow:0 0 0 1.5px #B8AEDB}
+.h-zuraw{position:absolute;top:12px;right:10px;width:36px}
+.h-zuraw svg{display:block;width:100%;height:auto}
+.h-konf{position:absolute;right:var(--mx);bottom:calc(var(--my) + 34px);width:0;height:0;z-index:3;pointer-events:none}
+.h-konf i{position:absolute;width:6px;height:10px;border-radius:2px;opacity:0}
+.h-rzecz{position:absolute;z-index:2;pointer-events:none;display:block}
+.h-rzecz svg{display:block;width:100%;height:auto}
+.h-rzecz.l{right:94px;bottom:14px;width:40px}
+.h-rzecz.l.choinka{width:44px;bottom:12px;z-index:0}
+.h-rzecz.p{right:4px;bottom:12px;width:30px}
 .h-mucha,.h-jezyk,.h-usta,.h-czubek{display:none}
 @media (prefers-reduced-motion:no-preference){
   .h-mucha{display:block;position:absolute;right:calc(var(--mx) - 9px);bottom:calc(var(--my) - 9px);width:18px;height:18px;z-index:3;opacity:0;animation:muchaLot 12s linear infinite}
@@ -245,7 +263,34 @@ ul.zad li span:first-child{display:flex;align-items:center;gap:6px}
 .hero .frog{animation:heroZaba 6s ease-in-out infinite;transform-origin:50% 100%}
 .hero .cien{animation:cienZaby 6s ease-in-out infinite}
 .hero .kotylion .k-wst{transform-box:fill-box;transform-origin:50% 0;animation:kWstazki 6s ease-in-out infinite}
+.spad{display:block;animation:spad 10s linear infinite}
+.spad i{animation:sway 2.6s ease-in-out infinite alternate}
+.h-zuraw{animation:zuraw 14s ease-in-out infinite}
+.zw-skrz{transform-box:fill-box;transform-origin:100% 100%;animation:zwSkrz .45s ease-in-out infinite alternate}
+.h-konf i{animation:konf 6s ease-out infinite}
+.h-rzecz{transform-origin:50% 100%;animation:rzeczHop 6s ease-in-out infinite}
+.dy-swiatlo{animation:migot 1.6s ease-in-out infinite alternate}
+.lampka{animation:lampka 1.2s steps(1) infinite}.lampka.l1{animation-delay:-.4s}.lampka.l2{animation-delay:-.8s}
+.gwiazda{transform-box:fill-box;transform-origin:50% 50%;animation:gwiazda 6s ease-in-out infinite}
+.hero .nag-lisc{animation:nagLisc 6s linear infinite}
+.hero .nag-snieg{transform-box:fill-box;transform-origin:50% 100%;animation:nagSnieg 6s ease-in-out infinite}
+.hero .cz-pompon{transform-box:fill-box;transform-origin:50% 0;animation:pompon 6s ease-in-out infinite}
+.hero .ame{transform-box:fill-box;transform-origin:20% 100%;animation:ame 6s ease-in-out infinite}
 }
+/* Rytm skoku żabki: 76% wybicie, 84% lądowanie. */
+@keyframes spad{from{transform:translateY(0) rotate(0)}to{transform:translateY(360px) rotate(320deg)}}
+@keyframes sway{from{transform:translateX(-10px)}to{transform:translateX(10px)}}
+@keyframes zuraw{0%{transform:translate(0,0) scaleX(-1)}45%{transform:translate(-56px,26px) scaleX(-1)}50%{transform:translate(-56px,26px) scaleX(1)}95%{transform:translate(0,0) scaleX(1)}100%{transform:translate(0,0) scaleX(-1)}}
+@keyframes zwSkrz{to{transform:scaleY(-.5)}}
+@keyframes konf{0%,74%{opacity:0;transform:translate(0,0) rotate(0)}77%{opacity:1;transform:translate(0,0)}86%{opacity:1;transform:translate(var(--dx),var(--dy)) rotate(var(--r))}98%{opacity:0;transform:translate(calc(var(--dx) * 1.3),calc(var(--dy) + 70px)) rotate(calc(var(--r) * 2))}100%{opacity:0}}
+@keyframes rzeczHop{0%,82%,100%{transform:none}86%{transform:translateY(-4px) scaleY(1.04)}90%{transform:scaleY(.96)}94%{transform:none}}
+@keyframes migot{from{opacity:.5}to{opacity:1}}
+@keyframes lampka{50%{opacity:.3}}
+@keyframes gwiazda{0%,74%,100%{transform:none}80%{transform:scale(1.45) rotate(25deg)}88%{transform:none}}
+@keyframes nagLisc{0%,18%{transform:translate(-34px,-96px) rotate(-40deg);opacity:0}24%{opacity:1}36%{transform:translate(12px,-64px) rotate(25deg)}48%{transform:translate(-16px,-30px) rotate(-25deg)}60%,74%{transform:translate(0,0) rotate(-12deg);opacity:1}80%{transform:translate(26px,-40px) rotate(130deg);opacity:1}92%{transform:translate(52px,16px) rotate(230deg);opacity:0}100%{opacity:0;transform:translate(52px,16px)}}
+@keyframes nagSnieg{0%{transform:scaleY(0);opacity:0}8%{opacity:1}70%,74%{transform:scaleY(1);opacity:1}80%{transform:translateY(-16px) scale(1.25,.6);opacity:0}100%{transform:scaleY(0);opacity:0}}
+@keyframes pompon{0%,72%,100%{transform:none}78%{transform:translateY(5px)}84%{transform:translateY(-7px)}90%{transform:translateY(3px)}95%{transform:none}}
+@keyframes ame{0%,72%,100%{transform:none}78%{transform:rotate(-10deg)}84%{transform:rotate(12deg)}90%{transform:rotate(-5deg)}95%{transform:none}}
 @keyframes cienZaby{0%,100%{transform:none;opacity:1}20%{transform:scaleX(1.06)}40%{transform:translateX(-3px)}55%{transform:translateX(3px)}68%{transform:scaleX(1.1)}76%{transform:scale(.55);opacity:.45}84%{transform:scaleX(1.12);opacity:1}90%{transform:scale(.8);opacity:.75}95%{transform:none;opacity:1}}
 /* Kotylion: wstążki podrywają się przy skoku (76%) i kołyszą po lądowaniu, w rytmie heroZaba. */
 @keyframes kWstazki{0%,70%,100%{transform:none}76%{transform:scaleY(.6) rotate(-14deg)}82%{transform:scaleY(1.15) rotate(14deg)}88%{transform:rotate(-9deg)}93%{transform:rotate(5deg)}97%{transform:none}}
@@ -382,6 +427,10 @@ ul.zad li span:first-child{display:flex;align-items:center;gap:6px}
   .hero .frog{width:150px;height:174px;right:32px}
   .hero{--mx:108px;--my:100px}
   .hero .cien{right:62px;width:96px}
+  .h-rzecz.l{right:148px;bottom:18px;width:50px}
+  .h-rzecz.l.choinka{width:56px;bottom:16px}
+  .h-rzecz.p{right:20px;bottom:16px;width:38px}
+  .h-fuji{right:120px;width:230px;height:96px}
   #app[data-ekran="kalendarz"] .screen,
   #app[data-ekran="staw"] .screen,
   #app[data-ekran="podsumowanie"] .screen,
@@ -936,14 +985,118 @@ const STAN_ZABY = [
   "Żabka jest najedzona i zadowolona!",
   "Żabka jest pełniutka i przeszczęśliwa!"
 ];
-/* AKCENT LISTOPADOWY: kotylion biało-czerwony na Święto Niepodległości, przypięty do brzuszka.
-   Pokazuje się przez cały listopad tylko na ekranie głównym. Jest częścią rysunku żabki, więc oddycha
-   i skacze razem z nią, a wstążki podfruwają przy każdym skoku (ten sam rytm 6 s co skok).
-   Podgląd w innym miesiącu: dopisz do adresu ?podglad=listopad */
-function jestListopad(){
-  try { if (new URLSearchParams(location.search).get("podglad") === "listopad") return true; } catch (e) {}
-  return new Date().getMonth() === 10;
+/* AKCENTY SEZONOWE (październik–grudzień) na ekranie głównym. Data wybiera akcent, a akcent dokłada:
+   - rzeczy w rysunku żabki (skaczą razem z nią): kotylion, czapka sezonowa, cukierek, liść/śnieg lądujący na głowie,
+   - tło karty (spadające liście, Fuji, żuraw, śnieg, konfetti),
+   - rzeczy obok żabki (dynia, walizka, choinka, prezent), które podskakują, gdy żabka ląduje.
+   Wszystko chodzi w rytmie skoku żabki (6 s, skok w 76%). Przy „ogranicz ruch” zostają tylko nieruchome rzeczy.
+   Podgląd innego dnia: ?podglad=2026-12-06 (albo ?podglad=listopad). */
+function dataAkcentu(){
+  try {
+    const q = new URLSearchParams(location.search).get("podglad");
+    if (q === "listopad") return new Date(2026, 10, 20, 12);
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(q || "");
+    if (m) return new Date(+m[1], +m[2] - 1, +m[3], 12);
+  } catch (e) {}
+  return new Date();
 }
+const JAPONIA = [ // 4–15 listopada 2026: powitanie dnia + tłumaczenie
+  ["Konnichiwa!", "po japońsku: dzień dobry"], ["Ohayō!", "po japońsku: dzień dobry o poranku"], ["Arigatō!", "po japońsku: dziękuję"],
+  ["Kaeru!", "po japońsku: żaba (i wracać do domu)"], ["Oishii!", "po japońsku: pyszne"], ["Sugoi!", "po japońsku: super"],
+  ["Ganbatte!", "po japońsku: dasz radę"], ["Omedetō!", "po japońsku: gratulacje (dziś 11 listopada!)"], ["Kawaii!", "po japońsku: słodkie"],
+  ["Tanoshii!", "po japońsku: fajnie"], ["Itadakimasu!", "po japońsku: smacznego"], ["Shichi-Go-San!", "japońskie święto dzieci"]
+];
+function akcent(){
+  const d = dataAkcentu(), y = d.getFullYear(), m = d.getMonth(), dd = d.getDate();
+  const A = { tlo: [], nag: null, glowa: null, kotylion: false, ame: false, l: null, p: null, h1: null, podpis: null };
+  if (m === 9) { A.tlo = ["liscie"]; A.nag = "lisc"; if (dd >= 25) A.l = "dynia"; }
+  else if (m === 10) {
+    const japonia = y === 2026 && dd >= 4 && dd <= 15;
+    if (japonia) {
+      A.tlo = ["fuji", "momiji", "zuraw"]; A.nag = "momiji";
+      [A.h1, A.podpis] = JAPONIA[dd - 4];
+      A.kotylion = dd === 11; A.ame = dd === 15;
+    } else if (y === 2026 && dd === 3) { A.l = "walizka"; A.podpis = "Jutro lecimy do Japonii!"; }
+    else if (dd >= 3) A.kotylion = true;
+  }
+  else if (m === 11) {
+    A.tlo = ["snieg"];
+    if (dd <= 5) A.nag = "snieg";
+    else if (dd === 6) { A.glowa = "mikolaj"; A.p = "prezent"; A.podpis = "Wesołych Mikołajek!"; }
+    else if (dd <= 23) { A.l = "choinka"; A.nag = "snieg"; }
+    else if (dd <= 26) { A.l = "choinka swieta"; A.p = "prezent"; A.glowa = "mikolaj"; A.podpis = "Wesołych Świąt!"; }
+    else { A.tlo = ["konfetti"]; A.glowa = "party"; A.podpis = dd === 31 ? "Do zobaczenia w nowym roku!" : null; }
+  }
+  else return null;
+  return A;
+}
+// Szczyt głowy (albo kapelusza z garderoby), na który spada liść albo śnieg.
+const SZCZYT_KAPELUSZA = { pompon: -14, slomkowy: 6, beret: -6, kucharska: -10, korona: -2 };
+function naGlowie(rodzaj, kapelusz){
+  const y = kapelusz ? (SZCZYT_KAPELUSZA[kapelusz] ?? 0) : 46;
+  if (rodzaj === "snieg") {
+    if (kapelusz) return `<g transform="translate(100 ${y + 14})"><g class="nag-snieg"><path d="M-26 4q2-10 26-10q24 0 26 10q-13-4-26-3q-13-1-26 3z" fill="#fff" stroke="#B8AEDB" stroke-width="1.5" stroke-linejoin="round"/></g></g>`;
+    return `<g class="nag-snieg"><path d="M58 50C52 38 62 30 74 32C84 34 90 42 91 50C84 45 78 44 72 45C66 46 61 48 58 50Z M110 50C113 40 122 33 134 34C146 35 151 44 147 54C141 47 134 44 127 45C120 46 114 48 110 50Z" fill="#fff" stroke="#B8AEDB" stroke-width="1.5" stroke-linejoin="round"/></g>`;
+  }
+  const lisc = rodzaj === "momiji"
+    ? `<path d="M0 -11L3 -4L10 -6L6 1L11 5L4 5L5 11L0 6L-5 11L-4 5L-11 5L-6 1L-10 -6L-3 -4Z" fill="#D9472B" stroke="#008471" stroke-width="1.6" stroke-linejoin="round"/><path d="M0 6V13" stroke="#008471" stroke-width="1.6" stroke-linecap="round"/>`
+    : `<path d="M-11 0q11-11 22 0q-11 11-22 0z" fill="#E8A04A" stroke="#008471" stroke-width="1.8"/><path d="M-11 0h22M-11 0l-5 2" fill="none" stroke="#008471" stroke-width="1.6" stroke-linecap="round"/>`;
+  return `<g transform="translate(${kapelusz ? 100 : 98} ${y - 6})"><g class="nag-lisc">${lisc}</g></g>`;
+}
+function czapkaSezonowa(rodzaj){
+  const L = 'stroke="#008471" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"';
+  if (rodzaj === "mikolaj") return `<g class="cz-sez" transform="translate(0 -15)">
+    <path d="M60 42C66 8 112 -10 150 2C164 7 172 16 170 26C162 17 152 13 142 15C149 24 150 34 146 42Z" fill="#C8102E" ${L}/>
+    <g class="cz-pompon"><circle cx="171" cy="28" r="9" fill="#fff" ${L}/></g>
+    <rect x="50" y="36" width="102" height="16" rx="8" fill="#fff" ${L}/></g>`;
+  return `<g class="cz-sez" transform="translate(0 -8) rotate(-10 100 44)">
+    <path d="M76 46L100 -16L124 46Z" fill="#80B0E8" ${L}/>
+    <path d="M86 20L110 26M80 34L118 40M93 4L106 8" fill="none" stroke="#F4D242" stroke-width="4" stroke-linecap="round"/>
+    <path d="M76 46L100 -16L124 46Z" fill="none" ${L}/>
+    <g class="cz-pompon"><circle cx="100" cy="-18" r="7" fill="#F29CC3" ${L}/></g>
+    <path d="M74 46Q100 54 126 46" fill="none" ${L}/></g>`;
+}
+function cukierekAme(ax){
+  return `<g transform="translate(${ax} 0)"><g class="ame">
+    <path d="M134 160L154 92" stroke="#008471" stroke-width="10" stroke-linecap="round"/>
+    <path d="M134 160L154 92" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+    <path d="M134 160L154 92" stroke="#C8102E" stroke-width="6" stroke-dasharray="5 6"/>
+    <path d="M126 150h18l-2 18h-14z" fill="#F29CC3" stroke="#008471" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M131 157l4 4l4-4" fill="none" stroke="#F4D242" stroke-width="2" stroke-linecap="round"/>
+  </g></g>`;
+}
+// Tło karty i rzeczy obok żabki.
+const SPAD = { // [left %, opóźnienie s, czas s, skala]
+  liscie: [[8,0,9,1],[34,-3,11,.8],[58,-6,10,1.1],[78,-1.5,12,.9],[92,-8,9.5,.8]],
+  momiji: [[12,-2,10,1],[40,-6,12,.85],[62,0,9.5,1.1],[84,-4,11,.9],[96,-8,10.5,.8]],
+  snieg:  [[6,0,8,1],[20,-3,10,.7],[33,-6,9,.9],[47,-1,11,.6],[60,-4,8.5,1],[72,-7,10,.8],[86,-2,9,.7],[95,-5,11,.9]]
+};
+const KONFETTI = [[-40,-70,"#F29CC3"],[-22,-90,"#F4D242"],[0,-100,"#80B0E8"],[22,-88,"#D6D35F"],[42,-66,"#C45F3F"],[-56,-40,"#80B0E8"],[56,-38,"#F29CC3"],[-30,-50,"#D6D35F"],[30,-52,"#F4D242"],[-10,-76,"#C45F3F"],[12,-64,"#F29CC3"]];
+function tloHero(A){
+  if (!A) return "";
+  let h = "";
+  const lisc = '<svg viewBox="-14 -12 28 24"><path d="M-11 0q11-11 22 0q-11 11-22 0z" fill="#E8A04A" stroke="#008471" stroke-width="1.8"/><path d="M-11 0h22" fill="none" stroke="#008471" stroke-width="1.5"/></svg>';
+  const lisc2 = lisc.replace("#E8A04A", "#C45F3F");
+  const momiji = '<svg viewBox="-14 -14 28 30"><path d="M0 -11L3 -4L10 -6L6 1L11 5L4 5L5 11L0 6L-5 11L-4 5L-11 5L-6 1L-10 -6L-3 -4Z" fill="#D9472B" stroke="#008471" stroke-width="1.6" stroke-linejoin="round"/><path d="M0 6V13" stroke="#008471" stroke-width="1.6" stroke-linecap="round"/></svg>';
+  const spad = (typ, svg) => SPAD[typ].map(([x, del, t, k], i) => `<span class="spad ${typ}" style="left:${x}%;animation-duration:${t}s;animation-delay:${del}s;--k:${k}"><i>${typeof svg === "function" ? svg(i) : svg}</i></span>`).join("");
+  if (A.tlo.includes("fuji")) h += `<svg class="h-fuji" viewBox="0 0 230 96" aria-hidden="true"><circle cx="58" cy="30" r="14" fill="#D9472B" opacity=".75"/><path d="M0 96L84 26Q114 4 144 26L230 96Z" fill="#C3B9E4" stroke="#008471" stroke-width="2.5" stroke-linejoin="round" stroke-opacity=".6"/><path d="M84 26Q114 4 144 26L132 36L122 29L114 38L105 29L96 36Z" fill="#fff" stroke="#008471" stroke-width="2.2" stroke-linejoin="round"/></svg>`;
+  if (A.tlo.includes("liscie")) h += spad("liscie", i => i % 2 ? lisc2 : lisc);
+  if (A.tlo.includes("momiji")) h += spad("momiji", momiji);
+  if (A.tlo.includes("snieg")) h += spad("snieg", '<b></b>');
+  if (A.tlo.includes("zuraw")) h += `<span class="h-zuraw"><svg viewBox="0 0 44 30"><g class="zw-skrz"><path d="M22 16L8 2L26 12Z" fill="#fff" stroke="#008471" stroke-width="1.8" stroke-linejoin="round"/></g><path d="M4 18L22 16L40 8L34 18L22 24Z" fill="#F29CC3" stroke="#008471" stroke-width="1.8" stroke-linejoin="round"/><path d="M40 8L44 10" stroke="#008471" stroke-width="1.8" stroke-linecap="round"/></svg></span>`;
+  let o = h ? `<div class="h-tlo" aria-hidden="true">${h}</div>` : "";
+  if (A.tlo.includes("konfetti")) o += `<div class="h-konf" aria-hidden="true">${KONFETTI.map(([dx, dy, c], i) => `<i style="--dx:${dx}px;--dy:${dy}px;--r:${i * 47}deg;background:${c}"></i>`).join("")}</div>`;
+  if (A.l) o += `<span class="h-rzecz l ${A.l}" aria-hidden="true">${RZECZY_OBOK[A.l.split(" ")[0]](A.l.includes("swieta"))}</span>`;
+  if (A.p) o += `<span class="h-rzecz p ${A.p}" aria-hidden="true">${RZECZY_OBOK[A.p]()}</span>`;
+  return o;
+}
+const RZ_L = 'stroke="#008471" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"';
+const RZECZY_OBOK = {
+  dynia: () => `<svg viewBox="0 0 48 44"><path d="M24 8q2-6 7-7" fill="none" ${RZ_L}/><ellipse cx="14" cy="26" rx="11" ry="15" fill="#E8A04A" ${RZ_L}/><ellipse cx="34" cy="26" rx="11" ry="15" fill="#E8A04A" ${RZ_L}/><ellipse cx="24" cy="26" rx="11" ry="16" fill="#F0B35C" ${RZ_L}/><g class="dy-swiatlo"><path d="M14 22l4-5l4 5zM26 22l4-5l4 5zM15 31q9 7 18 0l-3 4l-3-3l-3 3l-3-3l-3 3z" fill="#F4D242" stroke="#8A4A1C" stroke-width="1.4" stroke-linejoin="round"/></g></svg>`,
+  walizka: () => `<svg viewBox="0 0 48 50"><path d="M17 12V6h14v6" fill="none" ${RZ_L}/><rect x="5" y="12" width="38" height="32" rx="6" fill="#80B0E8" ${RZ_L}/><path d="M16 12v32M32 12v32" fill="none" stroke="#16324F" stroke-width="1.5" opacity=".5"/><rect x="9" y="20" width="15" height="11" rx="2" fill="#fff" stroke="#008471" stroke-width="1.6"/><circle cx="16.5" cy="25.5" r="3.4" fill="#D9472B"/><rect x="26" y="30" width="13" height="9" rx="2" fill="#fff" stroke="#008471" stroke-width="1.6"/><path d="M26 34.5h13" stroke="#C8102E" stroke-width="4.5"/><rect x="26" y="30" width="13" height="9" rx="2" fill="none" stroke="#008471" stroke-width="1.6"/><circle cx="12" cy="46" r="2.5" fill="#008471"/><circle cx="36" cy="46" r="2.5" fill="#008471"/></svg>`,
+  choinka: sw => `<svg viewBox="0 0 48 66"><rect x="20" y="54" width="8" height="10" fill="#8A4A1C" ${RZ_L}/><path d="M24 8L42 34H32L44 54H4L16 34H6Z" fill="#4E9A6A" ${RZ_L}/>${[[18,30,"#F4D242"],[30,26,"#F29CC3"],[24,40,"#80B0E8"],[14,48,"#F29CC3"],[34,47,"#F4D242"]].map(([x, y, c], i) => `<circle class="lampka l${i % 3}" cx="${x}" cy="${y}" r="3" fill="${c}" stroke="#008471" stroke-width="1.2"/>`).join("")}${sw ? `<g class="gwiazda"><path d="M24 -2l3 6l7 1l-5 5l1 7l-6-3l-6 3l1-7l-5-5l7-1z" fill="#F4D242" ${RZ_L}/></g>` : ""}</svg>`,
+  prezent: () => `<svg viewBox="0 0 36 34"><rect x="3" y="12" width="30" height="20" rx="3" fill="#F29CC3" ${RZ_L}/><rect x="1" y="8" width="34" height="7" rx="2" fill="#F29CC3" ${RZ_L}/><path d="M18 8v24" stroke="#F4D242" stroke-width="5"/><path d="M18 8q-10-10-12-2q2 4 12 2q10-10 12-2q-2 4-12 2z" fill="#F4D242" ${RZ_L}/><path d="M18 8v24" fill="none" stroke="#008471" stroke-width="1.5"/></svg>`
+};
 function kotylion(S){
   // Miejsce na brzuszku przesuwa się z tułowiem (jak ubranka), ale kotylion zostaje okrągły i rośnie tylko trochę.
   const x = 102 + (119 - 102) * S[0], y = 150 + (152 - 150) * S[1], k = 1.2 + (S[0] - 1) * 0.35;
@@ -958,7 +1111,7 @@ function kotylion(S){
     <circle r="2" fill="#FFF8EE"/>
   </g></g>`;
 }
-function zabaPet(lv, cls, attrs, mina, stalyStroj, akcent){
+function zabaPet(lv, cls, attrs, mina, stalyStroj, A){
   const S = [[.7, .9], [1, 1], [1.3, 1.12], [1.65, 1.25]][lv];
   const T = `translate(102 150) scale(${S[0]} ${S[1]}) translate(-102 -150)`;
   const ax = (S[0] - 1) * 28, fx = (S[0] - 1) * 18, fy = (S[1] - 1) * 20;
@@ -987,7 +1140,10 @@ function zabaPet(lv, cls, attrs, mina, stalyStroj, akcent){
     : null;
   const zzz = lv === 0 ? `<text x="150" y="34" font-family="Playpen Sans, sans-serif" font-weight="800" font-size="18" fill="#008471">z</text><text x="166" y="18" font-family="Playpen Sans, sans-serif" font-weight="800" font-size="13" fill="#008471">z</text>` : "";
   // Strój z garderoby (nie na ekranie logowania). Ubranka na tułowiu rosną razem z najedzoną żabką.
-  const U = (cls || "").includes("w-zaba") ? { tyl: "", przod: "" } : ubranieSVG(stalyStroj || aktualnyStroj(), T, ax, fx, fy);
+  let stroj = stalyStroj || aktualnyStroj();
+  if (A && (A.glowa || A.ame)) { stroj = { ...stroj }; if (A.glowa) delete stroj.glowa; if (A.ame) delete stroj.reka; }
+  const U = (cls || "").includes("w-zaba") ? { tyl: "", przod: "" } : ubranieSVG(stroj, T, ax, fx, fy);
+  const sezon = A ? `${A.kotylion ? kotylion(S) : ""}${A.ame ? cukierekAme(ax) : ""}${A.glowa ? czapkaSezonowa(A.glowa) : ""}${A.nag && !A.glowa ? naGlowie(A.nag, stroj.glowa) : ""}` : "";
   return `<svg class="${cls || "frog"}" ${attrs || ""} viewBox="14 -2 176 202" overflow="visible" aria-hidden="true">
     ${U.tyl}
     <g transform="translate(5 4)"><use href="#cialo" fill="#D6D35F" transform="${T}"/></g>
@@ -998,7 +1154,7 @@ function zabaPet(lv, cls, attrs, mina, stalyStroj, akcent){
       <path transform="translate(${-ax} 0)" d="M80 141q-13 6-17 17"/><path transform="translate(${ax} 0)" d="M120 141q12 5 16 15"/>
       <path transform="translate(${-fx} ${fy})" d="M84 167q-8 5-16 4M86 169q-4 7-12 10"/><path transform="translate(${fx} ${fy})" d="M116 167q8 5 16 4M114 169q4 7 12 10"/>
       ${twarzMina || twarz}
-    </g>${U.przod}${akcent && jestListopad() ? kotylion(S) : ""}${zzz}</svg>`;
+    </g>${U.przod}${sezon}${zzz}</svg>`;
 }
 const ICO_MUCHA = '<svg class="mucha" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="8" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="currentColor" stroke-width="1.6" transform="rotate(-25 8 8)"/><ellipse cx="16" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="currentColor" stroke-width="1.6" transform="rotate(25 16 8)"/><ellipse cx="12" cy="14.5" rx="3.6" ry="5" fill="currentColor"/><circle cx="12" cy="9" r="2.6" fill="currentColor"/></svg>';
 /* STAW: za każdy dzień z ćwiczeniem w stawie pojawia się nowa rzecz. Żabka jest tu zawsze bez ubranek z garderoby.
@@ -1316,6 +1472,7 @@ function start(){
   const s = seria();
   const pill = dzis ? "Dziś już poćwiczone ✓" : s ? `Seria: ${s} ${dniSlowo(s)}` : "Zacznij serię!";
   const lv = najedzenie(), muchy = wszystkieMuchy();
+  const A = akcent();
   const last = Zapis.rundy.filter(r => r.rodzaj === "runda").slice(-1)[0];
   const kafel = (t, i, arch) => {
     const [bg, fg] = kolorTematu(t, i); const p = opanowanie(t);
@@ -1335,12 +1492,13 @@ function start(){
   const tilesArch = TEMATY.map((t, i) => Zapis.archiwum[t.id] ? kafel(t, i, true) : "").join("");
   return `${naglowek()}
   <main class="screen">
-    <section class="hero">
-      <h1 class="mega">Co dziś kumamy?</h1>
+    <section class="hero${A ? " sezon" : ""}">
+      ${tloHero(A)}
+      <h1 class="mega">${esc(A && A.h1 || "Co dziś kumamy?")}</h1>${A && A.podpis ? `<p class="podpis">${esc(A.podpis)}</p>` : ""}
       <p class="stan">${Zapis.rundy.length ? STAN_ZABY[lv] : "Żabka czeka na pierwsze muchy. Każda dobra odpowiedź to jedna mucha!"}</p>
       <div class="pills"><span class="pill">${pill}</span><span class="pill">${ICO_MUCHA}${muchy} ${muchSlowo(muchy)}</span></div>
       <span class="cien" aria-hidden="true"></span>
-      ${zabaPet(lv, undefined, undefined, undefined, undefined, true)}
+      ${zabaPet(lv, undefined, undefined, undefined, undefined, A)}
       <span class="h-usta" aria-hidden="true"></span>
       <span class="h-jezyk" aria-hidden="true"></span><span class="h-czubek" aria-hidden="true"></span>
       <svg class="h-mucha" viewBox="0 0 24 24" aria-hidden="true"><g class="h-skrz"><ellipse cx="8" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="#008471" stroke-width="1.6" transform="rotate(-25 8 8)"/><ellipse cx="16" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="#008471" stroke-width="1.6" transform="rotate(25 16 8)"/></g><ellipse cx="12" cy="14.5" rx="3.6" ry="5" fill="#008471"/><circle cx="12" cy="9" r="2.6" fill="#008471"/></svg>

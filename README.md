@@ -17,7 +17,7 @@ Powstała na prośbę mojej córki i na jej potrzeby, żeby powtarzanie materia�
 - **Kalendarz.** Dla każdego tematu osobno. Widać serię, rekord, a po stuknięciu dnia rundy ze wszystkimi zadaniami.
 - **Wymowa i dyktando.** W angielskich słówkach z rodziny po rundzie można odsłuchać wymowę, a w dyktandzie apka sama czyta słowa (głos wbudowany w urządzenie).
 - **Skumane.** Opanowany temat można odłożyć do archiwum i w każdej chwili przywrócić.
-- **Akcent listopadowy.** Przez cały listopad żabka na ekranie głównym ma przypięty biało-czerwony kotylion na Święto Niepodległości. Skacze razem z nią, a wstążki podfruwają przy każdym skoku. Podgląd w innym miesiącu: dopisz do adresu `?podglad=listopad`.
+- **Akcenty sezonowe.** Od października do Sylwestra żabka na ekranie głównym zmienia wygląd według daty (szczegóły niżej).
 - **Działa wszędzie:** na telefonie, tablecie i komputerze. Można ją dodać do ekranu głównego jak zwykłą apkę.
 
 ## Jak wygląda
@@ -58,6 +58,26 @@ W `index.html`:
 - kolejność etapów ustala lista `ETAPY`. Nowy etap (np. rodzina) to nowa pozycja na tej liście i ekran do niego w funkcji `staw()`.
 
 Kolejność na liście to kolejność odblokowania, więc nowe rzeczy dopisuje się na końcu.
+
+## Akcenty sezonowe
+
+Tylko na ekranie głównym, włączają się same według daty. Rzeczy na żabce skaczą razem z nią, rzeczy obok niej podskakują, gdy ląduje, a przy „ogranicz ruch” zostaje tylko to, co nieruchome.
+
+| Kiedy | Akcent |
+|---|---|
+| 1–24 października | Spadające liście, czasem jeden ląduje żabce na głowie i spada przy skoku |
+| 25–31 października | Liście i dynia-lampion z mrugającym światełkiem |
+| 1–2 listopada | Bez akcentu |
+| 3 listopada 2026 | Walizka z naklejkami, „Jutro lecimy do Japonii!” |
+| 4–15 listopada 2026 | Japonia: Fuji w tle, czerwone liście klonu, papierowy żuraw i japońskie powitanie dnia z tłumaczeniem; 11.11 z kotylionem, 15.11 (Shichi-Go-San) z cukierkiem chitose-ame |
+| 16–30 listopada | Biało-czerwony kotylion, wstążki podfruwają przy skoku (w innych latach od 3 listopada) |
+| 1–5 grudnia | Pierwszy śnieg, na głowie zbiera się śnieg, który żabka strząsa skokiem |
+| 6 grudnia | Mikołajki: czapka Mikołaja i prezent |
+| 7–23 grudnia | Śnieg i choinka z migającymi lampkami |
+| 24–26 grudnia | Święta: choinka z gwiazdą, prezent, czapka Mikołaja |
+| 27–31 grudnia | Sylwester: imprezowa czapeczka i konfetti przy każdym skoku |
+
+Czapka sezonowa zastępuje na ekranie głównym czapkę z garderoby, a garderoba się nie zmienia. Podgląd dowolnego dnia: dopisz do adresu np. `?podglad=2026-12-24`. Kalendarz akcentów jest w `index.html`, w funkcji `akcent()`.
 
 ## Tematy
 
