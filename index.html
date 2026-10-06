@@ -939,7 +939,7 @@ function zabaPet(lv, cls, attrs, mina, stalyStroj){
     </g>${U.przod}${zzz}</svg>`;
 }
 const ICO_MUCHA = '<svg class="mucha" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="8" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="currentColor" stroke-width="1.6" transform="rotate(-25 8 8)"/><ellipse cx="16" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="currentColor" stroke-width="1.6" transform="rotate(25 16 8)"/><ellipse cx="12" cy="14.5" rx="3.6" ry="5" fill="currentColor"/><circle cx="12" cy="9" r="2.6" fill="currentColor"/></svg>';
-/* STAW: za każdy dzień z ćwiczeniem w stawie pojawia się nowa rzecz.
+/* STAW: za każdy dzień z ćwiczeniem w stawie pojawia się nowa rzecz. Żabka jest tu zawsze bez ubranek z garderoby.
    Kolejność na liście = kolejność odblokowania. "z" ustala, co jest rysowane z tyłu (0 = za trawą). */
 const INK = 'stroke="#008471" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"';
 const LAMPKI = [[110.6,16.1,"#F4D242"],[150.5,22.8,"#F29CC3"],[190.4,26.3,"#D6D35F"],[230.3,26.8,"#80B0E8"],[270.2,24.3,"#F4D242"],[310.1,18.7,"#F29CC3"]];
@@ -986,7 +986,7 @@ function stawSVG(n, lv){
     <path d="M200 206q12-4 24 0M300 290q-12 4-24 0M160 296q10-3 20 0M60 250q8-3 16 0" fill="none" stroke="#008471" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>
     ${przod}${extra}
     ${doodle(`<ellipse cx="180" cy="262" rx="44" ry="12" fill="#898E46" ${INK}/>`)}
-    <g class="a-hop">${zabaPet(lv, "", 'x="132" y="150" width="96" height="112"')}</g>
+    <g class="a-hop">${zabaPet(lv, "", 'x="132" y="150" width="96" height="112"', null, {})}</g>
   </svg>`;
 }
 const ICO_STAW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="16" rx="9" ry="4"/><path d="M8 12q-2-5 0-8M12 12V5M16 12q2-5 0-8"/></svg>';
