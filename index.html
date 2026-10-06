@@ -540,6 +540,17 @@ ul.zad li span:first-child{display:flex;align-items:center;gap:6px}
 <div id="app"></div>
 
 <script>
+/* Numer wersji: widać go na ekranie „Tematy”, żeby sprawdzić, czy telefon ma już nowy kod. */
+const WERSJA = "2026-10-06 15:55";
+/* Gdy coś się wysypie, pokaż treść błędu na dole ekranu (pomaga szukać usterek na telefonie). */
+function pokazBlad(msg){
+  let el = document.getElementById("blad-js");
+  if (!el) { el = document.createElement("div"); el.id = "blad-js"; el.style.cssText = "position:fixed;left:8px;right:8px;bottom:8px;z-index:9999;padding:10px 12px;border-radius:12px;background:#C45F3F;color:#FFF8EE;font:600 13px/1.35 system-ui;white-space:pre-wrap"; el.onclick = () => el.remove(); document.body.appendChild(el); }
+  el.textContent = "Błąd: " + msg + "  (wersja " + WERSJA + ")";
+}
+window.addEventListener("error", e => pokazBlad((e.message || "nieznany") + (e.lineno ? " · linia " + e.lineno : "")));
+window.addEventListener("unhandledrejection", e => pokazBlad(String(e.reason && e.reason.message || e.reason)));
+
 /* =====================================================================
    ZAGADNIENIA
    Żeby dodać nowe zagadnienie, dopisz obiekt do listy TEMATY.
@@ -1607,6 +1618,7 @@ function tematy(){
     <p class="hint" style="margin:0">Temat, który już dobrze umiesz, odłóż do skumanych. Zniknie z ekranu ćwiczeń, ale wyniki zostaną. W każdej chwili możesz go przywrócić.</p>
     <section class="tlist"><span class="mega tl">Ćwiczę</span>${akt || '<p class="hint" style="margin:0">Wszystkie tematy są skumane.</p>'}</section>
     <section class="tlist"><span class="mega tl">Skumane</span>${arch || '<p class="hint" style="margin:0">Na razie pusto. Tu trafią opanowane tematy.</p>'}</section>
+    <p class="hint" style="margin:0;text-align:center;font-size:12px">wersja ${WERSJA}</p>
   </main>
   ${zakladki("start")}`;
 }
