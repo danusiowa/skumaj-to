@@ -151,6 +151,10 @@ input.ans:focus,input.ans:focus-visible{outline:none;box-shadow:inset 0 0 0 3px 
 .kr{display:flex;gap:5px;justify-content:center}
 .klaw button{flex:1 1 0;min-width:0;max-width:46px;height:52px;padding:0;border-radius:12px;background:var(--bialy);box-shadow:inset 0 0 0 1.5px var(--linia);font-family:var(--mega);font-weight:800;font-size:21px;color:var(--staw)}
 .klaw button:active,.pad button:active{transform:translateY(1px);filter:brightness(.94)}
+.klaw .znaki button{height:44px;background:var(--kartka);font-size:19px}
+.q-glosy{display:flex;gap:8px;margin-top:-4px;flex-wrap:wrap}
+.q-glos{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;background:rgba(255,248,238,.16);color:var(--kartka);font-size:13px;font-weight:700;cursor:pointer}
+.q-glos .ti{width:20px;height:20px}
 .klaw button.del{flex:1.7 1 0;max-width:78px;background:var(--kartka)}
 .klaw .dol button{max-width:none;height:54px}
 .klaw .dol button:first-child{flex:1 1 0;max-width:64px}
@@ -627,6 +631,30 @@ const TEMATY = [
           out.push({ klucz: slowo, pytanie: pl, odp: slowo, grupa: pl });
       return out;
     }
+  },
+  {
+    // Dialogi do scenki na hiszpański (tylko teksty z zeszytu). Trzy rodzaje zadań w jednej rundzie:
+    // odpowiedz na pytanie (napisane), odpowiedz ze słuchu (pytanie tylko czytane na głos),
+    // zadaj pytanie do odpowiedzi. Każdy hiszpański tekst można odsłuchać, też wolniej.
+    // Akcenty i znaki ¿ ? ¡ ! . , nie są sprawdzane (ñ jest), poprawny zapis widać w podsumowaniu.
+    id: "hisz-dialogi", nazwa: "Hiszpański: dialogi", typ: "tekst", luzno: true, polecenie: "Napisz po hiszpańsku", wymowa: "es-ES",
+    tlo: "#E8483A", napis: "#FFE36E",
+    zadania(){
+      const JAK = "Estoy muy bien / Estoy genial / Estoy fatal / Estoy así así / Muy bien / Genial / Fatal / Así así";
+      const IMIE = "Me llamo Amelka / Yo soy Amelka / Me llamo Amelka, ¿y tú?";
+      const SKAD = "Yo soy de Polonia. Soy polaca. / Yo soy de Polonia / Soy polaca";
+      const LATA = "Tengo diez años";
+      const JAK_PYT = "¿Cómo estás? / ¿Qué tal?";
+      const PYTANIA = [["¿Cómo estás?", JAK], ["¿Qué tal?", JAK], ["¿Cómo te llamas?", IMIE], ["¿De dónde eres?", SKAD], ["¿Cuántos años tienes?", LATA]];
+      const ODPOWIEDZI = [["Estoy muy bien.", JAK_PYT], ["Estoy genial.", JAK_PYT], ["Estoy fatal.", JAK_PYT], ["Así así.", JAK_PYT],
+        ["Me llamo Amelka.", "¿Cómo te llamas?"], ["Yo soy Amelka.", "¿Cómo te llamas?"],
+        ["Yo soy de Polonia.", "¿De dónde eres?"], ["Soy polaca.", "¿De dónde eres?"], ["Tengo diez años.", "¿Cuántos años tienes?"]];
+      return [
+        ...PYTANIA.map(([p, o]) => ({ klucz: "o:" + p, pytanie: p, odp: o, polecenie: "Odpowiedz po hiszpańsku", mow: p })),
+        ...PYTANIA.map(([p, o]) => ({ klucz: "s:" + p, pytanie: "🔊 " + p, odp: o, polecenie: "Posłuchaj i odpowiedz", mow: p, sluch: true })),
+        ...ODPOWIEDZI.map(([p, o]) => ({ klucz: "z:" + p, pytanie: p, odp: o, polecenie: "Jakie to było pytanie?", mow: p }))
+      ];
+    }
   }
 ];
 /* Wymowa: czyta angielskie słówko głosem urządzenia (bez internetu, bez nagrań).
@@ -865,6 +893,8 @@ const Zapis = {
 /* ===================== pomocnicze ===================== */
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
 const norm = s => String(s).toLowerCase().replace(/\s+/g, " ").trim();
+/* Łagodniej (hiszpański): bez akcentów i znaków ¿?¡!.,  ale ñ zostaje, bo „años” to nie „anos”. */
+const normLuzno = s => norm(String(s).normalize("NFD").replace(/n\u0303/g, "ñ").replace(/[\u0300-\u036f]/g, "").replace(/[¿?¡!.,]/g, " "));
 const pad2 = n => String(n).padStart(2, "0");
 const dzienKlucz = d => d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
 const czas = ms => { const s = Math.round(ms / 1000); return Math.floor(s / 60) + ":" + pad2(s % 60); };
@@ -1291,8 +1321,10 @@ function start(){
 /* Dyktando: słowo czyta się samo. Wywołujemy to tylko z kliknięcia albo klawisza,
    bo iPhone i iPad pozwalają mówić stronie dopiero po geście użytkownika. */
 function czytajZadanie(){
-  if (!R || !R.temat.dyktando || !MOWA) return;
-  const z = R.lista[R.i]; if (z) mow(z.odp, R.temat.wymowa);
+  if (!R || !MOWA) return;
+  const z = R.lista[R.i]; if (!z) return;
+  if (R.temat.dyktando) mow(z.odp, R.temat.wymowa);
+  else if (z.sluch) mow(z.mow, R.temat.wymowa);
 }
 function zacznijRunde(tematId, zadaniaPoprawki){
   const t = tematById(tematId); if (!t) return;
@@ -1321,26 +1353,28 @@ function zadanie(){
     <div class="dots" style="grid-template-columns:repeat(${n},minmax(0,1fr))" aria-hidden="true">${dots}</div>
     ${pytanieOWyjscie ? `<div class="confirm"><span>Przerwać rundę? Wynik się nie zapisze.</span><div><button data-act="zostan">Zostaję</button><button class="go" data-act="przerwij">Przerwij</button></div></div>` : ""}
     <section class="card${t.reszta || t.typ === "tekst" ? " szeroka" : ""}${R.pokazane !== R.i ? " pop" : ""}">
-      <span class="mega label">${esc(t.dyktando && !MOWA ? "Napisz po angielsku" : t.polecenie)}</span>
-      ${t.dyktando && MOWA
-        ? `<div class="dykt"><button class="dykt-gra" data-act="mow" data-txt="${esc(z.odp)}" data-lang="${t.wymowa}" aria-label="Posłuchaj słowa">${ICO_GLOSNIK}</button><span class="dykt-opis"><b>Stuknij, żeby posłuchać</b><button class="dykt-wolno" data-act="mow" data-txt="${esc(z.odp)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}">🐢 wolniej</button></span></div>`
-        : `<div class="mega q${dlugie ? " long" : ""}">${esc(z.pytanie)}</div>`}
+      <span class="mega label">${esc(t.dyktando && !MOWA ? "Napisz po angielsku" : z.polecenie || t.polecenie)}</span>
+      ${(t.dyktando || z.sluch) && MOWA
+        ? `<div class="dykt"><button class="dykt-gra" data-act="mow" data-txt="${esc(z.sluch ? z.mow : z.odp)}" data-lang="${t.wymowa}" aria-label="Posłuchaj">${ICO_GLOSNIK}</button><span class="dykt-opis"><b>Stuknij, żeby posłuchać</b><button class="dykt-wolno" data-act="mow" data-txt="${esc(z.sluch ? z.mow : z.odp)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}">🐢 wolniej</button></span></div>`
+        : `<div class="mega q${dlugie ? " long" : ""}">${esc(z.sluch ? z.mow : z.pytanie)}</div>${z.mow && MOWA ? `<div class="q-glosy"><button class="q-glos" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" aria-label="Posłuchaj">${ICO_GLOSNIK}<span>posłuchaj</span></button><button class="q-glos" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}" aria-label="Posłuchaj wolniej">🐢 wolniej</button></div>` : ""}`}
       <div class="ansrow">${t.typ === "liczby" ? '<span class="mega eq">=</span>' : ""}${odp}</div>
       ${frog("skup")}
     </section>
-    <p class="hint">${t.reszta ? "Wpisz wynik, potem resztę (r.)." : t.typ === "liczby" ? "Wpisz wynik i naciśnij OK." : t.dyktando && MOWA ? "Wpisz, co słyszysz, i naciśnij OK." : "Wpisz słówko i naciśnij OK."} Wyniki zobaczysz na końcu rundy.</p>
+    <p class="hint">${t.reszta ? "Wpisz wynik, potem resztę (r.)." : t.typ === "liczby" ? "Wpisz wynik i naciśnij OK." : t.dyktando && MOWA ? "Wpisz, co słyszysz, i naciśnij OK." : t.luzno && z.sluch && MOWA ? "Odpowiedz na to, co słyszysz. Akcenty i znaki zapytania możesz pominąć." : t.luzno ? "Akcenty i znaki zapytania możesz pominąć." : "Wpisz słówko i naciśnij OK."} Wyniki zobaczysz na końcu rundy.</p>
     ${t.typ === "liczby"
       ? `<div class="pad">${[1,2,3,4,5,6,7,8,9].map(d => `<button data-act="cyfra" data-d="${d}">${d}</button>`).join("")}
          <button class="del" data-act="usun" aria-label="Usuń cyfrę">⌫</button><button data-act="cyfra" data-d="0">0</button><button class="ok" data-act="ok" aria-label="${t.reszta && pole === 0 ? "Dalej do reszty" : "Zatwierdź"}">${t.reszta && pole === 0 ? "Dalej" : "OK"}</button></div>`
-      : klawiatura()}
+      : klawiatura(t)}
   </main>`;
 }
 
 /* Własna klawiatura z literami: telefon nie wysuwa swojej, a układ jest zawsze ten sam. */
 const RZEDY = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
-function klawiatura(){
+const ZNAKI_HISZP = ["á","é","í","ó","ú","ñ","¿","?",","];
+function klawiatura(t){
   const k = l => `<button data-act="litera" data-l="${l}" aria-label="${l}">${l}</button>`;
   return `<div class="klaw" role="group" aria-label="Klawiatura">
+    ${t && t.wymowa === "es-ES" ? `<div class="kr znaki">${ZNAKI_HISZP.map(k).join("")}</div>` : ""}
     <div class="kr">${[...RZEDY[0]].map(k).join("")}</div>
     <div class="kr">${[...RZEDY[1]].map(k).join("")}</div>
     <div class="kr">${[...RZEDY[2]].map(k).join("")}<button class="del" data-act="usun" aria-label="Usuń literę">⌫</button></div>
@@ -1348,7 +1382,7 @@ function klawiatura(){
   </div>`;
 }
 function wpiszLitere(l){
-  if (R.input.length >= 30) return;
+  if (R.input.length >= 40) return;
   if (l === " " && (!R.input || R.input.endsWith(" "))) return;
   R.input += l; render();
 }
@@ -1361,8 +1395,9 @@ function zatwierdz(){
     if (!R.reszta) return;
   }
   const wpis = R.temat.reszta ? R.input + " r. " + R.reszta : R.input.trim(); if (!wpis) return;
-  const dobre = z.odp.split("/").map(norm).filter(Boolean);
-  const ok = dobre.includes(norm(wpis)) || norm(wpis) === norm(z.odp);
+  const n = R.temat.luzno ? normLuzno : norm;
+  const dobre = z.odp.split("/").map(n).filter(Boolean);
+  const ok = dobre.includes(n(wpis)) || n(wpis) === n(z.odp);
   const teraz = Date.now();
   R.odpowiedzi.push({ klucz: z.klucz, pytanie: z.pytanie, odp: z.odp, wpis, dobrze: ok, ms: teraz - R.tZad });
   R.tZad = teraz; R.input = ""; R.reszta = ""; R.pole = 0; R.i++;
@@ -1860,7 +1895,7 @@ document.addEventListener("keydown", e => {
     else if (e.key === "Enter") { e.preventDefault(); zatwierdz(); }
   } else {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
-    if (/^[a-zA-Z\- ]$/.test(e.key)) { e.preventDefault(); wpiszLitere(e.key.toLowerCase()); }
+    if (/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ¿?¡!,.\- ]$/.test(e.key)) { e.preventDefault(); wpiszLitere(e.key.toLowerCase()); }
     else if (e.key === "Backspace") { e.preventDefault(); usunCyfre(); }
     else if (e.key === "Enter") { e.preventDefault(); zatwierdz(); }
   }
