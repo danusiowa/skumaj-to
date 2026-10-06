@@ -151,7 +151,15 @@ input.ans:focus,input.ans:focus-visible{outline:none;box-shadow:inset 0 0 0 3px 
 .kr{display:flex;gap:5px;justify-content:center}
 .klaw button{flex:1 1 0;min-width:0;max-width:46px;height:52px;padding:0;border-radius:12px;background:var(--bialy);box-shadow:inset 0 0 0 1.5px var(--linia);font-family:var(--mega);font-weight:800;font-size:21px;color:var(--staw)}
 .klaw button:active,.pad button:active{transform:translateY(1px);filter:brightness(.94)}
-.klaw .znaki button{height:44px;background:var(--kartka);font-size:19px}
+.wcard{min-height:230px}
+.wcard .q.wq{max-width:68%;overflow-wrap:normal}
+.opcje{display:flex;flex-direction:column;gap:10px}
+.opcja{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:58px;padding:12px 16px;border-radius:18px;background:var(--bialy);box-shadow:inset 0 0 0 2px var(--linia);color:var(--staw);font-family:var(--mega);font-weight:800;font-size:19px;text-align:left;cursor:pointer}
+.opcja .ti{width:22px;height:22px;flex:none;opacity:.55}
+.opcja.akt{background:var(--zakreslacz);box-shadow:inset 0 0 0 3px var(--staw)}
+.opcja.akt .ti{opacity:1}
+.powiedz{display:flex;flex-direction:column;gap:12px}
+.ocena{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .q-glosy{display:flex;gap:8px;margin-top:-4px;flex-wrap:wrap}
 .q-glos{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;background:rgba(255,248,238,.16);color:var(--kartka);font-size:13px;font-weight:700;cursor:pointer}
 .q-glos .ti{width:20px;height:20px}
@@ -633,27 +641,32 @@ const TEMATY = [
     }
   },
   {
-    // Dialogi do scenki na hiszpański (tylko teksty z zeszytu). Trzy rodzaje zadań w jednej rundzie:
-    // odpowiedz na pytanie (napisane), odpowiedz ze słuchu (pytanie tylko czytane na głos),
-    // zadaj pytanie do odpowiedzi. Każdy hiszpański tekst można odsłuchać, też wolniej.
-    // Akcenty i znaki ¿ ? ¡ ! . , nie są sprawdzane (ñ jest), poprawny zapis widać w podsumowaniu.
-    id: "hisz-dialogi", nazwa: "Hiszpański: dialogi", typ: "tekst", luzno: true, polecenie: "Napisz po hiszpańsku", wymowa: "es-ES",
+    // Dialogi do scenki na hiszpański (tylko teksty z zeszytu). Nic się tu nie pisze:
+    // - wybór: do pytania wybierz pasującą odpowiedź (pytanie napisane albo tylko słyszane)
+    //   albo do odpowiedzi wybierz pytanie; stuknięta opcja czyta się na głos,
+    // - powiedz: powiedz zdanie na głos, posłuchaj wzoru i sama oceń, czy umiesz.
+    id: "hisz-dialogi", nazwa: "Hiszpański: dialogi", typ: "wybor", dlugosc: 10, wymowa: "es-ES",
     tlo: "#E8483A", napis: "#FFE36E",
     zadania(){
-      const JAK = "Estoy muy bien / Estoy genial / Estoy fatal / Estoy así así / Muy bien / Genial / Fatal / Así así";
-      const IMIE = "Me llamo Amelka / Yo soy Amelka / Me llamo Amelka, ¿y tú?";
-      const SKAD = "Yo soy de Polonia. Soy polaca. / Yo soy de Polonia / Soy polaca";
-      const LATA = "Tengo diez años";
-      const JAK_PYT = "¿Cómo estás? / ¿Qué tal?";
-      const PYTANIA = [["¿Cómo estás?", JAK], ["¿Qué tal?", JAK], ["¿Cómo te llamas?", IMIE], ["¿De dónde eres?", SKAD], ["¿Cuántos años tienes?", LATA]];
-      const ODPOWIEDZI = [["Estoy muy bien.", JAK_PYT], ["Estoy genial.", JAK_PYT], ["Estoy fatal.", JAK_PYT], ["Así así.", JAK_PYT],
-        ["Me llamo Amelka.", "¿Cómo te llamas?"], ["Yo soy Amelka.", "¿Cómo te llamas?"],
-        ["Yo soy de Polonia.", "¿De dónde eres?"], ["Soy polaca.", "¿De dónde eres?"], ["Tengo diez años.", "¿Cuántos años tienes?"]];
-      return [
-        ...PYTANIA.map(([p, o]) => ({ klucz: "o:" + p, pytanie: p, odp: o, polecenie: "Odpowiedz po hiszpańsku", mow: p })),
-        ...PYTANIA.map(([p, o]) => ({ klucz: "s:" + p, pytanie: "🔊 " + p, odp: o, polecenie: "Posłuchaj i odpowiedz", mow: p, sluch: true })),
-        ...ODPOWIEDZI.map(([p, o]) => ({ klucz: "z:" + p, pytanie: p, odp: o, polecenie: "Jakie to było pytanie?", mow: p }))
+      const D = [
+        { g: "jak", p: ["¿Cómo estás?", "¿Qué tal?"], o: ["Estoy muy bien.", "Estoy genial.", "Estoy fatal.", "Así así."] },
+        { g: "imie", p: ["¿Cómo te llamas?"], o: ["Me llamo Amelka, ¿y tú?", "Yo soy Amelka."] },
+        { g: "skad", p: ["¿De dónde eres?"], o: ["Yo soy de Polonia. Soy polaca."] },
+        { g: "lata", p: ["¿Cuántos años tienes?"], o: ["Tengo diez años."] }
       ];
+      const los = a => a[Math.floor(Math.random() * a.length)];
+      const opcje = (d, pole) => shuffle([los(d[pole]), ...D.filter(x => x !== d).map(x => los(x[pole]))]);
+      const out = [];
+      for (const d of D) for (const p of d.p) {
+        out.push({ klucz: "o:" + p, pytanie: p, odp: d.o.join(" / "), polecenie: "Wybierz odpowiedź", mow: p, opcje: opcje(d, "o"), grupa: "o:" + p });
+        out.push({ klucz: "s:" + p, pytanie: "🔊 " + p, odp: d.o.join(" / "), polecenie: "Posłuchaj i wybierz odpowiedź", mow: p, sluch: true, opcje: opcje(d, "o"), grupa: "o:" + p });
+        out.push({ klucz: "m:" + p, pytanie: p, odp: p, polecenie: "Powiedz na głos", mow: p, powiedz: true });
+      }
+      for (const d of D) for (const o of d.o) {
+        out.push({ klucz: "z:" + o, pytanie: o, odp: d.p.join(" / "), polecenie: "Jakie to było pytanie?", mow: o, opcje: opcje(d, "p") });
+        out.push({ klucz: "m:" + o, pytanie: o, odp: o, polecenie: "Powiedz na głos", mow: o, powiedz: true });
+      }
+      return out;
     }
   }
 ];
@@ -893,8 +906,6 @@ const Zapis = {
 /* ===================== pomocnicze ===================== */
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
 const norm = s => String(s).toLowerCase().replace(/\s+/g, " ").trim();
-/* Łagodniej (hiszpański): bez akcentów i znaków ¿?¡!.,  ale ñ zostaje, bo „años” to nie „anos”. */
-const normLuzno = s => norm(String(s).normalize("NFD").replace(/n\u0303/g, "ñ").replace(/[\u0300-\u036f]/g, "").replace(/[¿?¡!.,]/g, " "));
 const pad2 = n => String(n).padStart(2, "0");
 const dzienKlucz = d => d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
 const czas = ms => { const s = Math.round(ms / 1000); return Math.floor(s / 60) + ":" + pad2(s % 60); };
@@ -1204,7 +1215,9 @@ function wybierzZadania(t, n){
   return out;
 }
 const PROG_STAWU = 12; // ile dobrych odpowiedzi (z 15) trzeba, żeby dzień dał nową rzecz w stawie
-const zaliczona = r => r.rodzaj === "runda" && r.dobre >= PROG_STAWU;
+// Krótsze rundy (np. dialogi) potrzebują tej samej części dobrych odpowiedzi: 12/15 = 80%.
+const progRundy = n => Math.ceil((n || DLUGOSC_RUNDY) * PROG_STAWU / DLUGOSC_RUNDY);
+const zaliczona = r => r.rodzaj === "runda" && r.dobre >= progRundy(r.wszystkie);
 function dniStawu(){ return new Set(Zapis.rundy.filter(zaliczona).map(r => r.dzien)); }
 function dniZCwiczeniem(temat){ return new Set(Zapis.rundy.filter(r => !temat || r.temat === temat).map(r => r.dzien)); }
 function seria(temat){
@@ -1328,12 +1341,13 @@ function czytajZadanie(){
 }
 function zacznijRunde(tematId, zadaniaPoprawki){
   const t = tematById(tematId); if (!t) return;
-  const lista = zadaniaPoprawki ? shuffle(zadaniaPoprawki) : wybierzZadania(t, DLUGOSC_RUNDY);
+  const lista = zadaniaPoprawki ? shuffle(zadaniaPoprawki) : wybierzZadania(t, t.dlugosc || DLUGOSC_RUNDY);
   R = { temat: t, rodzaj: zadaniaPoprawki ? "poprawa" : "runda", lista, i: 0, input: "", odpowiedzi: [], start: Date.now(), tZad: Date.now() };
   pytanieOWyjscie = false; ekran = "zadanie"; render(); window.scrollTo({ top: 0 }); czytajZadanie();
 }
 
 function zadanie(){
+  if (R.temat.typ === "wybor") return zadanieWybor();
   const t = R.temat, z = R.lista[R.i], n = R.lista.length;
   setTimeout(() => { if (R) R.pokazane = R.i; }, 0);
   const dots = R.lista.map((_, k) => `<i class="${k < R.i ? "done" : k === R.i ? "now" : ""}"></i>`).join("");
@@ -1360,21 +1374,65 @@ function zadanie(){
       <div class="ansrow">${t.typ === "liczby" ? '<span class="mega eq">=</span>' : ""}${odp}</div>
       ${frog("skup")}
     </section>
-    <p class="hint">${t.reszta ? "Wpisz wynik, potem resztę (r.)." : t.typ === "liczby" ? "Wpisz wynik i naciśnij OK." : t.dyktando && MOWA ? "Wpisz, co słyszysz, i naciśnij OK." : t.luzno && z.sluch && MOWA ? "Odpowiedz na to, co słyszysz. Akcenty i znaki zapytania możesz pominąć." : t.luzno ? "Akcenty i znaki zapytania możesz pominąć." : "Wpisz słówko i naciśnij OK."} Wyniki zobaczysz na końcu rundy.</p>
+    <p class="hint">${t.reszta ? "Wpisz wynik, potem resztę (r.)." : t.typ === "liczby" ? "Wpisz wynik i naciśnij OK." : t.dyktando && MOWA ? "Wpisz, co słyszysz, i naciśnij OK." : "Wpisz słówko i naciśnij OK."} Wyniki zobaczysz na końcu rundy.</p>
     ${t.typ === "liczby"
       ? `<div class="pad">${[1,2,3,4,5,6,7,8,9].map(d => `<button data-act="cyfra" data-d="${d}">${d}</button>`).join("")}
          <button class="del" data-act="usun" aria-label="Usuń cyfrę">⌫</button><button data-act="cyfra" data-d="0">0</button><button class="ok" data-act="ok" aria-label="${t.reszta && pole === 0 ? "Dalej do reszty" : "Zatwierdź"}">${t.reszta && pole === 0 ? "Dalej" : "OK"}</button></div>`
-      : klawiatura(t)}
+      : klawiatura()}
   </main>`;
+}
+
+/* Typ "wybor" (dialogi): nic się nie pisze.
+   - zadanie z opcjami: stuknięcie opcji czyta ją na głos i zaznacza, „Dalej” zatwierdza,
+   - zadanie „powiedz”: dziecko mówi zdanie, słucha wzoru i samo ocenia, czy umie. */
+function zadanieWybor(){
+  const t = R.temat, z = R.lista[R.i], n = R.lista.length;
+  setTimeout(() => { if (R) R.pokazane = R.i; }, 0);
+  const dots = R.lista.map((_, k) => `<i class="${k < R.i ? "done" : k === R.i ? "now" : ""}"></i>`).join("");
+  const glosy = tekst => MOWA ? `<div class="q-glosy"><button class="q-glos" data-act="mow" data-txt="${esc(tekst)}" data-lang="${t.wymowa}" aria-label="Posłuchaj">${ICO_GLOSNIK}<span>posłuchaj</span></button><button class="q-glos" data-act="mow" data-txt="${esc(tekst)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}" aria-label="Posłuchaj wolniej">🐢 wolniej</button></div>` : "";
+  const gora = z.sluch && MOWA
+    ? `<div class="dykt"><button class="dykt-gra" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" aria-label="Posłuchaj pytania">${ICO_GLOSNIK}</button><span class="dykt-opis"><b>Stuknij, żeby posłuchać pytania</b><button class="dykt-wolno" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}">🐢 wolniej</button></span></div>`
+    : `<div class="mega q long wq">${esc(z.mow)}</div>${glosy(z.mow)}`;
+  const dol = z.powiedz
+    ? `<div class="powiedz">
+        <p class="hint" style="margin:0">${MOWA ? "1. Powiedz to zdanie głośno. 2. Posłuchaj, jak brzmi. 3. Oceń sama:" : "Powiedz to zdanie głośno i oceń sama:"}</p>
+        <div class="ocena"><button class="btn ghost" data-act="ocena" data-ok="0">Jeszcze ćwiczę</button><button class="btn" data-act="ocena" data-ok="1">Umiem ✓</button></div>
+      </div>`
+    : `<div class="opcje" role="radiogroup">${z.opcje.map((o, k) => `<button class="opcja${R.wybor === o ? " akt" : ""}" role="radio" aria-checked="${R.wybor === o}" data-act="wybierz" data-k="${k}"><span>${esc(o)}</span>${MOWA ? ICO_GLOSNIK : ""}</button>`).join("")}</div>
+       <button class="btn" data-act="ok" ${R.wybor ? "" : "disabled"}>Dalej</button>`;
+  return `
+  <div class="qhead">
+    <span class="mega" style="font-size:14px">${R.i + 1} / ${n}</span>
+    <button class="x" data-act="wyjdz">✕ Przerwij</button>
+  </div>
+  <main class="screen" style="padding-top:10px">
+    <div class="dots" style="grid-template-columns:repeat(${n},minmax(0,1fr))" aria-hidden="true">${dots}</div>
+    ${pytanieOWyjscie ? `<div class="confirm"><span>Przerwać rundę? Wynik się nie zapisze.</span><div><button data-act="zostan">Zostaję</button><button class="go" data-act="przerwij">Przerwij</button></div></div>` : ""}
+    <section class="card szeroka wcard${R.pokazane !== R.i ? " pop" : ""}">
+      <span class="mega label">${esc(z.polecenie)}</span>
+      ${gora}
+      ${frog("skup")}
+    </section>
+    ${dol}
+  </main>`;
+}
+function wybierzOpcje(k){
+  const z = R.lista[R.i]; const o = z.opcje[k]; if (!o) return;
+  R.wybor = o; render(); mow(o, R.temat.wymowa);
+}
+function zatwierdzWybor(ok, wpis){
+  const z = R.lista[R.i], teraz = Date.now();
+  R.odpowiedzi.push({ klucz: z.klucz, pytanie: z.sluch ? "🔊 " + z.mow : z.powiedz ? "🗣️ " + z.mow : z.mow, odp: z.odp, wpis, dobrze: ok, ms: teraz - R.tZad });
+  R.tZad = teraz; R.wybor = null; R.i++;
+  if (R.i >= R.lista.length) return zakonczRunde();
+  render(); czytajZadanie();
 }
 
 /* Własna klawiatura z literami: telefon nie wysuwa swojej, a układ jest zawsze ten sam. */
 const RZEDY = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
-const ZNAKI_HISZP = ["á","é","í","ó","ú","ñ","¿","?",","];
-function klawiatura(t){
+function klawiatura(){
   const k = l => `<button data-act="litera" data-l="${l}" aria-label="${l}">${l}</button>`;
   return `<div class="klaw" role="group" aria-label="Klawiatura">
-    ${t && t.wymowa === "es-ES" ? `<div class="kr znaki">${ZNAKI_HISZP.map(k).join("")}</div>` : ""}
     <div class="kr">${[...RZEDY[0]].map(k).join("")}</div>
     <div class="kr">${[...RZEDY[1]].map(k).join("")}</div>
     <div class="kr">${[...RZEDY[2]].map(k).join("")}<button class="del" data-act="usun" aria-label="Usuń literę">⌫</button></div>
@@ -1389,15 +1447,18 @@ function wpiszLitere(l){
 
 function zatwierdz(){
   const z = R.lista[R.i];
+  if (R.temat.typ === "wybor") {
+    if (z.powiedz || !R.wybor) return;
+    return zatwierdzWybor(z.odp.split("/").map(norm).includes(norm(R.wybor)), R.wybor);
+  }
   if (R.temat.reszta) {
     if ((R.pole || 0) === 0) { if (R.input) { R.pole = 1; render(); } return; }
     if (!R.input) { R.pole = 0; render(); return; }
     if (!R.reszta) return;
   }
   const wpis = R.temat.reszta ? R.input + " r. " + R.reszta : R.input.trim(); if (!wpis) return;
-  const n = R.temat.luzno ? normLuzno : norm;
-  const dobre = z.odp.split("/").map(n).filter(Boolean);
-  const ok = dobre.includes(n(wpis)) || n(wpis) === n(z.odp);
+  const dobre = z.odp.split("/").map(norm).filter(Boolean);
+  const ok = dobre.includes(norm(wpis)) || norm(wpis) === norm(z.odp);
   const teraz = Date.now();
   R.odpowiedzi.push({ klucz: z.klucz, pytanie: z.pytanie, odp: z.odp, wpis, dobrze: ok, ms: teraz - R.tZad });
   R.tZad = teraz; R.input = ""; R.reszta = ""; R.pole = 0; R.i++;
@@ -1472,7 +1533,7 @@ function losuj(nazwa, lista){
 }
 function pokazToast(r){
   const stary = document.querySelector(".toast"); if (stary) stary.remove();
-  const ok = r.dobre >= PROG_STAWU;
+  const ok = r.dobre >= progRundy(r.wszystkie);
   const tekst = r.dobre === r.wszystkie ? losuj("perfekt", TEKSTY_PERFEKCYJNE) : ok ? losuj("ok", TEKSTY_ZALICZONE) : losuj("nie", TEKSTY_NIEZALICZONE);
   const el = document.createElement("button");
   el.className = "toast " + (ok ? "ok" : "nie");
@@ -1499,7 +1560,7 @@ function podsumowanie(){
   const zaliczoneDzis = Zapis.rundy.filter(x => x.dzien === r.dzien && zaliczona(x));
   const nrDnia = dniStawu().size;
   const nowosc = zaliczona(r) && zaliczoneDzis.length === 1 && zaliczoneDzis[0].id === r.id ? nagrodaDnia(nrDnia) : null;
-  const brak = r.rodzaj === "runda" && !zaliczoneDzis.length ? PROG_STAWU - r.dobre : 0;
+  const brak = r.rodzaj === "runda" && !zaliczoneDzis.length ? progRundy(r.wszystkie) - r.dobre : 0;
   const pierwszaOdp = o => o.split("/")[0].trim();
   return `
   <div class="qhead"><span class="mega" style="font-size:14px">${r.rodzaj === "poprawa" ? "Koniec poprawy" : "Koniec rundy"}</span><span style="font-size:13px;color:var(--szary)">${esc(t.nazwa)}</span></div>
@@ -1510,7 +1571,7 @@ function podsumowanie(){
       ${frog(zaba)}
     </section>
     <div class="strip" style="background:var(--staw)"><span class="mega" style="color:var(--zakreslacz);display:flex;align-items:center;gap:6px">${ICO_MUCHA}+${r.dobre} ${muchSlowo(r.dobre)}</span><span>${r.dobre ? "Żabka już zajada! " + STAN_ZABY[najedzenie()] : "Tym razem bez much, ale następna runda na pewno coś złapie."}</span></div>
-    ${brak > 0 ? `<div class="strip" style="background:var(--lawenda);color:var(--fiolet-ink)"><span class="mega" style="color:var(--pomidor)">${["Staw czeka", "Garderoba czeka", "Staw czeka"][biezacyEtap()]}</span><span>Do nowej nagrody zabrakło ${brak} ${brak === 1 ? "punktu" : "punktów"}. Potrzeba ${PROG_STAWU}/15. Spróbujesz jeszcze raz?</span></div>` : ""}
+    ${brak > 0 ? `<div class="strip" style="background:var(--lawenda);color:var(--fiolet-ink)"><span class="mega" style="color:var(--pomidor)">${["Staw czeka", "Garderoba czeka", "Staw czeka"][biezacyEtap()]}</span><span>Do nowej nagrody zabrakło ${brak} ${brak === 1 ? "punktu" : "punktów"}. Potrzeba ${progRundy(r.wszystkie)}/${r.wszystkie}. Spróbujesz jeszcze raz?</span></div>` : ""}
     ${nowosc ? `<button class="strip" style="background:var(--slonko);color:var(--staw);text-align:left" data-act="ekran" data-to="staw"><span class="mega" style="color:var(--pomidor)">${nowosc.tytul}</span><span>${esc(nowosc.nazwa)} · ${nowosc.link}</span></button>` : ""}
     <div class="stats">
       <div class="stat" style="background:var(--lawenda);color:var(--pomidor)"><span class="mega">Czas</span><span class="v">${czas(r.ms)}</span><small style="color:var(--fiolet-ink)">${porownanie}</small></div>
@@ -1786,6 +1847,8 @@ app.addEventListener("click", async e => {
   const a = b.dataset.act;
   if (a === "ekran") { wybranyTemat = null; pytanieArchiwum = null; widokEtapu = null; ekran = b.dataset.to; if (ekran === "kalendarz") kal = null; render(); window.scrollTo({ top: 0 }); }
   else if (a === "runda") zacznijRunde(b.dataset.t);
+  else if (a === "wybierz") wybierzOpcje(Number(b.dataset.k));
+  else if (a === "ocena") zatwierdzWybor(b.dataset.ok === "1", b.dataset.ok === "1" ? "umiem" : "jeszcze ćwiczę");
   else if (a === "etap") { widokEtapu = Number(b.dataset.e); render(); }
   else if (a === "ubierz") {
     const u = UBRANKA.find(x => x.id === b.dataset.u); if (!u) return;
@@ -1888,14 +1951,18 @@ function usunCyfre(){
 document.addEventListener("keydown", e => {
   if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("tile")) { e.preventDefault(); e.target.click(); return; }
   if (ekran !== "zadanie" || !R) return;
-  if (R.temat.typ === "liczby") {
+  if (R.temat.typ === "wybor") {
+    const z = R.lista[R.i];
+    if (z && z.opcje && /^[1-9]$/.test(e.key)) wybierzOpcje(Number(e.key) - 1);
+    else if (e.key === "Enter") { e.preventDefault(); zatwierdz(); }
+  } else if (R.temat.typ === "liczby") {
     if (/^[0-9]$/.test(e.key)) wpiszCyfre(e.key);
     else if (e.key === "Backspace") usunCyfre();
     else if (R.temat.reszta && (e.key === "r" || e.key === "R" || e.key === "Tab" || e.key === "ArrowRight" || e.key === "ArrowLeft")) { e.preventDefault(); R.pole = e.key === "ArrowLeft" ? 0 : e.key === "ArrowRight" || e.key === "r" || e.key === "R" ? 1 : 1 - (R.pole || 0); render(); }
     else if (e.key === "Enter") { e.preventDefault(); zatwierdz(); }
   } else {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
-    if (/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ¿?¡!,.\- ]$/.test(e.key)) { e.preventDefault(); wpiszLitere(e.key.toLowerCase()); }
+    if (/^[a-zA-Z\- ]$/.test(e.key)) { e.preventDefault(); wpiszLitere(e.key.toLowerCase()); }
     else if (e.key === "Backspace") { e.preventDefault(); usunCyfre(); }
     else if (e.key === "Enter") { e.preventDefault(); zatwierdz(); }
   }
