@@ -51,7 +51,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .hero > h1,.hero > .stan,.hero > .pills,.hero > .podpis{position:relative;z-index:2}
 .hero .podpis{margin:-10px 0 0;font-size:14px;font-weight:700;color:var(--pomidor);max-width:60%}
 .h-tlo{position:absolute;inset:0;border-radius:inherit;overflow:hidden;z-index:0;pointer-events:none}
-.h-fuji{position:absolute;right:58px;bottom:0;width:150px;height:63px}
+.h-fuji{position:absolute;right:36px;bottom:0;width:216px;height:90px}
 .spad{display:none;position:absolute;top:-30px;width:calc(18px * var(--k))}
 .spad i{display:block}
 .spad svg{display:block;width:100%;height:auto}
@@ -64,6 +64,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .h-rzecz svg{display:block;width:100%;height:auto}
 .h-rzecz.l{right:94px;bottom:14px;width:40px}
 .h-rzecz.l.choinka{width:44px;bottom:12px;z-index:0}
+.h-rzecz.l.dynia{width:46px;bottom:12px}
 .h-rzecz.p{right:4px;bottom:12px;width:30px}
 .h-mucha,.h-jezyk,.h-usta,.h-czubek{display:none}
 @media (prefers-reduced-motion:no-preference){
@@ -269,7 +270,9 @@ ul.zad li span:first-child{display:flex;align-items:center;gap:6px}
 .zw-skrz{transform-box:fill-box;transform-origin:100% 100%;animation:zwSkrz .45s ease-in-out infinite alternate}
 .h-konf i{animation:konf 6s ease-out infinite}
 .h-rzecz{transform-origin:50% 100%;animation:rzeczHop 6s ease-in-out infinite}
-.dy-swiatlo{animation:migot 1.6s ease-in-out infinite alternate}
+.dy-swiatlo,.dy-blask{animation:migot 1.3s ease-in-out infinite alternate}
+.nietoperz{animation:nietoperz 3.2s ease-in-out infinite}
+.nt-skrz{transform-box:fill-box;transform-origin:50% 60%;animation:ntSkrz .32s ease-in-out infinite alternate}
 .lampka{animation:lampka 1.2s steps(1) infinite}.lampka.l1{animation-delay:-.4s}.lampka.l2{animation-delay:-.8s}
 .gwiazda{transform-box:fill-box;transform-origin:50% 50%;animation:gwiazda 6s ease-in-out infinite}
 .hero .nag-lisc{animation:nagLisc 6s linear infinite}
@@ -285,6 +288,8 @@ ul.zad li span:first-child{display:flex;align-items:center;gap:6px}
 @keyframes konf{0%,74%{opacity:0;transform:translate(0,0) rotate(0)}77%{opacity:1;transform:translate(0,0)}86%{opacity:1;transform:translate(var(--dx),var(--dy)) rotate(var(--r))}98%{opacity:0;transform:translate(calc(var(--dx) * 1.3),calc(var(--dy) + 70px)) rotate(calc(var(--r) * 2))}100%{opacity:0}}
 @keyframes rzeczHop{0%,82%,100%{transform:none}86%{transform:translateY(-4px) scaleY(1.04)}90%{transform:scaleY(.96)}94%{transform:none}}
 @keyframes migot{from{opacity:.5}to{opacity:1}}
+@keyframes nietoperz{0%,100%{transform:translate(0,0)}25%{transform:translate(5px,-4px)}50%{transform:translate(0,-7px)}75%{transform:translate(-5px,-3px)}}
+@keyframes ntSkrz{to{transform:scaleY(.35)}}
 @keyframes lampka{50%{opacity:.3}}
 @keyframes gwiazda{0%,74%,100%{transform:none}80%{transform:scale(1.45) rotate(25deg)}88%{transform:none}}
 @keyframes nagLisc{0%,18%{transform:translate(-34px,-96px) rotate(-40deg);opacity:0}24%{opacity:1}36%{transform:translate(12px,-64px) rotate(25deg)}48%{transform:translate(-16px,-30px) rotate(-25deg)}60%,74%{transform:translate(0,0) rotate(-12deg);opacity:1}80%{transform:translate(26px,-40px) rotate(130deg);opacity:1}92%{transform:translate(52px,16px) rotate(230deg);opacity:0}100%{opacity:0;transform:translate(52px,16px)}}
@@ -429,8 +434,9 @@ ul.zad li span:first-child{display:flex;align-items:center;gap:6px}
   .hero .cien{right:62px;width:96px}
   .h-rzecz.l{right:148px;bottom:18px;width:50px}
   .h-rzecz.l.choinka{width:56px;bottom:16px}
+  .h-rzecz.l.dynia{width:56px;bottom:16px}
   .h-rzecz.p{right:20px;bottom:16px;width:38px}
-  .h-fuji{right:120px;width:230px;height:96px}
+  .h-fuji{right:96px;width:320px;height:134px}
   #app[data-ekran="kalendarz"] .screen,
   #app[data-ekran="staw"] .screen,
   #app[data-ekran="podsumowanie"] .screen,
@@ -1079,7 +1085,7 @@ function tloHero(A){
   const lisc2 = lisc.replace("#E8A04A", "#C45F3F");
   const momiji = '<svg viewBox="-14 -14 28 30"><path d="M0 -11L3 -4L10 -6L6 1L11 5L4 5L5 11L0 6L-5 11L-4 5L-11 5L-6 1L-10 -6L-3 -4Z" fill="#D9472B" stroke="#008471" stroke-width="1.6" stroke-linejoin="round"/><path d="M0 6V13" stroke="#008471" stroke-width="1.6" stroke-linecap="round"/></svg>';
   const spad = (typ, svg) => SPAD[typ].map(([x, del, t, k], i) => `<span class="spad ${typ}" style="left:${x}%;animation-duration:${t}s;animation-delay:${del}s;--k:${k}"><i>${typeof svg === "function" ? svg(i) : svg}</i></span>`).join("");
-  if (A.tlo.includes("fuji")) h += `<svg class="h-fuji" viewBox="0 0 230 96" aria-hidden="true"><circle cx="58" cy="30" r="14" fill="#D9472B" opacity=".75"/><path d="M0 96L84 26Q114 4 144 26L230 96Z" fill="#C3B9E4" stroke="#008471" stroke-width="2.5" stroke-linejoin="round" stroke-opacity=".6"/><path d="M84 26Q114 4 144 26L132 36L122 29L114 38L105 29L96 36Z" fill="#fff" stroke="#008471" stroke-width="2.2" stroke-linejoin="round"/></svg>`;
+  if (A.tlo.includes("fuji")) h += `<svg class="h-fuji" viewBox="0 0 230 96" aria-hidden="true"><circle cx="48" cy="28" r="16" fill="#D9472B" stroke="#008471" stroke-width="2.2"/><path d="M4 96L84 26Q114 4 144 26L226 96" fill="#8E84C4" stroke="#008471" stroke-width="3" stroke-linejoin="round"/><path d="M84 26Q114 4 144 26L134 38L123 30L114 41L104 30L94 38Z" fill="#fff" stroke="#008471" stroke-width="2.6" stroke-linejoin="round"/><path d="M60 70l14-12M164 62l12 12" fill="none" stroke="#B9B0E2" stroke-width="3" stroke-linecap="round"/></svg>`;
   if (A.tlo.includes("liscie")) h += spad("liscie", i => i % 2 ? lisc2 : lisc);
   if (A.tlo.includes("momiji")) h += spad("momiji", momiji);
   if (A.tlo.includes("snieg")) h += spad("snieg", '<b></b>');
@@ -1092,7 +1098,15 @@ function tloHero(A){
 }
 const RZ_L = 'stroke="#008471" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"';
 const RZECZY_OBOK = {
-  dynia: () => `<svg viewBox="0 0 48 44"><path d="M24 8q2-6 7-7" fill="none" ${RZ_L}/><ellipse cx="14" cy="26" rx="11" ry="15" fill="#E8A04A" ${RZ_L}/><ellipse cx="34" cy="26" rx="11" ry="15" fill="#E8A04A" ${RZ_L}/><ellipse cx="24" cy="26" rx="11" ry="16" fill="#F0B35C" ${RZ_L}/><g class="dy-swiatlo"><path d="M14 22l4-5l4 5zM26 22l4-5l4 5zM15 31q9 7 18 0l-3 4l-3-3l-3 3l-3-3l-3 3z" fill="#F4D242" stroke="#8A4A1C" stroke-width="1.4" stroke-linejoin="round"/></g></svg>`,
+  dynia: () => `<svg viewBox="0 0 58 80"><defs><radialGradient id="dy-blask"><stop offset="0" stop-color="#FFE27A"/><stop offset=".55" stop-color="#FFC24A" stop-opacity=".6"/><stop offset="1" stop-color="#FFB13B" stop-opacity="0"/></radialGradient></defs>
+    <g class="nietoperz"><g class="nt-skrz"><path d="M29 14q-8-9-18-6q4 3 3 7q-5-1-7 3q8-1 13 3zM29 14q8-9 18-6q-4 3-3 7q5-1 7 3q-8-1-13 3z" fill="#4A3F6B" stroke="#2E2645" stroke-width="1.4" stroke-linejoin="round"/></g><ellipse cx="29" cy="16" rx="4.5" ry="5" fill="#4A3F6B" stroke="#2E2645" stroke-width="1.4"/><path d="M26 11.5l1-3l1.5 2.5M32 11.5l-1-3l-1.5 2.5" fill="#4A3F6B" stroke="#2E2645" stroke-width="1.2" stroke-linejoin="round"/><circle cx="27.4" cy="15.6" r="1" fill="#F4D242"/><circle cx="30.6" cy="15.6" r="1" fill="#F4D242"/></g>
+    <circle class="dy-blask" cx="29" cy="56" r="27" fill="url(#dy-blask)"/>
+    <path d="M29 34q-1-6 3-9q3-2 6 0" fill="none" stroke="#5C7A2E" stroke-width="3" stroke-linecap="round"/><path d="M33 29q5-5 9 0q-5 3-9 0z" fill="#898E46" ${RZ_L}/>
+    <path d="M27 33q-1-6 2-7l3 1q1 4-1 6z" fill="#6B4A2A" ${RZ_L}/>
+    <ellipse cx="15" cy="56" rx="13" ry="19" fill="#E06A1F" ${RZ_L}/><ellipse cx="43" cy="56" rx="13" ry="19" fill="#E06A1F" ${RZ_L}/><ellipse cx="29" cy="56" rx="14" ry="21" fill="#F07D26" ${RZ_L}/>
+    <path d="M22 40q-3 16 0 32M36 40q3 16 0 32" fill="none" stroke="#C4581A" stroke-width="1.6" stroke-linecap="round"/>
+    <g class="dy-swiatlo" stroke="#7A3510" stroke-width="1.5" stroke-linejoin="round"><path d="M13 52l6-9l5 9z" fill="#FFD54A"/><path d="M34 52l5-9l6 9z" fill="#FFD54A"/><path d="M27 58l2-4l2 4z" fill="#FFD54A"/><path d="M12 62q17 14 34 0l-4 2l-2 4l-3-4l-3 5l-3-5l-3 5l-3-5l-3 4l-2-4z" fill="#FFD54A"/></g>
+  </svg>`,
   walizka: () => `<svg viewBox="0 0 48 50"><path d="M17 12V6h14v6" fill="none" ${RZ_L}/><rect x="5" y="12" width="38" height="32" rx="6" fill="#80B0E8" ${RZ_L}/><path d="M16 12v32M32 12v32" fill="none" stroke="#16324F" stroke-width="1.5" opacity=".5"/><rect x="9" y="20" width="15" height="11" rx="2" fill="#fff" stroke="#008471" stroke-width="1.6"/><circle cx="16.5" cy="25.5" r="3.4" fill="#D9472B"/><rect x="26" y="30" width="13" height="9" rx="2" fill="#fff" stroke="#008471" stroke-width="1.6"/><path d="M26 34.5h13" stroke="#C8102E" stroke-width="4.5"/><rect x="26" y="30" width="13" height="9" rx="2" fill="none" stroke="#008471" stroke-width="1.6"/><circle cx="12" cy="46" r="2.5" fill="#008471"/><circle cx="36" cy="46" r="2.5" fill="#008471"/></svg>`,
   choinka: sw => `<svg viewBox="0 0 48 66"><rect x="20" y="54" width="8" height="10" fill="#8A4A1C" ${RZ_L}/><path d="M24 8L42 34H32L44 54H4L16 34H6Z" fill="#4E9A6A" ${RZ_L}/>${[[18,30,"#F4D242"],[30,26,"#F29CC3"],[24,40,"#80B0E8"],[14,48,"#F29CC3"],[34,47,"#F4D242"]].map(([x, y, c], i) => `<circle class="lampka l${i % 3}" cx="${x}" cy="${y}" r="3" fill="${c}" stroke="#008471" stroke-width="1.2"/>`).join("")}${sw ? `<g class="gwiazda"><path d="M24 -2l3 6l7 1l-5 5l1 7l-6-3l-6 3l1-7l-5-5l7-1z" fill="#F4D242" ${RZ_L}/></g>` : ""}</svg>`,
   prezent: () => `<svg viewBox="0 0 36 34"><rect x="3" y="12" width="30" height="20" rx="3" fill="#F29CC3" ${RZ_L}/><rect x="1" y="8" width="34" height="7" rx="2" fill="#F29CC3" ${RZ_L}/><path d="M18 8v24" stroke="#F4D242" stroke-width="5"/><path d="M18 8q-10-10-12-2q2 4 12 2q10-10 12-2q-2 4-12 2z" fill="#F4D242" ${RZ_L}/><path d="M18 8v24" fill="none" stroke="#008471" stroke-width="1.5"/></svg>`

@@ -66,7 +66,7 @@ Tylko na ekranie głównym, włączają się same według daty. Rzeczy na żabce
 | Kiedy | Akcent |
 |---|---|
 | 1–24 października | Spadające liście, czasem jeden ląduje żabce na głowie i spada przy skoku |
-| 25–31 października | Liście i dynia-lampion z mrugającym światełkiem |
+| 25–31 października | Liście, halloweenowa dynia-lampion z migoczącą buzią i nietoperz nad nią |
 | 1–2 listopada | Bez akcentu |
 | 3 listopada 2026 | Walizka z naklejkami, „Jutro lecimy do Japonii!” |
 | 4–15 listopada 2026 | Japonia: Fuji w tle, czerwone liście klonu, papierowy żuraw i japońskie powitanie dnia z tłumaczeniem; 11.11 z kotylionem, 15.11 (Shichi-Go-San) z cukierkiem chitose-ame |
