@@ -1387,7 +1387,7 @@ function zadanieWybor(){
   const gora = z.sluch && MOWA
     ? `<div class="dykt"><button class="dykt-gra" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" aria-label="Posłuchaj pytania">${ICO_GLOSNIK}</button><span class="dykt-opis"><b>Stuknij, żeby posłuchać pytania</b><button class="dykt-wolno" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}">🐢 wolniej</button></span></div>`
     : `<div class="mega q long wq">${esc(z.mow)}</div>${glosy(z.mow)}`;
-  const dol = `<div class="opcje" role="radiogroup">${z.opcje.map((o, k) => `<button class="opcja${R.wybor === o ? " akt" : ""}" role="radio" aria-checked="${R.wybor === o}" data-act="wybierz" data-k="${k}"><span>${esc(o)}</span>${MOWA ? ICO_GLOSNIK : ""}</button>`).join("")}</div>
+  const dol = `<div class="opcje" role="radiogroup">${z.opcje.map((o, k) => `<button class="opcja${R.wybor === o ? " akt" : ""}" role="radio" aria-checked="${R.wybor === o}" data-act="opcja" data-k="${k}"><span>${esc(o)}</span>${MOWA ? ICO_GLOSNIK : ""}</button>`).join("")}</div>
        <button class="btn" data-act="ok" ${R.wybor ? "" : "disabled"}>Dalej</button>`;
   return `
   <div class="qhead">
@@ -1836,7 +1836,7 @@ app.addEventListener("click", async e => {
   const a = b.dataset.act;
   if (a === "ekran") { wybranyTemat = null; pytanieArchiwum = null; widokEtapu = null; ekran = b.dataset.to; if (ekran === "kalendarz") kal = null; render(); window.scrollTo({ top: 0 }); }
   else if (a === "runda") zacznijRunde(b.dataset.t);
-  else if (a === "wybierz") wybierzOpcje(Number(b.dataset.k));
+  else if (a === "opcja") wybierzOpcje(Number(b.dataset.k));
   else if (a === "etap") { widokEtapu = Number(b.dataset.e); render(); }
   else if (a === "ubierz") {
     const u = UBRANKA.find(x => x.id === b.dataset.u); if (!u) return;
