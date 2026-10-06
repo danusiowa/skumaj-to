@@ -1,6 +1,6 @@
 # Skumaj to! 🐸
 
-Apka do powtórek szkolnego materiału dla 4 klasy. Za każdą dobrą odpowiedź żabka dostaje muchę, a staw rośnie z każdym dobrym dniem.
+Apka do powtórek szkolnego materiału dla 4 klasy. Za każdą dobrą odpowiedź żabka dostaje muchę, a za każdy dobry dzień przychodzi nowa nagroda: rzecz do stawu, ubranko albo jesienna niespodzianka.
 
 **Zagraj:** https://danusiowa.github.io/skumaj-to/
 
@@ -11,8 +11,7 @@ Apka do powtórek szkolnego materiału dla 4 klasy. Za każdą dobrą odpowiedź
 - **Rundy po 15 zadań.** Odpowiedź wpisuje się samodzielnie na klawiaturze apki (z cyframi albo z literami), więc klawiatura telefonu nie zasłania ekranu. Dobrze czy źle widać dopiero w podsumowaniu, razem z czasem.
 - **Mądre losowanie.** Zadanie nie powtarza się w rundzie (3×7 i 7×3 liczą się jako jedno). Błędne wracają częściej, opanowane rzadziej.
 - **Żabka i muchy.** Za każdą dobrą odpowiedź żabka dostaje muchę. Muchy „trawią się” z dnia na dzień, więc bez ćwiczeń żabka chudnie i robi się śpiąca.
-- **Staw.** Każdy dzień z rundą na co najmniej 12/15 dodaje do stawu nową rzecz: lilię, domek, łódkę, tęczę…
-- **Kolejne nagrody.** Gdy staw jest kompletny (14 rzeczy), pojawia się **garderoba**: każdy dobry dzień daje jedno z 15 ubranek, a strój żabki można dowolnie składać i zmieniać. Potem przychodzi **jesienny staw** (14 jesiennych rzeczy). Ukończone etapy można dalej oglądać przyciskami nad sceną. Strój zapisuje się razem z ustawieniami (w polu `archiwum` pod kluczem `_stroj`), więc baza nie potrzebuje zmian.
+- **Nagrody za systematyczność.** Każdy dzień z rundą na co najmniej 12/15 przynosi nagrodę. Najpierw zapełnia się staw, potem garderoba żabki, potem jesienny staw (szczegóły niżej).
 - **Kalendarz.** Dla każdego tematu osobno. Widać serię, rekord, a po stuknięciu dnia rundy ze wszystkimi zadaniami.
 - **Wymowa i dyktando.** W angielskich słówkach z rodziny po rundzie można odsłuchać wymowę, a w dyktandzie apka sama czyta słowa (głos wbudowany w urządzenie).
 - **Skumane.** Opanowany temat można odłożyć do archiwum i w każdej chwili przywrócić.
@@ -25,6 +24,37 @@ Apka do powtórek szkolnego materiału dla 4 klasy. Za każdą dobrą odpowiedź
 Na komputerze i tablecie kafelki układają się szerzej, cztery w rzędzie:
 
 ![Ekran startowy na komputerze](docs/makieta-komputer.png)
+
+## Nagrody za systematyczność
+
+Nagrodę daje **dzień** z co najmniej jedną rundą na 12/15 albo lepiej (kilka dobrych rund tego samego dnia to nadal jedna nagroda). Dni liczą się po kolei przez wszystkie etapy. Kolejny etap pojawia się dopiero wtedy, gdy poprzedni jest kompletny:
+
+| Etap | Ile nagród | Co się zbiera |
+|---|---|---|
+| 1. Staw | 14 | Lilia, kwiatek, domek, trzciny, słoneczko, kamień, rybka, ważka, pomost, leżak, parasol, łódka, lampki, tęcza |
+| 2. Garderoba | 15 | Czapka z pomponem, kalosze, szalik, okulary słoneczne, kapelusz słomkowy, plecak, muszka, parasolka, beret, trampki, okrągłe okulary, korale, peleryna, czapka kucharza, korona |
+| 3. Jesienny staw | 14 | Wrzosy, liście, dynia, grzybki, latawiec, drzewo, wiewiórka, chmurka z deszczykiem, odlatujące ptaki, kasztany, kosz jabłek, jeżyk, łódka z liścia, strach na wróble |
+
+- **Garderoba.** Z zebranych ubranek można w każdej chwili składać strój: stuknięcie zakłada albo zdejmuje rzecz, a „Zdejmij wszystko” rozbiera żabkę. Na każde miejsce (głowa, oczy, szyja, plecy, stopy, łapka) żabka nosi jedną rzecz. Dopóki nic nie zostanie zmienione, żabka nosi najnowsze ubranko na każde miejsce.
+- **Gdzie widać strój.** W garderobie i na ekranie startowym. W letnim stawie żabka jest zawsze bez ubranek, a w jesiennym zawsze w żółtym kapeluszu od deszczu.
+- **Stare komplety.** Po skończeniu pierwszego etapu nad sceną pojawiają się przyciski etapów (np. „Staw ✓”, „Garderoba 9/15”), więc każdy zebrany komplet można dalej oglądać.
+- **Po wszystkim.** Gdy jesienny staw jest kompletny, każdy kolejny dobry dzień dosypuje na trawę liść albo kasztan.
+- **Podsumowanie rundy** mówi, co przyszło („Nowe ubranko! Muszka”), a na końcu etapu, co będzie dalej.
+- **Zapis stroju.** Strój zapisuje się w telefonie i w Supabase razem z ustawieniami (w kolumnie `archiwum` tabeli `ustawienia`, pod kluczem `_stroj`), więc baza nie potrzebuje zmian.
+
+![Staw, garderoba i jesienny staw na telefonie](docs/makiety-nagrody.png)
+
+Na komputerze i tablecie garderoba ma dwie kolumny: żabka po lewej, ubranka po prawej.
+
+### Jak dodać nagrody
+
+W `index.html`:
+
+- rzeczy do letniego stawu są na liście `STAW`, do jesiennego na liście `JESIEN` (rysunek SVG w układzie sceny 360×320, `z` ustala, co jest z przodu, a `anim` dodaje lekki ruch),
+- ubranka są na liście `UBRANKA`, a ich rysunki w `<defs>` na początku `<body>` (identyfikatory `ub-…`, w układzie rysunku żabki),
+- kolejność etapów ustala lista `ETAPY`. Nowy etap (np. rodzina) to nowa pozycja na tej liście i ekran do niego w funkcji `staw()`.
+
+Kolejność na liście to kolejność odblokowania, więc nowe rzeczy dopisuje się na końcu.
 
 ## Tematy
 
