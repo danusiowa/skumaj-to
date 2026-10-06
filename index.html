@@ -244,8 +244,11 @@ ul.zad li span:first-child{display:flex;align-items:center;gap:6px}
 @media (prefers-reduced-motion:no-preference){
 .hero .frog{animation:heroZaba 6s ease-in-out infinite;transform-origin:50% 100%}
 .hero .cien{animation:cienZaby 6s ease-in-out infinite}
+.hero .kotylion .k-wst{transform-box:fill-box;transform-origin:50% 0;animation:kWstazki 6s ease-in-out infinite}
 }
 @keyframes cienZaby{0%,100%{transform:none;opacity:1}20%{transform:scaleX(1.06)}40%{transform:translateX(-3px)}55%{transform:translateX(3px)}68%{transform:scaleX(1.1)}76%{transform:scale(.55);opacity:.45}84%{transform:scaleX(1.12);opacity:1}90%{transform:scale(.8);opacity:.75}95%{transform:none;opacity:1}}
+/* Kotylion: wstążki podrywają się przy skoku (76%) i kołyszą po lądowaniu, w rytmie heroZaba. */
+@keyframes kWstazki{0%,70%,100%{transform:none}76%{transform:scaleY(.6) rotate(-14deg)}82%{transform:scaleY(1.15) rotate(14deg)}88%{transform:rotate(-9deg)}93%{transform:rotate(5deg)}97%{transform:none}}
 @keyframes heroZaba{0%,100%{transform:none}20%{transform:scale(1.03,.97)}40%{transform:rotate(-2deg)}55%{transform:rotate(2deg)}68%{transform:scale(1.05,.94)}76%{transform:translateY(-12px) scale(.97,1.04)}84%{transform:scale(1.04,.96)}90%{transform:translateY(-4px)}95%{transform:none}}
 .loader{min-height:80vh;min-height:80dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;font-size:15px}
 .lmucha{width:70px;height:56px}
@@ -933,7 +936,29 @@ const STAN_ZABY = [
   "Żabka jest najedzona i zadowolona!",
   "Żabka jest pełniutka i przeszczęśliwa!"
 ];
-function zabaPet(lv, cls, attrs, mina, stalyStroj){
+/* AKCENT LISTOPADOWY: kotylion biało-czerwony na Święto Niepodległości, przypięty do brzuszka.
+   Pokazuje się przez cały listopad tylko na ekranie głównym. Jest częścią rysunku żabki, więc oddycha
+   i skacze razem z nią, a wstążki podfruwają przy każdym skoku (ten sam rytm 6 s co skok).
+   Podgląd w innym miesiącu: dopisz do adresu ?podglad=listopad */
+function jestListopad(){
+  try { if (new URLSearchParams(location.search).get("podglad") === "listopad") return true; } catch (e) {}
+  return new Date().getMonth() === 10;
+}
+function kotylion(S){
+  // Miejsce na brzuszku przesuwa się z tułowiem (jak ubranka), ale kotylion zostaje okrągły i rośnie tylko trochę.
+  const x = 102 + (119 - 102) * S[0], y = 150 + (152 - 150) * S[1], k = 1.2 + (S[0] - 1) * 0.35;
+  return `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${k.toFixed(2)})"><g class="kotylion">
+    <g class="k-wst" fill="none" stroke="#008471" stroke-width="2" stroke-linejoin="round">
+      <path d="M-3 6l-7 17l4-2l2 5l5-19z" fill="#FFF8EE"/>
+      <path d="M3 6l7 17l-4-2l-2 5l-5-19z" fill="#C8102E"/>
+    </g>
+    <circle r="11" fill="#FFF8EE" stroke="#008471" stroke-width="2"/>
+    <circle r="11" fill="none" stroke="#E8DCCB" stroke-width="1.2" stroke-dasharray="2 3"/>
+    <circle r="6.5" fill="#C8102E" stroke="#008471" stroke-width="1.6"/>
+    <circle r="2" fill="#FFF8EE"/>
+  </g></g>`;
+}
+function zabaPet(lv, cls, attrs, mina, stalyStroj, akcent){
   const S = [[.7, .9], [1, 1], [1.3, 1.12], [1.65, 1.25]][lv];
   const T = `translate(102 150) scale(${S[0]} ${S[1]}) translate(-102 -150)`;
   const ax = (S[0] - 1) * 28, fx = (S[0] - 1) * 18, fy = (S[1] - 1) * 20;
@@ -973,7 +998,7 @@ function zabaPet(lv, cls, attrs, mina, stalyStroj){
       <path transform="translate(${-ax} 0)" d="M80 141q-13 6-17 17"/><path transform="translate(${ax} 0)" d="M120 141q12 5 16 15"/>
       <path transform="translate(${-fx} ${fy})" d="M84 167q-8 5-16 4M86 169q-4 7-12 10"/><path transform="translate(${fx} ${fy})" d="M116 167q8 5 16 4M114 169q4 7 12 10"/>
       ${twarzMina || twarz}
-    </g>${U.przod}${zzz}</svg>`;
+    </g>${U.przod}${akcent && jestListopad() ? kotylion(S) : ""}${zzz}</svg>`;
 }
 const ICO_MUCHA = '<svg class="mucha" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="8" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="currentColor" stroke-width="1.6" transform="rotate(-25 8 8)"/><ellipse cx="16" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="currentColor" stroke-width="1.6" transform="rotate(25 16 8)"/><ellipse cx="12" cy="14.5" rx="3.6" ry="5" fill="currentColor"/><circle cx="12" cy="9" r="2.6" fill="currentColor"/></svg>';
 /* STAW: za każdy dzień z ćwiczeniem w stawie pojawia się nowa rzecz. Żabka jest tu zawsze bez ubranek z garderoby.
@@ -1315,7 +1340,7 @@ function start(){
       <p class="stan">${Zapis.rundy.length ? STAN_ZABY[lv] : "Żabka czeka na pierwsze muchy. Każda dobra odpowiedź to jedna mucha!"}</p>
       <div class="pills"><span class="pill">${pill}</span><span class="pill">${ICO_MUCHA}${muchy} ${muchSlowo(muchy)}</span></div>
       <span class="cien" aria-hidden="true"></span>
-      ${zabaPet(lv)}
+      ${zabaPet(lv, undefined, undefined, undefined, undefined, true)}
       <span class="h-usta" aria-hidden="true"></span>
       <span class="h-jezyk" aria-hidden="true"></span><span class="h-czubek" aria-hidden="true"></span>
       <svg class="h-mucha" viewBox="0 0 24 24" aria-hidden="true"><g class="h-skrz"><ellipse cx="8" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="#008471" stroke-width="1.6" transform="rotate(-25 8 8)"/><ellipse cx="16" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="#008471" stroke-width="1.6" transform="rotate(25 16 8)"/></g><ellipse cx="12" cy="14.5" rx="3.6" ry="5" fill="#008471"/><circle cx="12" cy="9" r="2.6" fill="#008471"/></svg>

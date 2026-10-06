@@ -17,6 +17,7 @@ Powstała na prośbę mojej córki i na jej potrzeby, żeby powtarzanie materia�
 - **Kalendarz.** Dla każdego tematu osobno. Widać serię, rekord, a po stuknięciu dnia rundy ze wszystkimi zadaniami.
 - **Wymowa i dyktando.** W angielskich słówkach z rodziny po rundzie można odsłuchać wymowę, a w dyktandzie apka sama czyta słowa (głos wbudowany w urządzenie).
 - **Skumane.** Opanowany temat można odłożyć do archiwum i w każdej chwili przywrócić.
+- **Akcent listopadowy.** Przez cały listopad żabka na ekranie głównym ma przypięty biało-czerwony kotylion na Święto Niepodległości. Skacze razem z nią, a wstążki podfruwają przy każdym skoku. Podgląd w innym miesiącu: dopisz do adresu `?podglad=listopad`.
 - **Działa wszędzie:** na telefonie, tablecie i komputerze. Można ją dodać do ekranu głównego jak zwykłą apkę.
 
 ## Jak wygląda
