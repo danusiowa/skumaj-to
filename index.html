@@ -1063,12 +1063,13 @@ function czapkaSezonowa(rodzaj){
     <path d="M60 42C66 8 112 -10 150 2C164 7 172 16 170 26C162 17 152 13 142 15C149 24 150 34 146 42Z" fill="#C8102E" ${L}/>
     <g class="cz-pompon"><circle cx="171" cy="28" r="9" fill="#fff" ${L}/></g>
     <rect x="50" y="36" width="102" height="16" rx="8" fill="#fff" ${L}/></g>`;
-  return `<g class="cz-sez" transform="translate(0 -8) rotate(-10 100 44)">
-    <path d="M76 46L100 -16L124 46Z" fill="#80B0E8" ${L}/>
-    <path d="M86 20L110 26M80 34L118 40M93 4L106 8" fill="none" stroke="#F4D242" stroke-width="4" stroke-linecap="round"/>
-    <path d="M76 46L100 -16L124 46Z" fill="none" ${L}/>
-    <g class="cz-pompon"><circle cx="100" cy="-18" r="7" fill="#F29CC3" ${L}/></g>
-    <path d="M74 46Q100 54 126 46" fill="none" ${L}/></g>`;
+  // Czapeczka sylwestrowa: wąska, przekrzywiona, na czubku głowy nad prawym okiem, żeby nie zasłaniała oczu.
+  return `<g class="cz-sez" transform="translate(132 35) rotate(14)">
+    <path d="M-16 0L0 -46L16 0Z" fill="#80B0E8" ${L}/>
+    <path d="M-10 -14L8 -10M-13 -4L13 -1M-5 -28L5 -26" fill="none" stroke="#F4D242" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M-16 0L0 -46L16 0Z" fill="none" ${L}/>
+    <g class="cz-pompon"><circle cx="0" cy="-48" r="6" fill="#F29CC3" ${L}/></g>
+    <path d="M-17 0Q0 6 17 0" fill="none" ${L}/></g>`;
 }
 function cukierekAme(ax){
   return `<g transform="translate(${ax} 0)"><g class="ame">
