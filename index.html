@@ -1534,7 +1534,9 @@ function kolorZaby(){
   return SK_KOLORY.find(k => k.id === st.kolor && (k.cena === 0 || st.kupione[k.id])) || SK_KOLORY[0];
 }
 function ustawKolorZaby(){
-  const k = kolorZaby(), r = document.documentElement.style;
+  // Przed zalogowaniem nie wiadomo, kto korzysta z apki, więc żabka jest zwykła, zielona.
+  const goscie = Zapis.potrzebneLogowanie || Zapis.ustawHaslo || !gotowe;
+  const k = goscie ? SK_KOLORY[0] : kolorZaby(), r = document.documentElement.style;
   r.setProperty("--zaba", k.fill); r.setProperty("--policzki", k.policzki);
 }
 let skPyt = null, skBrak = null, skNast = 0, skT1 = 0, skT2 = 0;
