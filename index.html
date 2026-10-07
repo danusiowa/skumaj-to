@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" href="ikona-512.png">
 <link rel="manifest" href="manifest.json">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}*,*::before,*::after{box-sizing:inherit}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}*,*::before,*::after{box-sizing:inherit}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Skumaj to!</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,7 +29,7 @@
 *,*::before,*::after{box-sizing:border-box}
 html,body{min-height:100%}
 body{background:var(--kartka);color:var(--staw);font-family:var(--tekst);font-size:16px;line-height:1.45;padding-inline:16px;padding-block:0}
-#app{max-width:440px;margin:0 auto;min-height:calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));min-height:calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));display:flex;flex-direction:column}
+#app{max-width:440px;margin:0 auto;min-height:calc(100vh - env(safe-area-inset-top, 0px));min-height:calc(100dvh - env(safe-area-inset-top, 0px));display:flex;flex-direction:column}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--slonko);outline-offset:2px}
 .mega{font-family:var(--mega);font-weight:800;letter-spacing:0}
@@ -125,7 +125,7 @@ svg.mucha{width:16px;height:16px;flex:none}
 .btn.ghost{background:transparent;color:var(--staw);box-shadow:inset 0 0 0 2px var(--staw)}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .spacer{flex-grow:1}
-nav.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:10px 6px calc(14px + env(safe-area-inset-bottom, 0px));font-size:12px;text-align:center;position:sticky;bottom:0;background:var(--staw);margin:0 -16px;border-radius:22px 22px 0 0}
+nav.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:8px 6px max(8px, calc(env(safe-area-inset-bottom, 0px) - 12px));font-size:12px;text-align:center;position:sticky;bottom:0;background:var(--staw);margin:0 -16px;border-radius:22px 22px 0 0}
 nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:4px;color:#CFE6DF}
 nav.tabs button i{width:44px;height:28px;border-radius:14px;display:grid;place-items:center}
 nav.tabs button i svg{width:18px;height:18px}
