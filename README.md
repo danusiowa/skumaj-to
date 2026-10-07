@@ -133,6 +133,8 @@ Tematy są w `index.html`, na liście `TEMATY`. Nowy temat to jeden obiekt:
 
 Temat potrzebuje co najmniej 15 zadań, żeby runda nie miała powtórek.
 
+Na ekranie startowym tematy układają się w bloki przedmiotów (Matematyka, Angielski, Hiszpański…). Przedmiot to część nazwy przed dwukropkiem, więc nowy przedmiot wystarczy wpisać w nazwie tematu, a jego blok pojawi się sam.
+
 ## Logowanie i wyniki
 
 - Konta są **tylko na zaproszenie**. Każdy zalogowany może zaprosić nową osobę przyciskiem „Zaproś” w nagłówku, który tworzy jednorazowy link. Link do ustawienia nowego hasła dla istniejącego konta może utworzyć tylko administratorka. Kod jest w części adresu po `#`, więc podgląd linku w WhatsAppie go nie zużyje.

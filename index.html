@@ -100,6 +100,8 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .hero .stan{margin:0;max-width:58%;font-size:14px;font-weight:500;color:var(--fiolet-ink)}
 .hero .frog{width:124px;height:144px}
 svg.mucha{width:16px;height:16px;flex:none}
+.blok{display:flex;flex-direction:column}
+.blok-t{margin:4px 0 0;font-size:18px}
 .tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:8px}
 .tile{position:relative;aspect-ratio:1;border-radius:18px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;transition:transform .15s;cursor:pointer;overflow:hidden}
 .tile.arch{opacity:.75}
@@ -1761,7 +1763,7 @@ function start(){
   const muchy = wszystkieMuchy();
   const A = akcent();
   const last = Zapis.rundy.filter(r => r.rodzaj === "runda").slice(-1)[0];
-  const kafel = (t, i, arch) => {
+  const kafel = (t, i, arch, wBloku) => {
     const [bg, fg] = kolorTematu(t, i); const p = opanowanie(t);
     const open = wybranyTemat === t.id, pyta = pytanieArchiwum === t.id;
     const menu = pyta
@@ -1770,12 +1772,15 @@ function start(){
         ? `<button class="tb go" data-act="przywroc" data-t="${t.id}">Przywróć do ćwiczeń</button><button class="tb" data-act="runda" data-t="${t.id}">Zacznij<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10.2-6.5a1 1 0 0 0 0-1.8L9.5 4.6A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg></button>`
         : `<button class="tb go" data-act="runda" data-t="${t.id}">Zacznij<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10.2-6.5a1 1 0 0 0 0-1.8L9.5 4.6A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg></button><button class="tb" data-act="pytaj-archiwum" data-t="${t.id}">Skumane<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`;
     return `<div class="tile${open ? " open" : ""}${arch ? " arch" : ""}" style="background:${bg};color:${fg};--tb:${bg};--tf:${fg}" data-act="wybierz" data-t="${t.id}" tabindex="0" role="button" aria-expanded="${open}" aria-label="${esc(t.nazwa)}${arch ? ", skumane" : ""}">
-      <span class="tname">${t.nazwa.includes(": ") ? `<small>${esc(t.nazwa.split(": ")[0])}</small>` : ""}<span class="mega">${esc(t.nazwa.includes(": ") ? t.nazwa.split(": ").slice(1).join(": ").replace(/^./, c => c.toUpperCase()) : t.nazwa)}</span></span>
+      <span class="tname">${t.nazwa.includes(": ") && !wBloku ? `<small>${esc(t.nazwa.split(": ")[0])}</small>` : ""}<span class="mega">${esc(t.nazwa.includes(": ") ? t.nazwa.split(": ").slice(1).join(": ").replace(/^./, c => c.toUpperCase()) : t.nazwa)}</span></span>
       <span class="foot"><span>${arch ? "skumane ✓" : Math.round(p * 100) + "%"}</span></span>
       <div class="tmenu">${menu}</div>
     </div>`;
   };
-  const tiles = TEMATY.map((t, i) => Zapis.archiwum[t.id] ? "" : kafel(t, i, false)).join("");
+  // Aktywne tematy w blokach przedmiotów (Matematyka, Angielski…), w kolejności z listy TEMATY.
+  const przedmiot = t => t.nazwa.includes(": ") ? t.nazwa.split(": ")[0] : "Inne";
+  const aktywne = TEMATY.map((t, i) => [t, i]).filter(([t]) => !Zapis.archiwum[t.id]);
+  const tiles = [...new Set(aktywne.map(([t]) => przedmiot(t)))].map(p => `<section class="blok" aria-label="${esc(p)}"><h2 class="mega blok-t">${esc(p)}</h2><div class="tiles">${aktywne.filter(([t]) => przedmiot(t) === p).map(([t, i]) => kafel(t, i, false, true)).join("")}</div></section>`).join("");
   const tilesArch = TEMATY.map((t, i) => Zapis.archiwum[t.id] ? kafel(t, i, true) : "").join("");
   return `${naglowek()}
   <main class="screen">
@@ -1790,7 +1795,7 @@ function start(){
       <span class="h-jezyk" aria-hidden="true"></span><span class="h-czubek" aria-hidden="true"></span>
       <svg class="h-mucha" viewBox="0 0 24 24" aria-hidden="true"><g class="h-skrz"><ellipse cx="8" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="#008471" stroke-width="1.6" transform="rotate(-25 8 8)"/><ellipse cx="16" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="#008471" stroke-width="1.6" transform="rotate(25 16 8)"/></g><ellipse cx="12" cy="14.5" rx="3.6" ry="5" fill="#008471"/><circle cx="12" cy="9" r="2.6" fill="#008471"/></svg>
     </section>
-    ${tiles.trim() ? `<div class="tiles">${tiles}</div>` : `<div class="strip" style="background:var(--slonko);color:var(--staw)"><span class="mega">Wszystko skumane!</span><span>Przywróć temat ze skumanych poniżej.</span></div>`}
+    ${tiles.trim() ? tiles : `<div class="strip" style="background:var(--slonko);color:var(--staw)"><span class="mega">Wszystko skumane!</span><span>Przywróć temat ze skumanych poniżej.</span></div>`}
     ${tilesArch.trim() ? `<h2 class="mega" style="margin:8px 0 0;font-size:17px">Skumane</h2><div class="tiles">${tilesArch}</div>` : ""}
     ${last ? `<div class="strip"><span class="mega">Ostatnio</span><span>${last.dobre}/${last.wszystkie} w ${czas(last.ms)} · ${esc((tematById(last.temat) || {}).nazwa || "")}</span></div>` : ""}
   </main>
