@@ -620,9 +620,11 @@ const SLOWA_RODZINA = [
 
 function lista(pary){ return pary.map(([pytanie, odp]) => ({ klucz: pytanie, pytanie, odp })); }
 
+/* „od” = dzień, w którym temat pojawił się w apce. Wcześniejsze dni kalendarz pokazuje jako neutralne, nie jako opuszczone.
+   Nowy temat: wpisz dzisiejszą datę. */
 const TEMATY = [
   {
-    id: "tabliczka", nazwa: "Matematyka: mnożenie do 100", typ: "liczby", polecenie: "Ile to jest?",
+    id: "tabliczka", od: "2026-10-03", nazwa: "Matematyka: mnożenie do 100", typ: "liczby", polecenie: "Ile to jest?",
     tlo: "#008471", napis: "#D6D35F",
     zadania(){
       const out = [];
@@ -634,7 +636,7 @@ const TEMATY = [
     }
   },
   {
-    id: "dzielenie", nazwa: "Matematyka: dzielenie do 100", typ: "liczby", polecenie: "Ile to jest?",
+    id: "dzielenie", od: "2026-10-03", nazwa: "Matematyka: dzielenie do 100", typ: "liczby", polecenie: "Ile to jest?",
     tlo: "#80B0E8", napis: "#16324F",
     zadania(){
       const out = [];
@@ -646,7 +648,7 @@ const TEMATY = [
     }
   },
   {
-    id: "reszta", nazwa: "Matematyka: dzielenie z resztą do 100", typ: "liczby", reszta: true, polecenie: "Podziel z resztą",
+    id: "reszta", od: "2026-10-04", nazwa: "Matematyka: dzielenie z resztą do 100", typ: "liczby", reszta: true, polecenie: "Podziel z resztą",
     tlo: "#C45F3F", napis: "#FFF8EE",
     zadania(){
       const out = [];
@@ -660,7 +662,7 @@ const TEMATY = [
     }
   },
   {
-    id: "ang-liczby", nazwa: "Angielski: liczby do 100", typ: "tekst", polecenie: "Napisz słowami po angielsku",
+    id: "ang-liczby", od: "2026-10-03", nazwa: "Angielski: liczby do 100", typ: "tekst", polecenie: "Napisz słowami po angielsku",
     tlo: "#F4D242", napis: "#00594F",
     zadania(){
       const jed = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
@@ -682,14 +684,14 @@ const TEMATY = [
     }
   },
   {
-    id: "ang-rodzina", nazwa: "Angielski: rodzina", typ: "tekst", polecenie: "Napisz po angielsku", wymowa: "en-GB",
+    id: "ang-rodzina", od: "2026-10-03", nazwa: "Angielski: rodzina", typ: "tekst", polecenie: "Napisz po angielsku", wymowa: "en-GB",
     tlo: "#FFC0C0", napis: "#9C3A20",
     zadania(){ return lista(SLOWA_RODZINA); }
   },
   {
     // Dyktando: apka czyta słowo, dziecko wpisuje, co usłyszało. Te same słowa co w „rodzinie”.
     // Każdy wariant (mum, mother) to osobne zadanie, ale z jednej grupy, więc w rundzie jest tylko jeden.
-    id: "ang-rodzina-sluch", nazwa: "Angielski: rodzina ze słuchu", typ: "tekst", dyktando: true, polecenie: "Posłuchaj i napisz", wymowa: "en-GB",
+    id: "ang-rodzina-sluch", od: "2026-10-05", nazwa: "Angielski: rodzina ze słuchu", typ: "tekst", dyktando: true, polecenie: "Posłuchaj i napisz", wymowa: "en-GB",
     tlo: "#D1CAEA", napis: "#4A3F6B",
     zadania(){
       const out = [];
@@ -703,7 +705,7 @@ const TEMATY = [
     // Dialogi do scenki na hiszpański (tylko teksty z zeszytu). Nic się tu nie pisze:
     // do pytania wybierz pasującą odpowiedź (pytanie napisane albo tylko słyszane)
     // albo do odpowiedzi wybierz pytanie. Każdy tekst można odsłuchać, stuknięta opcja czyta się na głos.
-    id: "hisz-dialogi", nazwa: "Hiszpański: dialogi", typ: "wybor", dlugosc: 10, wymowa: "es-ES",
+    id: "hisz-dialogi", od: "2026-10-06", nazwa: "Hiszpański: dialogi", typ: "wybor", dlugosc: 10, wymowa: "es-ES",
     tlo: "#E8483A", napis: "#FFE36E",
     zadania(){
       const D = [
@@ -1954,16 +1956,22 @@ function kalendarz(){
   const offset = (pierwszy.getDay() + 6) % 7;
   const dzisK = dzienKlucz(dzis);
   const biezacy = kal.r === dzis.getFullYear() && kal.m === dzis.getMonth();
-  const dotad = biezacy ? dzis.getDate() : (pierwszy > dzis ? 0 : dniWMies);
-  let wMies = 0, cells = "";
+  // Od kiedy liczymy dni: od pierwszej rundy w apce, ale nie wcześniej niż temat się pojawił.
+  const pierwszaRunda = Zapis.rundy.length ? Zapis.rundy[0].dzien : null;
+  const rundaTematu = (Zapis.rundy.find(r => r.temat === F) || {}).dzien;
+  let start = pierwszaRunda && tF && tF.od && tF.od > pierwszaRunda ? tF.od : pierwszaRunda;
+  if (rundaTematu && start && rundaTematu < start) start = rundaTematu;
+  const nowyTemat = start && tF && tF.od === start && (!pierwszaRunda || tF.od > pierwszaRunda);
+  let wMies = 0, dotad = 0, cells = "";
   for (let i = 0; i < offset; i++) cells += "<span></span>";
   for (let d = 1; d <= dniWMies; d++) {
     const k = kal.r + "-" + pad2(kal.m + 1) + "-" + pad2(d);
     const przyszly = k > dzisK, done = zrobione.has(k);
-    const przedStartem = !Zapis.rundy.length || k < Zapis.rundy[0].dzien;
+    const przedStartem = !start || k < start;
     if (done) wMies++;
+    if (!przyszly && (!przedStartem || done)) dotad++;
     const cls = ["day", przyszly || (przedStartem && !done) ? "future" : done ? "done" : (k === dzisK ? "" : "miss"), k === dzisK ? "today" : "", k === kal.sel ? "sel" : ""].join(" ");
-    const opis = `${d} ${MIESIACE_D[kal.m]}: ${przyszly ? "jeszcze przed nami" : done ? "ćwiczenie zrobione" : przedStartem ? "przed pierwszą rundą" : "bez ćwiczenia"}`;
+    const opis = `${d} ${MIESIACE_D[kal.m]}: ${przyszly ? "jeszcze przed nami" : done ? "ćwiczenie zrobione" : przedStartem ? (nowyTemat ? "tego tematu jeszcze nie było" : "przed pierwszą rundą") : "bez ćwiczenia"}`;
     const opisPelny = done ? opis + " (" + nazwyDnia(k) + ")" : opis;
     const kolko = przyszly || (przedStartem && !done) ? `<span class="${cls}" aria-label="${opis}">${d}</span>` : `<button class="${cls}" data-act="dzien" data-k="${k}" aria-label="${esc(opisPelny)}">${d}</button>`;
     cells += `<div class="dcell">${kolko}</div>`;

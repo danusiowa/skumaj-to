@@ -97,6 +97,7 @@ Tematy są w `index.html`, na liście `TEMATY`. Nowy temat to jeden obiekt:
 ```js
 {
   id: "ang-kolory",                      // unikalny, nie zmieniać po dodaniu (po nim zapisują się wyniki)
+  od: "2026-10-20",                      // dzień dodania tematu: wcześniejsze dni kalendarz pokazuje jako neutralne
   nazwa: "Angielski: kolory",            // "Przedmiot: temat"
   typ: "tekst",                          // "liczby" = klawiatura z cyframi, "tekst" = klawiatura z literami
   // reszta: true,                      // przy "liczby": dwa okienka, wynik i reszta (odp: "3 r. 2")
