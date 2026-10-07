@@ -433,7 +433,8 @@ ul.zad .glosnik .ti{width:12px;height:12px}
   body{padding-inline:24px}
   #app{max-width:1040px}
   .top{margin:12px 0 20px;padding:12px 20px;border-radius:22px}
-  nav.tabs{margin:0 auto;max-width:none;width:min(1040px,calc(100% - 48px));border-radius:22px 22px 0 0;padding-inline:max(24px,calc((100% - 640px)/2))}
+  /* Pasek ma dokładnie szerokość treści (--app-l/--app-w liczy skrypt, więc pasek przewijania niczego nie przesuwa). */
+  nav.tabs{margin:0;max-width:none;left:var(--app-l,24px);right:auto;width:var(--app-w,calc(100% - 48px));border-radius:22px 22px 0 0;padding-inline:max(24px,calc((100% - 640px)/2))}
   .dcell .day{max-width:54px;margin-inline:auto}
   .screen{gap:18px;padding-bottom:28px}
   .tiles{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
@@ -1733,6 +1734,13 @@ let kal = null;          // { r, m, sel }
 let pytanieOWyjscie = false;
 const app = document.getElementById("app");
 const przewijak = document.getElementById("przewijak");
+// Dolny pasek na komputerze ustawiamy dokładnie nad treścią (#app), nawet gdy przeglądarka pokazuje pasek przewijania.
+function dopasujPasek(){
+  const r = app.getBoundingClientRect(), st = document.documentElement.style;
+  st.setProperty("--app-l", r.left + "px"); st.setProperty("--app-w", r.width + "px");
+}
+try { const ro = new ResizeObserver(dopasujPasek); ro.observe(app); ro.observe(przewijak); } catch (e) {}
+addEventListener("resize", dopasujPasek);
 const przewinDo = o => { try { przewijak.scrollTo(o); } catch (e) { przewijak.scrollTop = (o && o.top) || 0; } };
 let gotowe = false;
 function loader(){
