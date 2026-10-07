@@ -125,7 +125,9 @@ svg.mucha{width:16px;height:16px;flex:none}
 .btn.ghost{background:transparent;color:var(--staw);box-shadow:inset 0 0 0 2px var(--staw)}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .spacer{flex-grow:1}
-nav.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:8px 6px max(8px, calc(env(safe-area-inset-bottom, 0px) - 12px));font-size:12px;text-align:center;position:sticky;bottom:0;background:var(--staw);margin:0 -16px;border-radius:22px 22px 0 0}
+nav.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:8px 6px max(8px, calc(env(safe-area-inset-bottom, 0px) - 12px));font-size:12px;text-align:center;position:fixed;left:0;right:0;bottom:0;z-index:20;max-width:472px;background:var(--staw);margin:0 auto;border-radius:22px 22px 0 0}
+/* Menu jest przypięte do dołu ekranu (fixed), bo w Safari przyklejone (sticky) nie nadąża za chowającym się paskiem przeglądarki. Miejsce pod treścią zostawia .tabs-miejsce. */
+.tabs-miejsce{flex:none;height:calc(58px + max(8px, calc(env(safe-area-inset-bottom, 0px) - 12px)))}
 nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:4px;color:#CFE6DF}
 nav.tabs button i{width:44px;height:28px;border-radius:14px;display:grid;place-items:center}
 nav.tabs button i svg{width:18px;height:18px}
@@ -427,7 +429,7 @@ ul.zad li span:first-child{display:flex;align-items:center;gap:6px}
   body{padding-inline:24px}
   #app{max-width:1040px}
   .top{margin:12px 0 20px;padding:12px 20px;border-radius:22px}
-  nav.tabs{margin:0;border-radius:22px 22px 0 0;padding-inline:max(24px,calc((100% - 640px)/2))}
+  nav.tabs{margin:0 auto;max-width:none;width:min(1040px,calc(100% - 48px));border-radius:22px 22px 0 0;padding-inline:max(24px,calc((100% - 640px)/2))}
   .dcell .day{max-width:54px;margin-inline:auto}
   .screen{gap:18px;padding-bottom:28px}
   .tiles{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
@@ -1751,7 +1753,7 @@ function naglowek(){
   return `<div class="top"><span class="logo">${frog("luz", "")}</span><span class="mega">Skumaj to!</span>${Zapis.mozeZapraszac() && !pytamWyloguj ? `<button class="wyloguj zapr" data-act="ekran" data-to="zapros" aria-label="Zaproś do stawu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="3.5"/><path d="M3.5 19.5c.8-3.4 3.3-5.5 6.5-5.5 1.6 0 3 .5 4.1 1.4M18 13v6M15 16h6"/></svg><span>Zaproś</span></button>` : ""}${Zapis.uid ? `<button class="wyloguj" data-act="wyloguj" aria-label="${pytamWyloguj ? "Potwierdź wylogowanie" : "Wyloguj się"}">${pytamWyloguj ? "Na pewno? Wyloguj" : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M9 8l-4 4 4 4M5 12h11"/></svg>Wyloguj`}</button>` : ""}</div>`;
 }
 function zakladki(akt){
-  return `<nav class="tabs" aria-label="Menu">
+  return `<div class="tabs-miejsce" aria-hidden="true"></div><nav class="tabs" aria-label="Menu">
     <button data-act="ekran" data-to="start" ${akt === "start" ? 'aria-current="page"' : ""}><i>${ICO_PLAY}</i>Ćwiczę</button>
     <button data-act="ekran" data-to="staw" ${akt === "staw" ? 'aria-current="page"' : ""}>${biezacyEtap() === 1 ? `<i>${ICO_WIESZAK}</i>Garderoba` : `<i>${ICO_STAW}</i>Staw`}</button>
     <button data-act="ekran" data-to="sklepik" ${akt === "sklepik" ? 'aria-current="page"' : ""}><i>${ICO_SKLEP}</i>Sklepik</button>
