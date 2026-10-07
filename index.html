@@ -123,7 +123,7 @@ svg.mucha{width:16px;height:16px;flex:none}
 .btn.ghost{background:transparent;color:var(--staw);box-shadow:inset 0 0 0 2px var(--staw)}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .spacer{flex-grow:1}
-nav.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding:10px 6px calc(14px + env(safe-area-inset-bottom, 0px));font-size:12px;text-align:center;position:sticky;bottom:0;background:var(--staw);margin:0 -16px;border-radius:22px 22px 0 0}
+nav.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:10px 6px calc(14px + env(safe-area-inset-bottom, 0px));font-size:12px;text-align:center;position:sticky;bottom:0;background:var(--staw);margin:0 -16px;border-radius:22px 22px 0 0}
 nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:4px;color:#CFE6DF}
 nav.tabs button i{width:44px;height:28px;border-radius:14px;display:grid;place-items:center}
 nav.tabs button i svg{width:18px;height:18px}
@@ -425,7 +425,7 @@ ul.zad li span:first-child{display:flex;align-items:center;gap:6px}
   body{padding-inline:24px}
   #app{max-width:1040px}
   .top{margin:12px 0 20px;padding:12px 20px;border-radius:22px}
-  nav.tabs{margin:0;border-radius:22px 22px 0 0;padding-inline:max(24px,calc((100% - 520px)/2))}
+  nav.tabs{margin:0;border-radius:22px 22px 0 0;padding-inline:max(24px,calc((100% - 640px)/2))}
   .dcell .day{max-width:54px;margin-inline:auto}
   .screen{gap:18px;padding-bottom:28px}
   .tiles{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
@@ -501,6 +501,100 @@ ul.zad li span:first-child{display:flex;align-items:center;gap:6px}
 @media (hover:hover){.ub:not(.zam):hover{filter:brightness(.97)}}
 .pop{animation:pop .35s ease}
 @keyframes pop{0%{transform:scale(.94)}60%{transform:scale(1.03)}100%{transform:scale(1)}}
+/* Sklepik żabki */
+.sk-uklad,.sk-lewa,.sk-prawa{display:flex;flex-direction:column;gap:16px}
+.sk-scena{position:relative;border-radius:24px;overflow:hidden;box-shadow:inset 0 0 0 1.5px var(--linia);background:var(--kartka)}
+.sk-scena > svg{display:block;width:100%;height:auto}
+.sk-zaba-btn{position:absolute;left:34%;top:30%;width:32%;height:52%;border-radius:40%;background:transparent}
+.sk-zaba-btn:focus-visible{outline:3px solid var(--pomidor);outline-offset:2px}
+.sk-dymek{position:absolute;left:4%;top:20%;width:30%;background:#fff;border-radius:16px;padding:8px 12px;box-shadow:inset 0 0 0 2.5px var(--staw),3px 3px 0 var(--zakreslacz);font-family:var(--mega);font-weight:800;font-size:13px;line-height:1.25;color:var(--staw)}
+.sk-dymek::after{content:"";position:absolute;right:-9px;bottom:12px;width:14px;height:14px;background:#fff;box-shadow:inset -2.5px 2.5px 0 var(--staw);transform:rotate(45deg) skew(10deg,10deg);border-radius:0 3px 0 0}
+.sk-portfel{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 16px;border-radius:18px;background:var(--staw);color:var(--kartka)}
+.sk-portfel .ile{display:flex;align-items:center;gap:8px;font-size:15px}
+.sk-portfel .mucha{width:30px;height:30px;color:var(--zakreslacz)}
+.sk-portfel .ile .mega{font-size:30px;line-height:1;color:var(--zakreslacz)}
+.sk-dzial{display:flex;flex-direction:column;gap:10px}
+.sk-dzial h2{margin:0;font-size:18px}
+.sk-dzial p{margin:2px 0 0;font-size:14px;color:var(--szary)}
+.sk-siatka{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.sk-karta{all:unset;box-sizing:border-box;cursor:pointer;min-height:136px;border-radius:18px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:6px;text-align:center;color:var(--staw);background:var(--bialy);box-shadow:inset 0 0 0 1.5px var(--linia)}
+.sk-karta.wyb{background:#E9F1E2;box-shadow:inset 0 0 0 3px var(--staw)}
+.sk-karta.pyta{box-shadow:inset 0 0 0 3px var(--pomidor)}
+.sk-karta:focus-visible{outline:3px solid var(--pomidor);outline-offset:2px}
+.sk-ik{display:grid;place-items:center;height:58px}
+.sk-ik svg{width:72px;height:58px;overflow:visible}
+.sk-karta.drogo .sk-ik{opacity:.38;filter:grayscale(.6)}
+.sk-nazwa{font-family:var(--mega);font-weight:800;font-size:13px;line-height:1.15}
+.sk-plak{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-height:26px;padding:0 10px;border-radius:99px;font-size:12px;font-weight:700;white-space:nowrap;background:var(--zakreslacz);color:var(--staw)}
+.sk-plak .mucha{width:15px;height:15px}
+.sk-karta.drogo .sk-plak{background:var(--puste);color:var(--szary)}
+.sk-karta.moje .sk-plak{background:var(--bialy);box-shadow:inset 0 0 0 1.5px var(--staw)}
+.sk-karta.wyb .sk-plak{background:var(--staw);color:var(--kartka);box-shadow:none}
+.sk-pasek{display:flex;flex-direction:column;gap:10px;padding:12px 14px;border-radius:16px;font-size:14px}
+.sk-pasek p{margin:0}
+.sk-pasek .przyc{display:flex;gap:8px;flex-wrap:wrap}
+.sk-pasek .btn{width:auto;height:44px;padding:0 18px;font-size:15px}
+.sk-scena .fx{display:none}
+.sk-scena[data-trik="skok"] .fx-skok,.sk-scena[data-trik="taniec"] .fx-taniec,.sk-scena[data-trik="piruet"] .fx-piruet,.sk-scena[data-trik="spiew"] .fx-spiew,.sk-scena[data-trik="fikolek"] .fx-fikolek{display:inline}
+.sk-zaba,.sk-cien{transform-box:fill-box}
+.sk-zaba{transform-origin:50% 100%}
+.sk-cien{transform-origin:center}
+@media (prefers-reduced-motion:reduce){.sk-scena .fx{display:none!important}}
+@media (prefers-reduced-motion:no-preference){
+.sk-scena[data-trik="skok"] .sk-zaba{animation:skSkok 1.4s cubic-bezier(.4,0,.3,1)}
+.sk-scena[data-trik="taniec"] .sk-zaba{animation:skTaniec 2.4s ease-in-out}
+.sk-scena[data-trik="piruet"] .sk-zaba{animation:skPiruet 1.6s ease-in-out}
+.sk-scena[data-trik="spiew"] .sk-zaba{animation:skSpiew 2.6s ease-in-out}
+.sk-scena[data-trik="fikolek"] .sk-zaba{animation:skFikolek 1.8s ease-in-out;transform-origin:50% 50%}
+.sk-scena[data-trik="skok"] .sk-cien{animation:skCienSkok 1.4s ease-in-out}
+.sk-scena[data-trik="fikolek"] .sk-cien{animation:skCienFik 1.8s ease-in-out}
+.sk-scena[data-trik="taniec"] .sk-cien{animation:skCienTan 2.4s ease-in-out}
+.sk-gw{transform-box:fill-box;transform-origin:center;animation:skGw .9s ease-in-out infinite both}
+.sk-gw.sk-d1{animation-delay:.3s}.sk-gw.sk-d2{animation-delay:.6s}.sk-gw.sk-d3{animation-delay:.15s}
+.sk-zawrot .sk-gw{animation:skGw .9s ease-in-out 1.5s infinite both}
+.sk-kurz{transform-box:fill-box;transform-origin:center;opacity:0}
+.sk-kurz-s{animation:skKurz .7s ease-out .98s both}
+.sk-kurz-f{animation:skKurz .7s ease-out .35s both}
+.sk-kurz-f2{animation:skKurz .7s ease-out .6s both}
+.sk-smugi{opacity:0;animation:skSmugi 1.4s ease-in-out both}
+.sk-wir path{animation:skWir .35s linear infinite}
+.sk-wir{animation:skWirOn 1.6s ease-in-out both}
+.sk-nuta{animation:skNuta 1.2s ease-out infinite}
+.sk-nuta.sk-d2{animation-delay:.6s}.sk-nuta.sk-d3{animation-delay:.3s}.sk-nuta.sk-d4{animation-delay:.9s}
+.sk-fruwa{animation:skFruwa 5s ease-in-out infinite}
+.sk-macha{animation:skMacha .5s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 50%}
+.sk-idzie{animation:skIdzie 3.4s ease-in-out infinite}
+.sk-pelza{animation:skPelza 4s ease-in-out infinite;transform-box:fill-box;transform-origin:100% 100%}
+.sk-kiwa{animation:skKiwa 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.sk-drepcze{animation:skDrepcze 3.2s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+}
+@keyframes skSkok{0%,100%{transform:none}12%{transform:scale(1.18,.78)}24%{transform:translateY(-24px) scale(.88,1.16)}50%{transform:translateY(-66px) scale(.96,1.05) rotate(-5deg)}70%{transform:translateY(0) scale(.92,1.1)}78%{transform:scale(1.22,.76)}88%{transform:scale(.95,1.06)}}
+@keyframes skTaniec{0%,100%{transform:none}10%{transform:translateX(-8px) rotate(-15deg)}20%{transform:translateY(-18px)}30%{transform:translateX(8px) rotate(15deg)}40%{transform:translateY(-18px)}50%{transform:translateX(-8px) rotate(-15deg) scale(1.06,.94)}60%{transform:translateY(-22px) rotate(8deg)}70%{transform:translateX(8px) rotate(15deg)}80%{transform:translateY(-14px) scaleX(-1)}90%{transform:scaleX(-1) rotate(-8deg)}}
+@keyframes skPiruet{0%,100%{transform:none}8%{transform:scale(1.08,.9)}20%{transform:translateY(-12px) scaleX(.06)}32%{transform:translateY(-16px) scaleX(-1)}44%{transform:translateY(-12px) scaleX(-.06)}56%{transform:translateY(-16px) scaleX(1)}68%{transform:translateY(-10px) scaleX(.06)}80%{transform:translateY(-8px) scaleX(-1)}90%{transform:scaleX(.06)}}
+@keyframes skSpiew{0%,100%{transform:none}15%{transform:rotate(-8deg) scale(1.05)}30%{transform:translateY(-8px)}45%{transform:rotate(8deg) scale(1.08)}60%{transform:translateY(-8px)}75%{transform:rotate(-6deg) scale(1.1,.95)}90%{transform:rotate(4deg)}}
+@keyframes skFikolek{0%{transform:translate(0,0) rotate(0deg) scale(1,1)}12%{transform:translate(0,6px) rotate(0deg) scale(1.12,.86)}28%{transform:translate(-22px,8px) rotate(-180deg) scale(.86,.86)}45%{transform:translate(-46px,8px) rotate(-360deg) scale(.86,.86)}58%{transform:translate(-50px,0) rotate(-360deg) scale(1.12,.88)}78%{transform:translate(-20px,-12px) rotate(-360deg) scale(1,1)}90%{transform:translate(0,0) rotate(-360deg) scale(1.06,.94)}100%{transform:translate(0,0) rotate(-360deg) scale(1,1)}}
+@keyframes skCienSkok{0%,100%,72%{transform:none;opacity:.5}50%{transform:scale(.45);opacity:.2}}
+@keyframes skCienFik{0%,100%{transform:none}45%,58%{transform:translateX(-48px) scale(.8)}78%{transform:translateX(-20px) scale(.7);opacity:.3}}
+@keyframes skCienTan{0%,100%{transform:none}20%,40%,60%,80%{transform:scale(.8)}}
+@keyframes skGw{0%,100%{transform:scale(0) rotate(0);opacity:0}50%{transform:scale(1.1) rotate(45deg);opacity:1}}
+@keyframes skKurz{0%{opacity:0;transform:scale(.3)}30%{opacity:1}100%{opacity:0;transform:scale(1.5)}}
+@keyframes skSmugi{0%,14%,60%,100%{opacity:0}24%,48%{opacity:1}}
+@keyframes skWir{to{stroke-dashoffset:-34}}
+@keyframes skWirOn{0%,100%{opacity:0}12%,85%{opacity:1}}
+@keyframes skNuta{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-30px);opacity:0}}
+@keyframes skFruwa{0%,100%{transform:translate(0,0)}25%{transform:translate(-8px,-6px)}50%{transform:translate(-14px,2px)}75%{transform:translate(-4px,6px)}}
+@keyframes skMacha{to{transform:scaleX(.72)}}
+@keyframes skIdzie{0%,100%{transform:translateX(0)}50%{transform:translateX(-7px)}}
+@keyframes skPelza{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.07)}}
+@keyframes skKiwa{0%,100%{transform:rotate(0)}30%{transform:rotate(-7deg)}60%{transform:rotate(3deg)}}
+@keyframes skDrepcze{0%,50%,100%{transform:none}25%{transform:translateY(-2px) rotate(-2deg)}75%{transform:translateY(-2px) rotate(2deg)}}
+@media (min-width:760px){
+  #app[data-ekran="sklepik"] .screen{width:100%;max-width:1040px;margin-inline:auto}
+  .sk-uklad{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:28px;align-items:start}
+  .sk-lewa{position:sticky;top:16px}
+  .sk-dymek{font-size:16px}
+}
+@media (hover:hover){.sk-karta:hover{filter:brightness(.97)}}
 @media (prefers-reduced-motion:reduce){.pop{animation:none}.tile{transition:none}}
 </style>
 
@@ -530,9 +624,32 @@ ul.zad li span:first-child{display:flex;align-items:center;gap:6px}
     <g id="ub-trampki-l"><path d="M72 164h20v12q0 4-4 4h-24q-6 0-6-5q0-5 6-5h8z" style="fill:var(--fx,#80B0E8)"/><path d="M70 176h20" fill="none" stroke-width="2" style="stroke:var(--ex,#FFF8EE)"/></g>
     <g id="ub-trampki-p"><path d="M128 164h-20v12q0 4 4 4h24q6 0 6-5q0-5-6-5h-8z" style="fill:var(--fx,#80B0E8)"/><path d="M110 176h20" fill="none" stroke-width="2" style="stroke:var(--ex,#FFF8EE)"/></g>
     <g id="ub-parasolka"><path d="M165 40v120q0 8-6 8t-6-6" fill="none"/><path d="M143 44q22-30 44 0q-5.5 5-11 0q-5.5 5-11 0q-5.5 5-11 0q-5.5 5-11 0z" style="fill:var(--fx,#F29CC3)"/><circle cx="165" cy="12" r="3.5" style="fill:var(--fx,#F4D242)"/><path d="M136 156q10-2 17 2" fill="none" stroke-width="3.6"/></g>
+    <!-- Sklepik: kolory żabki (wzory na całą apkę), ikonki sztuczek i przyjaciele -->
+    <linearGradient id="zaba-tecza" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F29CC3"/><stop offset=".28" stop-color="#F4D242"/><stop offset=".52" stop-color="#D6D35F"/><stop offset=".76" stop-color="#80B0E8"/><stop offset="1" stop-color="#D1CAEA"/></linearGradient>
+    <pattern id="zaba-kropki" width="26" height="26" patternUnits="userSpaceOnUse"><rect width="26" height="26" fill="#D6D35F"/><circle cx="6" cy="7" r="4" fill="#F29CC3"/><circle cx="19" cy="19" r="4" fill="#80B0E8"/></pattern>
+<g id="sk-glowka">
+<path style="fill:var(--zaba,#D6D35F)" d="M40 100C38 80 46 66 52 60C44 40 62 30 74 34C84 36 90 44 92 52C98 50 104 50 110 52C112 42 120 34 132 34C146 34 154 46 148 60C158 70 162 86 160 100C158 122 132 132 100 132C66 133 42 122 40 100Z" transform="translate(6 5)"/>
+<g fill="none" stroke="#008471" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+<path d="M40 100C38 80 46 66 52 60C44 40 62 30 74 34C84 36 90 44 92 52C98 50 104 50 110 52C112 42 120 34 132 34C146 34 154 46 148 60C158 70 162 86 160 100C158 122 132 132 100 132C66 133 42 122 40 100Z"/>
+<circle cx="70" cy="58" r="15" fill="#fff"/><circle cx="130" cy="58" r="15" fill="#fff"/>
+<circle cx="72" cy="58" r="6" fill="#008471" stroke="none"/><circle cx="132" cy="58" r="6" fill="#008471" stroke="none"/>
+<circle cx="56" cy="94" r="8" stroke="none" style="fill:var(--policzki,#F29CC3)"/><circle cx="144" cy="94" r="8" stroke="none" style="fill:var(--policzki,#F29CC3)"/>
+<path d="M80 102q20 18 40 0"/>
+</g>
+<g id="sk-skok"><path d="M28 48v8M40 45v13M52 48v8M18 62h44" fill="none" stroke="#008471" stroke-width="2.5" stroke-linecap="round"/><use href="#sk-glowka" transform="translate(4 -10) scale(.36)"/></g>
+<g id="sk-taniec"><path d="M10 14q-6 10 0 20M17 18q-3 6 0 12M70 14q6 10 0 20M63 18q3 6 0 12" fill="none" stroke="#008471" stroke-width="2.5" stroke-linecap="round"/><g transform="rotate(-14 40 24)"><use href="#sk-glowka" transform="translate(4 -6) scale(.36)"/></g><path d="M30 50l-4 10M50 50l4 10" fill="none" stroke="#008471" stroke-width="2.5" stroke-linecap="round"/></g>
+<g id="sk-piruet"><use href="#sk-glowka" transform="translate(4 -6) scale(.36)"/><path d="M60 50a24 8 0 1 1-12-6" fill="none" stroke="#008471" stroke-width="2.5" stroke-linecap="round"/><path d="M44 40l5 4-6 3" fill="none" stroke="#008471" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g id="sk-spiew"><use href="#sk-glowka" transform="translate(-6 4) scale(.32)"/><path d="M58 8v24M70 14v22M58 8l12 6" fill="none" stroke="#008471" stroke-width="2.5" stroke-linecap="round"/><ellipse cx="54" cy="33" rx="5" ry="4" fill="#F29CC3" stroke="#008471" stroke-width="2.5"/><ellipse cx="66" cy="37" rx="5" ry="4" fill="#F4D242" stroke="#008471" stroke-width="2.5"/></g>
+<g id="sk-fikolek"><g transform="rotate(180 40 22)"><use href="#sk-glowka" transform="translate(4 -6) scale(.36)"/></g><path d="M12 48a28 12 0 0 0 56 0" fill="none" stroke="#008471" stroke-width="2.5" stroke-linecap="round"/><path d="M68 48l-2-7M68 48l-7 1" fill="none" stroke="#008471" stroke-width="2.5" stroke-linecap="round"/></g>
+<g id="sk-zolwik"><path d="M24 50v6q0 3 4 3t4-3v-6M54 50v6q0 3 4 3t4-3v-6" style="fill: var(--fx, #D6D35F)"/><path d="M74 46l7 2-7 3" style="fill: var(--fx, #D6D35F)"/><path d="M16 50q0-32 30-32q30 0 30 32z" style="fill: var(--fx, #80B0E8)"/><path d="M32 26l7 11-7 11M58 25l-5 12 7 11M39 37h14" fill="none" stroke-width="2"/><path d="M14 50h64" fill="none"/><path d="M30 24q6-4 14-5" fill="none" stroke-width="2" style="stroke: var(--ex, #FFF8EE)"/><circle cx="15" cy="40" r="9.5" style="fill: var(--fx, #D6D35F)"/><circle cx="13" cy="37" r="3.6" stroke-width="1.6" style="fill: var(--ex, #FFFFFF)"/><circle cx="12.4" cy="37.4" r="1.7" stroke="none" style="fill: var(--ex, #008471)"/><circle cx="19" cy="44" r="2.4" stroke="none" style="fill: var(--ex, #F29CC3)"/><path d="M8 44q3 3 7 1" fill="none" stroke-width="1.8"/></g>
+<g id="sk-biedronka"><path d="M22 47l-6 4M58 47l6 4M24 55l-5 5M56 55l5 5" fill="none" stroke-width="2"/><circle cx="40" cy="41" r="18" style="fill: var(--fx, #C45F3F)"/><path d="M40 27v32" fill="none" stroke-width="2"/><circle cx="31" cy="38" r="3.6" stroke="none" style="fill: var(--ex, #4A3F6B)"/><circle cx="49" cy="38" r="3.6" stroke="none" style="fill: var(--ex, #4A3F6B)"/><circle cx="32" cy="50" r="3" stroke="none" style="fill: var(--ex, #4A3F6B)"/><circle cx="48" cy="50" r="3" stroke="none" style="fill: var(--ex, #4A3F6B)"/><path d="M35 12q-3-6-8-6M45 12q3-6 8-6" fill="none" stroke-width="2"/><circle cx="27" cy="6" r="2.4" stroke="none" style="fill: var(--ex, #008471)"/><circle cx="53" cy="6" r="2.4" stroke="none" style="fill: var(--ex, #008471)"/><circle cx="40" cy="21" r="10.5" style="fill: var(--fx, #4A3F6B)"/><circle cx="36" cy="20" r="3.4" stroke="none" style="fill: var(--ex, #FFFFFF)"/><circle cx="44" cy="20" r="3.4" stroke="none" style="fill: var(--ex, #FFFFFF)"/><circle cx="36.6" cy="20.4" r="1.6" stroke="none" style="fill: var(--ex, #4A3F6B)"/><circle cx="44.6" cy="20.4" r="1.6" stroke="none" style="fill: var(--ex, #4A3F6B)"/><path d="M37 25.5q3 2.4 6 0" fill="none" stroke-width="1.6" style="stroke: var(--ex, #FFF8EE)"/></g>
+<g id="sk-motylek"><path d="M38 28q-16-24-28-12q-6 12 28 14z" style="fill: var(--fx, #D1CAEA)"/><path d="M42 28q16-24 28-12q6 12-28 14z" style="fill: var(--fx, #D1CAEA)"/><path d="M38 34q-18 0-20 12q4 10 20-6z" style="fill: var(--fx, #F29CC3)"/><path d="M42 34q18 0 20 12q-4 10-20-6z" style="fill: var(--fx, #F29CC3)"/><circle cx="22" cy="20" r="3.5" stroke="none" style="fill: var(--ex, #F4D242)"/><circle cx="58" cy="20" r="3.5" stroke="none" style="fill: var(--ex, #F4D242)"/><circle cx="25" cy="44" r="2.6" stroke="none" style="fill: var(--ex, #FFF8EE)"/><circle cx="55" cy="44" r="2.6" stroke="none" style="fill: var(--ex, #FFF8EE)"/><ellipse cx="40" cy="38" rx="4.5" ry="13" style="fill: var(--fx, #F4D242)"/><path d="M37 14q-3-7-7-8M43 14q3-7 7-8" fill="none" stroke-width="2"/><circle cx="40" cy="20" r="7" style="fill: var(--fx, #F4D242)"/><circle cx="37.4" cy="19.5" r="1.7" stroke="none" style="fill: var(--ex, #008471)"/><circle cx="42.6" cy="19.5" r="1.7" stroke="none" style="fill: var(--ex, #008471)"/><path d="M37.5 23q2.5 2 5 0" fill="none" stroke-width="1.6"/></g>
+<g id="sk-slimak"><path d="M6 56q0-12 12-14h42q12 2 12 14z" style="fill: var(--fx, #D6D35F)"/><path d="M10 46q-4-16 6-20q10 0 10 16" style="fill: var(--fx, #D6D35F)"/><path d="M14 27l-4-13M22 27l3-13" fill="none" stroke-width="2"/><circle cx="10" cy="12" r="4.2" style="fill: var(--fx, #FFFFFF)"/><circle cx="25" cy="12" r="4.2" style="fill: var(--fx, #FFFFFF)"/><circle cx="10.6" cy="12.6" r="1.8" stroke="none" style="fill: var(--ex, #008471)"/><circle cx="25.6" cy="12.6" r="1.8" stroke="none" style="fill: var(--ex, #008471)"/><circle cx="12" cy="40" r="2.6" stroke="none" style="fill: var(--ex, #F29CC3)"/><path d="M15 36q3 3 7 0" fill="none" stroke-width="1.8"/><circle cx="46" cy="32" r="17" style="fill: var(--fx, #F29CC3)"/><path d="M46 32m-3 0a3 3 0 1 1 6 0a7 7 0 1 1-13-3a11 11 0 1 1 20 8" fill="none" stroke-width="2"/><path d="M36 22q4-5 10-6" fill="none" stroke-width="2" style="stroke: var(--ex, #FFF8EE)"/></g>
+<g id="sk-kaczuszka"><path d="M40 56l-3 6h8M51 56l-1 6h7" fill="none" stroke-width="2" style="stroke: var(--ex, #E8A04A)"/><path d="M18 42q0-12 16-12h16q10 0 15-7l5 3q1 9-4 15q-5 15-26 15q-22 0-22-14z" style="fill: var(--fx, #F4D242)"/><circle cx="26" cy="22" r="12" style="fill: var(--fx, #F4D242)"/><path d="M15 23q-9-1-11 3q4 5 12 2z" style="fill: var(--fx, #E8A04A)"/><circle cx="24" cy="19" r="2.4" stroke="none" style="fill: var(--ex, #008471)"/><circle cx="22" cy="27" r="2.6" stroke="none" style="fill: var(--ex, #F29CC3)"/><path d="M38 40q8 10 18 2" fill="none" stroke-width="2"/><path d="M26 10q2-6 6-6" fill="none" stroke-width="2"/></g>
+<path id="sk-gw" d="M0 -8l2.4 5.2 5.6.6-4.2 3.8 1.2 5.6L0 4.4-5 7.2l1.2-5.6L-8 -2.2l5.6-.6z" fill="#F4D242" stroke="#008471" stroke-width="1.8" stroke-linejoin="round"/>
     <g id="baza">
-      <use href="#cialo" fill="#D6D35F" transform="translate(5 4)"/>
-      <use href="#glowa" fill="#D6D35F" transform="translate(6 5)"/>
+      <use href="#cialo" style="fill:var(--zaba,#D6D35F)" transform="translate(5 4)"/>
+      <use href="#glowa" style="fill:var(--zaba,#D6D35F)" transform="translate(6 5)"/>
       <g fill="none" stroke="#008471" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
         <use href="#cialo"/><use href="#glowa"/>
         <path d="M80 141q-13 6-17 17M120 141q12 5 16 15"/>
@@ -787,25 +904,33 @@ const ZAPROSZENIE = (() => {
 })();
 
 const Zapis = {
-  rundy: [], oczekujace: [], archiwum: {}, stroj: null, archDoWyslania: false, stan: "urzadzenie", onChange: null,
+  rundy: [], oczekujace: [], archiwum: {}, stroj: null, sklep: null, archDoWyslania: false, stan: "urzadzenie", onChange: null,
   chmura: null,               // { zapiszRunde(r), zapiszArchiwum(a) } – Claude albo Supabase
   sb: null, uid: null, email: "", potrzebneLogowanie: false, ustawHaslo: false, bladZaproszenia: "",
   KLUCZ: "skumaj-to-v1",
   wczytajLokalnie(){
     try {
       const raw = JSON.parse(localStorage.getItem(this.KLUCZ) || "null");
-      if (raw) { this.rundy = raw.rundy || []; this.oczekujace = raw.oczekujace || []; this.archiwum = raw.archiwum || {}; this.stroj = raw.stroj || null; this.archDoWyslania = !!raw.archDoWyslania; }
+      if (raw) { this.rundy = raw.rundy || []; this.oczekujace = raw.oczekujace || []; this.archiwum = raw.archiwum || {}; this.stroj = raw.stroj || null; this.sklep = raw.sklep || null; this.archDoWyslania = !!raw.archDoWyslania; }
     } catch (e) {}
   },
   zapiszLokalnie(){
-    try { localStorage.setItem(this.KLUCZ, JSON.stringify({ rundy: this.rundy, oczekujace: this.oczekujace, archiwum: this.archiwum, stroj: this.stroj, archDoWyslania: this.archDoWyslania })); } catch (e) {}
+    try { localStorage.setItem(this.KLUCZ, JSON.stringify({ rundy: this.rundy, oczekujace: this.oczekujace, archiwum: this.archiwum, stroj: this.stroj, sklep: this.sklep, archDoWyslania: this.archDoWyslania })); } catch (e) {}
   },
   // Strój żabki jedzie do chmury razem z archiwum (w tym samym polu, pod kluczem "_stroj"), więc baza nie potrzebuje nowej kolumny.
-  doChmury(){ return this.stroj ? { ...this.archiwum, _stroj: this.stroj } : { ...this.archiwum }; },
+  // Zakupy ze sklepiku jadą tak samo, pod kluczem "_sklep".
+  doChmury(){
+    const a = { ...this.archiwum };
+    if (this.stroj) a._stroj = this.stroj;
+    if (this.sklep) a._sklep = this.sklep;
+    return a;
+  },
   zChmury(a){
     a = { ...(a || {}) };
     if (a._stroj && typeof a._stroj === "object") this.stroj = a._stroj;
     delete a._stroj;
+    if (a._sklep && typeof a._sklep === "object") this.sklep = a._sklep;
+    delete a._sklep;
     this.archiwum = a;
   },
   scal(zSerwera){
@@ -906,7 +1031,7 @@ const Zapis = {
       this.scal(data.map(r => ({ ...r, data: new Date(r.data).toISOString() })));
       const u = await sb.from("ustawienia").select("archiwum").maybeSingle();
       if (u.data && !this.archDoWyslania) this.zChmury(u.data.archiwum);
-      else if (!u.data && (Object.keys(this.archiwum).length || this.stroj)) this.archDoWyslania = true;
+      else if (!u.data && (Object.keys(this.archiwum).length || this.stroj || this.sklep)) this.archDoWyslania = true;
       this.zapiszLokalnie();
       this.stan = "chmura";
     } catch (e) {
@@ -925,6 +1050,13 @@ const Zapis = {
   },
   ustawArchiwum(id, skumany){
     if (skumany) this.archiwum[id] = new Date().toISOString(); else delete this.archiwum[id];
+    this.archDoWyslania = true;
+    this.zapiszLokalnie();
+    this.zmiana();
+    this.wyslij();
+  },
+  ustawSklep(sklep){
+    this.sklep = { kupione: { ...(sklep.kupione || {}) }, przyjaciel: sklep.przyjaciel || null, kolor: sklep.kolor || "zielona" };
     this.archDoWyslania = true;
     this.zapiszLokalnie();
     this.zmiana();
@@ -1124,17 +1256,17 @@ function zabaPet(mina0, cls, attrs, mina, stalyStroj, A){
   const ax = (S[0] - 1) * 28, fx = (S[0] - 1) * 18, fy = (S[1] - 1) * 20;
   const twarz = mina0 === "szczesliwa"
     ? `<path d="M58 62q12-13 24 0M118 62q12-13 24 0"/>
-     <circle cx="54" cy="94" r="7" fill="#F29CC3" stroke="none"/><circle cx="146" cy="94" r="7" fill="#F29CC3" stroke="none"/>
+     <circle cx="54" cy="94" r="7" stroke="none" style="fill:var(--policzki,#F29CC3)"/><circle cx="146" cy="94" r="7" stroke="none" style="fill:var(--policzki,#F29CC3)"/>
      <path d="M80 100q20 26 40 0Z" fill="#F29CC3"/>
      <path d="M30 70l-10-4M28 84l-10 2M170 70l10-4M172 84l10 2"/>`
     : `<circle cx="70" cy="58" r="14" fill="#fff"/><circle cx="130" cy="58" r="14" fill="#fff"/>
      <circle cx="72" cy="57" r="5" fill="#008471" stroke="none"/><circle cx="132" cy="57" r="5" fill="#008471" stroke="none"/>
-     <circle cx="54" cy="94" r="6" fill="#F29CC3" stroke="none"/><circle cx="146" cy="94" r="6" fill="#F29CC3" stroke="none"/>
+     <circle cx="54" cy="94" r="6" stroke="none" style="fill:var(--policzki,#F29CC3)"/><circle cx="146" cy="94" r="6" stroke="none" style="fill:var(--policzki,#F29CC3)"/>
      <path d="M82 102q18 16 36 0"/>`;
   const twarzMina = mina === "zamkniete"
     ? `<path d="M57 58q13 10 26 0M117 58q13 10 26 0"/>
        <path d="M60 63l-4 5M70 66v6M80 63l4 5M120 63l-4 5M130 66v6M140 63l4 5" stroke-width="2.4"/>
-       <circle cx="54" cy="94" r="6" fill="#F29CC3" stroke="none"/><circle cx="146" cy="94" r="6" fill="#F29CC3" stroke="none"/>
+       <circle cx="54" cy="94" r="6" stroke="none" style="fill:var(--policzki,#F29CC3)"/><circle cx="146" cy="94" r="6" stroke="none" style="fill:var(--policzki,#F29CC3)"/>
        <path d="M90 106q10 6 20 0"/>`
     : null;
   // Strój z garderoby (nie na ekranie logowania).
@@ -1144,8 +1276,8 @@ function zabaPet(mina0, cls, attrs, mina, stalyStroj, A){
   const sezon = A ? `${A.kotylion ? kotylion(S) : ""}${A.ame ? cukierekAme(ax) : ""}${A.glowa ? czapkaSezonowa(A.glowa) : ""}${A.nag && !A.glowa ? naGlowie(A.nag, stroj.glowa) : ""}` : "";
   return `<svg class="${cls || "frog"}" ${attrs || ""} viewBox="14 -2 176 202" overflow="visible" aria-hidden="true">
     ${U.tyl}
-    <g transform="translate(5 4)"><use href="#cialo" fill="#D6D35F" transform="${T}"/></g>
-    <use href="#glowa" fill="#D6D35F" transform="translate(6 5)"/>
+    <g transform="translate(5 4)"><use href="#cialo" style="fill:var(--zaba,#D6D35F)" transform="${T}"/></g>
+    <use href="#glowa" style="fill:var(--zaba,#D6D35F)" transform="translate(6 5)"/>
     <g fill="none" stroke="#008471" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
       <use href="#cialo" transform="${T}"/>
       <use href="#glowa"/>
@@ -1337,6 +1469,168 @@ function nagrodaDnia(k){
   return { tytul: "Nowość w jesiennym stawie!", nazwa: i % 3 === 2 ? "Kasztan na trawie" : "Liść na trawie", link: "zobacz staw ›" };
 }
 
+/* SKLEPIK ŻABKI: muchy (1 za każdą dobrą odpowiedź) wydaje się na sztuczki, przyjaciół i kolory.
+   Do wydania = wszystkie złapane muchy minus ceny kupionych rzeczy. Sztuczki i przyjaciele są tylko w sklepiku,
+   kolor żabki obowiązuje w całej apce. Nic nie przepada i nic nie jest na czas. */
+const ICO_SKLEP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l2-5h14l2 5M3 9a3 3 0 0 0 6 0a3 3 0 0 0 6 0a3 3 0 0 0 6 0M5 12v8h14v-8M10 20v-5h4v5"/></svg>';
+const SK_TRIKI = [
+  { id: "skok", nazwa: "Wielki skok", cena: 30, tekst: "Hop! Prawie do chmur!", ms: 1400 },
+  { id: "taniec", nazwa: "Taniec", cena: 55, tekst: "Tańczymy kum-kum!", ms: 2400 },
+  { id: "piruet", nazwa: "Piruet", cena: 70, tekst: "Kręcę się jak bączek!", ms: 1600 },
+  { id: "spiew", nazwa: "Śpiew", cena: 85, tekst: "La la kum! La la kwa!", ms: 2600 },
+  { id: "fikolek", nazwa: "Fikołek", cena: 105, tekst: "Fikołek! Ale mi się kręci w głowie!", ms: 2600 }
+];
+const SK_PRZYJACIELE = [
+  { id: "zolwik", nazwa: "Żółwik", cena: 105 },
+  { id: "biedronka", nazwa: "Biedronka", cena: 140 },
+  { id: "motylek", nazwa: "Motylek", cena: 175 },
+  { id: "slimak", nazwa: "Ślimak", cena: 210 },
+  { id: "kaczuszka", nazwa: "Kaczuszka", cena: 245 }
+];
+const SK_KOLORY = [
+  { id: "zielona", nazwa: "Zielona", cena: 0, fill: "#D6D35F", policzki: "#F29CC3" },
+  { id: "rozowa", nazwa: "Różowa", cena: 210, fill: "#F29CC3", policzki: "#E0607A" },
+  { id: "blekitna", nazwa: "Błękitna", cena: 210, fill: "#80B0E8", policzki: "#F29CC3" },
+  { id: "zlota", nazwa: "Złota", cena: 280, fill: "#F4D242", policzki: "#F29CC3" },
+  { id: "kropki", nazwa: "W kropki", cena: 350, fill: "url(#zaba-kropki)", policzki: "#F29CC3" },
+  { id: "teczowa", nazwa: "Tęczowa", cena: 490, fill: "url(#zaba-tecza)", policzki: "#C45F3F" }
+];
+const SK_DZIALY = [
+  { id: "sztuczki", tytul: "Sztuczki", opis: "Stuknij kupioną sztuczkę albo żabkę, a żabka ją pokaże.", lista: SK_TRIKI },
+  { id: "przyjaciele", tytul: "Przyjaciele", opis: "Jeden przyjaciel naraz dotrzymuje żabce towarzystwa.", lista: SK_PRZYJACIELE },
+  { id: "kolory", tytul: "Kolory żabki", opis: "", lista: SK_KOLORY }
+];
+// Przyjaciele na scenie (z cieniem i spokojną animacją) i efekty sztuczek; współrzędne sceny 360×250.
+const SK_SCENA_PRZYJ = {"biedronka": "<ellipse cx=\"284\" cy=\"206\" rx=\"26\" ry=\"4\" fill=\"#898E46\" opacity=\".5\"/><g class=\"sk-idzie\"><g transform=\"translate(240 139) scale(1.1)\"><use href=\"#sk-biedronka\" class=\"u-hl\" transform=\"translate(3 3)\"/><use href=\"#sk-biedronka\" class=\"u-ln\" stroke=\"#008471\" stroke-width=\"2.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></g></g>", "slimak": "<ellipse cx=\"282\" cy=\"206\" rx=\"38\" ry=\"4\" fill=\"#898E46\" opacity=\".5\"/><g class=\"sk-pelza\"><g transform=\"translate(236 141) scale(1.15)\"><use href=\"#sk-slimak\" class=\"u-hl\" transform=\"translate(3 3)\"/><use href=\"#sk-slimak\" class=\"u-ln\" stroke=\"#008471\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></g></g>", "kaczuszka": "<ellipse cx=\"282\" cy=\"206\" rx=\"30\" ry=\"4\" fill=\"#898E46\" opacity=\".5\"/><g class=\"sk-kiwa\"><g transform=\"translate(238 134) scale(1.15)\"><use href=\"#sk-kaczuszka\" class=\"u-hl\" transform=\"translate(3 3)\"/><use href=\"#sk-kaczuszka\" class=\"u-ln\" stroke=\"#008471\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></g></g>", "motylek": "<ellipse cx=\"278\" cy=\"206\" rx=\"18\" ry=\"3\" fill=\"#898E46\" opacity=\".3\"/><g class=\"sk-fruwa\"><g transform=\"translate(232 64) scale(1.15)\"><g class=\"sk-macha\"><use href=\"#sk-motylek\" class=\"u-hl\" transform=\"translate(3 3)\"/><use href=\"#sk-motylek\" class=\"u-ln\" stroke=\"#008471\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></g></g></g>", "zolwik": "<ellipse cx=\"284\" cy=\"206\" rx=\"36\" ry=\"4\" fill=\"#898E46\" opacity=\".5\"/><g class=\"sk-drepcze\"><g transform=\"translate(236 142) scale(1.1)\"><use href=\"#sk-zolwik\" class=\"u-hl\" transform=\"translate(3 3)\"/><use href=\"#sk-zolwik\" class=\"u-ln\" stroke=\"#008471\" stroke-width=\"2.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></g></g>"};
+const SK_FX = {"skok": "<g class=\"sk-smugi\" fill=\"none\" stroke=\"#008471\" stroke-width=\"2.5\" stroke-linecap=\"round\"><path d=\"M168 204v12M184 202v18M200 204v12\"/></g><g class=\"sk-kurz sk-kurz-s\" fill=\"#FFF8EE\" stroke=\"#008471\" stroke-width=\"2\"><circle cx=\"150\" cy=\"194\" r=\"7\"/><circle cx=\"140\" cy=\"188\" r=\"5\"/><circle cx=\"214\" cy=\"194\" r=\"7\"/><circle cx=\"224\" cy=\"188\" r=\"5\"/></g>", "taniec": "<g transform=\"translate(138 106)\"><use href=\"#sk-gw\" class=\"sk-gw\"/></g><g transform=\"translate(236 100)\"><use href=\"#sk-gw\" class=\"sk-gw sk-d1\"/></g><g transform=\"translate(128 160)\"><use href=\"#sk-gw\" class=\"sk-gw sk-d2\"/></g><g transform=\"translate(244 152)\"><use href=\"#sk-gw\" class=\"sk-gw sk-d3\"/></g><g fill=\"#F29CC3\" stroke=\"#008471\" stroke-width=\"2.2\" stroke-linecap=\"round\"><g class=\"sk-nuta\"><path d=\"M118 132v-18\" fill=\"none\"/><ellipse cx=\"114\" cy=\"133\" rx=\"5\" ry=\"4\"/></g><g class=\"sk-nuta sk-d2\"><path d=\"M258 128v-18\" fill=\"none\"/><ellipse cx=\"254\" cy=\"129\" rx=\"5\" ry=\"4\" fill=\"#80B0E8\"/></g></g>", "piruet": "<g class=\"sk-wir\" fill=\"none\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-dasharray=\"20 14\"><path d=\"M136 172a52 14 0 0 0 104 0\" stroke=\"#80B0E8\"/><path d=\"M142 128a46 12 0 0 1 92 0\" stroke=\"#F29CC3\"/></g><g transform=\"translate(132 118)\"><use href=\"#sk-gw\" class=\"sk-gw\"/></g><g transform=\"translate(244 136)\"><use href=\"#sk-gw\" class=\"sk-gw sk-d1\"/></g>", "spiew": "<g fill=\"#F4D242\" stroke=\"#008471\" stroke-width=\"2.2\" stroke-linecap=\"round\"><g class=\"sk-nuta\"><path d=\"M224 96v-18\" fill=\"none\"/><ellipse cx=\"220\" cy=\"97\" rx=\"5\" ry=\"4\"/></g><g class=\"sk-nuta sk-d2\"><path d=\"M242 84v-18l10 5\" fill=\"none\"/><ellipse cx=\"238\" cy=\"85\" rx=\"5\" ry=\"4\" fill=\"#F29CC3\"/></g><g class=\"sk-nuta sk-d3\"><path d=\"M150 92v-18\" fill=\"none\"/><ellipse cx=\"146\" cy=\"93\" rx=\"5\" ry=\"4\" fill=\"#80B0E8\"/></g><g class=\"sk-nuta sk-d4\"><path d=\"M132 106v-18l10 5\" fill=\"none\"/><ellipse cx=\"128\" cy=\"107\" rx=\"5\" ry=\"4\" fill=\"#D1CAEA\"/></g></g>", "fikolek": "<g class=\"sk-kurz sk-kurz-f\" fill=\"#FFF8EE\" stroke=\"#008471\" stroke-width=\"2\"><circle cx=\"170\" cy=\"196\" r=\"6\"/><circle cx=\"156\" cy=\"193\" r=\"5\"/></g><g class=\"sk-kurz sk-kurz-f2\" fill=\"#FFF8EE\" stroke=\"#008471\" stroke-width=\"2\"><circle cx=\"140\" cy=\"196\" r=\"6\"/><circle cx=\"126\" cy=\"192\" r=\"5\"/></g><g class=\"sk-zawrot\"><g transform=\"translate(160 104)\"><use href=\"#sk-gw\" class=\"sk-gw\"/></g><g transform=\"translate(188 92)\"><use href=\"#sk-gw\" class=\"sk-gw sk-d1\"/></g><g transform=\"translate(216 104)\"><use href=\"#sk-gw\" class=\"sk-gw sk-d2\"/></g></g>"};
+function skStan(){
+  const s = Zapis.sklep || {};
+  return { kupione: { ...(s.kupione || {}) }, przyjaciel: s.przyjaciel || null, kolor: s.kolor || "zielona" };
+}
+function skRzecz(id){
+  for (const d of SK_DZIALY) { const r = d.lista.find(x => x.id === id); if (r) return { ...r, dz: d.id }; }
+  return null;
+}
+function skWydane(){
+  const k = skStan().kupione; let w = 0;
+  for (const d of SK_DZIALY) for (const r of d.lista) if (k[r.id]) w += r.cena;
+  return w;
+}
+const muchyDoWydania = () => Math.max(0, wszystkieMuchy() - skWydane());
+const skMuchBier = n => n === 1 ? "muchę" : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? "muchy" : "much";
+function kolorZaby(){
+  const st = skStan();
+  return SK_KOLORY.find(k => k.id === st.kolor && (k.cena === 0 || st.kupione[k.id])) || SK_KOLORY[0];
+}
+function ustawKolorZaby(){
+  const k = kolorZaby(), r = document.documentElement.style;
+  r.setProperty("--zaba", k.fill); r.setProperty("--policzki", k.policzki);
+}
+let skPyt = null, skBrak = null, skNast = 0, skT1 = 0, skT2 = 0;
+function skDymek(txt, ms){
+  const d = app.querySelector(".sk-dymek"); if (!d) return;
+  d.textContent = txt; d.hidden = false;
+  clearTimeout(skT2); skT2 = setTimeout(() => { const e = app.querySelector(".sk-dymek"); if (e) e.hidden = true; }, ms || 2600);
+}
+function skPokaz(id){
+  const sc = app.querySelector(".sk-scena"), t = SK_TRIKI.find(x => x.id === id);
+  if (!sc || !t) return;
+  clearTimeout(skT1);
+  sc.removeAttribute("data-trik"); void sc.offsetWidth; sc.dataset.trik = id;
+  skDymek(t.tekst, Math.max(2600, t.ms + 600));
+  skT1 = setTimeout(() => { const s2 = app.querySelector(".sk-scena"); if (s2) s2.removeAttribute("data-trik"); }, t.ms + 80);
+}
+function skStukniecie(id){
+  const r = skRzecz(id), st = skStan(); if (!r) return;
+  if (r.cena > 0 && !st.kupione[id]) {
+    if (muchyDoWydania() >= r.cena) { skPyt = id; skBrak = null; } else { skBrak = id; skPyt = null; }
+    render(); return;
+  }
+  skPyt = skBrak = null;
+  if (r.dz === "sztuczki") { render(); skPokaz(id); }
+  else if (r.dz === "przyjaciele") Zapis.ustawSklep({ ...st, przyjaciel: st.przyjaciel === id ? null : id });
+  else Zapis.ustawSklep({ ...st, kolor: id });
+}
+function skKup(){
+  const r = skRzecz(skPyt); skPyt = null;
+  if (!r || muchyDoWydania() < r.cena) { render(); return; }
+  const st = skStan(), nowy = { ...st, kupione: { ...st.kupione, [r.id]: true } };
+  if (r.dz === "przyjaciele") nowy.przyjaciel = r.id;
+  if (r.dz === "kolory") nowy.kolor = r.id;
+  Zapis.ustawSklep(nowy);
+  setTimeout(() => { if (r.dz === "sztuczki") skPokaz(r.id); else skDymek(r.dz === "przyjaciele" ? "Mam nowego przyjaciela!" : "Jak mi w tym kolorze?"); }, 30);
+}
+function skZaba(){
+  const st = skStan(), triki = SK_TRIKI.filter(x => st.kupione[x.id]);
+  if (!triki.length) { skDymek("Kum kum!"); return; }
+  skPokaz(triki[skNast++ % triki.length].id);
+}
+function glowkaKoloru(k){
+  return `<svg viewBox="0 0 80 64" aria-hidden="true"><g transform="translate(-10 -10) scale(.5)"><use href="#glowa" fill="${k.fill}" transform="translate(6 5)"/><g fill="none" stroke="#008471" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"><use href="#glowa"/><circle cx="70" cy="58" r="15" fill="#fff"/><circle cx="130" cy="58" r="15" fill="#fff"/><circle cx="72" cy="58" r="6" fill="#008471" stroke="none"/><circle cx="132" cy="58" r="6" fill="#008471" stroke="none"/><circle cx="56" cy="94" r="8" fill="${k.policzki}" stroke="none"/><circle cx="144" cy="94" r="8" fill="${k.policzki}" stroke="none"/><path d="M80 102q20 18 40 0"/></g></g></svg>`;
+}
+function sklepik(){
+  const st = skStan(), mam = muchyDoWydania();
+  const przyj = st.przyjaciel && SK_SCENA_PRZYJ[st.przyjaciel] ? SK_SCENA_PRZYJ[st.przyjaciel] : "";
+  const fx = Object.entries(SK_FX).map(([k, v]) => `<g class="fx fx-${k}">${v}</g>`).join("");
+  const markiza = Array.from({ length: 12 }, (_, i) => `<path d="M${i * 30} 10h30v24a15 11 0 0 1-30 0z" fill="${i % 2 ? "#F4D242" : "#F29CC3"}"/>`).join("");
+  const scena = `<section class="sk-scena" aria-label="Scena sklepiku">
+    <svg viewBox="0 0 360 250" role="img" aria-label="Żabka w sklepiku">
+      <rect width="360" height="250" fill="#FFF8EE"/>
+      <rect x="23" y="59" width="320" height="160" rx="22" fill="#D1CAEA"/>
+      <rect x="20" y="56" width="320" height="160" rx="22" fill="none" stroke="#008471" stroke-width="2.5"/>
+      <path d="M0 196q90-12 180-6t180 4V250H0z" fill="#E6E298"/>
+      <path d="M0 196q90-12 180-6t180 4" fill="none" stroke="#008471" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M30 214q2-6 4-8M36 214q0-6 2-9M300 216q2-6 4-8M306 216q0-6 2-9M120 232q2-6 4-8M126 232q0-6 2-9" fill="none" stroke="#898E46" stroke-width="2" stroke-linecap="round"/>
+      <g stroke="#008471" stroke-width="2.5" stroke-linejoin="round"><rect x="-2" y="0" width="364" height="10" fill="#C45F3F"/>${markiza}</g>
+      <ellipse class="sk-cien" cx="180" cy="196" rx="34" ry="5" fill="#898E46" opacity=".5"/>
+      ${przyj}
+      <g class="sk-zaba">${zabaPet("wesola", "", 'x="130" y="85" width="102" height="117"', null, {})}</g>
+      ${fx}
+    </svg>
+    <button class="sk-zaba-btn" data-act="sk-zaba" aria-label="Żabka. Stuknij, a pokaże sztuczkę"></button>
+    <div class="sk-dymek" role="status" hidden></div>
+  </section>`;
+  const karta = (d, r) => {
+    const own = r.cena === 0 || !!st.kupione[r.id];
+    const wyb = own && ((d.id === "przyjaciele" && st.przyjaciel === r.id) || (d.id === "kolory" && kolorZaby().id === r.id));
+    const stac = mam >= r.cena;
+    let kl = "sk-karta", plak, opis;
+    if (wyb) { kl += " wyb"; plak = "Wybrane ✓"; opis = ", wybrane"; }
+    else if (own) { kl += " moje"; plak = d.id === "sztuczki" ? "Pokaż ▶" : "Twoje"; opis = d.id === "sztuczki" ? ", kupiona, pokaż" : ", twoje"; }
+    else { if (!stac) kl += " drogo"; plak = ICO_MUCHA + r.cena; opis = `, ${r.cena} ${skMuchBier(r.cena)}${stac ? "" : ", za mało much"}`; }
+    if (skPyt === r.id || skBrak === r.id) kl += " pyta";
+    const ik = d.id === "sztuczki" ? `<svg viewBox="0 0 80 64" aria-hidden="true"><use href="#sk-${r.id}"/></svg>`
+      : d.id === "przyjaciele" ? `<svg viewBox="0 0 80 64" aria-hidden="true"><use href="#sk-${r.id}" class="u-hl" transform="translate(3 3)"/><use href="#sk-${r.id}" class="u-ln" stroke="#008471" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+      : glowkaKoloru(r);
+    return `<button class="${kl}" data-act="sk-rzecz" data-id="${r.id}" aria-label="${esc(r.nazwa + opis)}"><span class="sk-ik">${ik}</span><span class="sk-nazwa">${esc(r.nazwa)}</span><span class="sk-plak">${plak}</span></button>`;
+  };
+  const pasek = d => {
+    if (skPyt && d.lista.some(x => x.id === skPyt)) {
+      const r = skRzecz(skPyt);
+      return `<div class="sk-pasek" style="background:var(--slonko);color:var(--staw)"><p class="mega" style="font-size:16px">Kupić „${esc(r.nazwa)}” za ${r.cena} ${skMuchBier(r.cena)}?</p><div class="przyc"><button class="btn" data-act="sk-kup">Kupuję!</button><button class="btn ghost" data-act="sk-nie">Jeszcze nie</button></div></div>`;
+    }
+    if (skBrak && d.lista.some(x => x.id === skBrak)) {
+      const r = skRzecz(skBrak), ile = Math.max(0, r.cena - mam);
+      return `<div class="sk-pasek" role="status" style="background:var(--piwonia);color:#7A2E1A"><p><b class="mega" style="font-size:16px;color:#A3482B">Brakuje jeszcze ${ile} ${ile === 1 ? "muchy" : "much"}.</b> Każda dobra odpowiedź to jedna mucha!</p><div class="przyc"><button class="btn ghost" style="background:var(--kartka);color:#A3482B;box-shadow:inset 0 0 0 2px #A3482B" data-act="sk-nie">Dobrze</button></div></div>`;
+    }
+    return "";
+  };
+  return `${naglowek()}
+  <main class="screen">
+    <div class="sk-uklad">
+      <div class="sk-lewa">
+        <h1 class="mega" style="margin:4px 0 0;font-size:22px">Sklepik żabki</h1>
+        ${scena}
+        <div class="sk-portfel"><span class="ile">${ICO_MUCHA}<span class="mega">${mam}</span><b>${muchSlowo(mam)} do wydania</b></span><span style="font-size:13px;color:#CFE6DF">złapane razem: ${wszystkieMuchy()}</span></div>
+      </div>
+      <div class="sk-prawa">
+        ${SK_DZIALY.map(d => `<section class="sk-dzial" aria-label="${d.tytul}"><div><h2 class="mega">${d.tytul}</h2>${d.opis ? `<p>${d.opis}</p>` : ""}</div><div class="sk-siatka">${d.lista.map(r => karta(d, r)).join("")}</div>${pasek(d)}</section>`).join("")}
+      </div>
+    </div>
+  </main>
+  ${zakladki("sklepik")}`;
+}
+
 const ICO_PLAY ='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5l12 7-12 7z"/></svg>';
 const ICO_CAL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>';
 
@@ -1436,11 +1730,12 @@ function loader(){
 }
 
 function render(){
+  ustawKolorZaby();
   app.dataset.ekran = !gotowe ? "loader" : Zapis.potrzebneLogowanie || Zapis.ustawHaslo ? "wejscie" : ekran;
   if (!gotowe) { app.innerHTML = loader(); return; }
   if (Zapis.potrzebneLogowanie) { app.innerHTML = logowanie(); return; }
   if (Zapis.ustawHaslo) { app.innerHTML = noweHaslo(); return; }
-  app.innerHTML = ekran === "start" ? start() : ekran === "zadanie" ? zadanie() : ekran === "podsumowanie" ? podsumowanie() : ekran === "staw" ? staw() : ekran === "tematy" ? tematy() : ekran === "zapros" ? zapros() : kalendarz();
+  app.innerHTML = ekran === "start" ? start() : ekran === "zadanie" ? zadanie() : ekran === "podsumowanie" ? podsumowanie() : ekran === "staw" ? staw() : ekran === "sklepik" ? sklepik() : ekran === "tematy" ? tematy() : ekran === "zapros" ? zapros() : kalendarz();
   const chip = app.querySelector('.filtry [aria-pressed="true"]');
   if (chip) { const box = chip.parentElement; box.scrollLeft = chip.offsetLeft - (box.clientWidth - chip.offsetWidth) / 2; }
 }
@@ -1454,6 +1749,7 @@ function zakladki(akt){
   return `<nav class="tabs" aria-label="Menu">
     <button data-act="ekran" data-to="start" ${akt === "start" ? 'aria-current="page"' : ""}><i>${ICO_PLAY}</i>Ćwiczę</button>
     <button data-act="ekran" data-to="staw" ${akt === "staw" ? 'aria-current="page"' : ""}>${biezacyEtap() === 1 ? `<i>${ICO_WIESZAK}</i>Garderoba` : `<i>${ICO_STAW}</i>Staw`}</button>
+    <button data-act="ekran" data-to="sklepik" ${akt === "sklepik" ? 'aria-current="page"' : ""}><i>${ICO_SKLEP}</i>Sklepik</button>
     <button data-act="ekran" data-to="kalendarz" ${akt === "kalendarz" ? 'aria-current="page"' : ""}><i>${ICO_CAL}</i>Kalendarz</button>
   </nav>`;
 }
@@ -2028,7 +2324,7 @@ function kalendarz(){
 app.addEventListener("click", async e => {
   const b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
   const a = b.dataset.act;
-  if (a === "ekran") { wybranyTemat = null; pytanieArchiwum = null; widokEtapu = null; ekran = b.dataset.to; if (ekran === "kalendarz") kal = null; render(); window.scrollTo({ top: 0 }); }
+  if (a === "ekran") { wybranyTemat = null; pytanieArchiwum = null; widokEtapu = null; skPyt = skBrak = null; ekran = b.dataset.to; if (ekran === "kalendarz") kal = null; render(); window.scrollTo({ top: 0 }); }
   else if (a === "runda") zacznijRunde(b.dataset.t);
   else if (a === "opcja") wybierzOpcje(Number(b.dataset.k));
   else if (a === "etap") { widokEtapu = Number(b.dataset.e); render(); }
@@ -2039,6 +2335,10 @@ app.addEventListener("click", async e => {
     Zapis.ustawStroj(st);
   }
   else if (a === "zdejmij") Zapis.ustawStroj({});
+  else if (a === "sk-rzecz") skStukniecie(b.dataset.id);
+  else if (a === "sk-kup") skKup();
+  else if (a === "sk-nie") { skPyt = skBrak = null; render(); }
+  else if (a === "sk-zaba") skZaba();
   else if (a === "mow") { mow(b.dataset.txt, b.dataset.lang, +b.dataset.tempo || 0, b.dataset.txt2); b.classList.remove("gra"); void b.offsetWidth; b.classList.add("gra"); }
   else if (a === "cyfra") wpiszCyfre(b.dataset.d);
   else if (a === "usun") usunCyfre();

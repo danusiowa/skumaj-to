@@ -14,6 +14,7 @@ Powstała na prośbę mojej córki i na jej potrzeby, żeby powtarzanie materia�
 - **Mądre losowanie.** Zadanie nie powtarza się w rundzie (3×7 i 7×3 liczą się jako jedno). Błędne wracają częściej, opanowane rzadziej.
 - **Żabka i muchy.** Za każdą dobrą odpowiedź żabka dostaje muchę. Muchy się sumują, a żabka zawsze jest wesoła.
 - **Nagrody za systematyczność.** Każdy dzień z rundą na co najmniej 12/15 przynosi nagrodę. Najpierw zapełnia się staw, potem garderoba żabki, potem jesienny staw (szczegóły niżej).
+- **Sklepik.** Złapane muchy można wydać na sztuczki, przyjaciół i kolory żabki (szczegóły niżej).
 - **Kalendarz.** Dla każdego tematu osobno. Widać serię, rekord, a po stuknięciu dnia rundy ze wszystkimi zadaniami.
 - **Wymowa i dyktando.** W angielskich słówkach z rodziny po rundzie można odsłuchać wymowę, a w dyktandzie apka sama czyta słowa (głos wbudowany w urządzenie).
 - **Skumane.** Opanowany temat można odłożyć do archiwum i w każdej chwili przywrócić.
@@ -78,6 +79,23 @@ Tylko na ekranie głównym, włączają się same według daty. Rzeczy na żabce
 | 27–31 grudnia | Sylwester: imprezowa czapeczka i konfetti przy każdym skoku |
 
 Czapka sezonowa zastępuje na ekranie głównym czapkę z garderoby, a garderoba się nie zmienia. Podgląd dowolnego dnia: dopisz do adresu np. `?podglad=2026-12-24`. Kalendarz akcentów jest w `index.html`, w funkcji `akcent()`.
+
+## Sklepik żabki
+
+Czwarta zakładka w menu. Muchy (jedna za każdą dobrą odpowiedź) wydaje się w sklepiku na rzeczy dla żabki. Do wydania jest tyle much, ile złapano razem, minus ceny kupionych rzeczy.
+
+| Dział | Rzeczy i ceny (w muchach) |
+|---|---|
+| Sztuczki | Wielki skok 30, Taniec 55, Piruet 70, Śpiew 85, Fikołek 105 |
+| Przyjaciele | Żółwik 105, Biedronka 140, Motylek 175, Ślimak 210, Kaczuszka 245 |
+| Kolory żabki | Zielona (od początku), Różowa 210, Błękitna 210, Złota 280, W kropki 350, Tęczowa 490 |
+
+- Stuknięcie niekupionej rzeczy pyta „Kupić…?”, a gdy much za mało, mówi, ile jeszcze brakuje.
+- Kupioną sztuczkę pokazuje się stuknięciem jej karty albo samej żabki. Naraz jest jeden przyjaciel (stuknięcie wybranego go chowa).
+- Sztuczki i przyjaciele są tylko w sklepiku. **Wybrany kolor żabka nosi w całej apce** (start, staw, garderoba, logo).
+- W sklepiku żabka jest bez ubranek z garderoby. Przy „ogranicz ruch” zostaje sam dymek, bez animacji.
+- Zakupy zapisują się w telefonie i w Supabase razem z ustawieniami (w kolumnie `archiwum`, pod kluczem `_sklep`), więc baza nie potrzebuje zmian.
+- Ceny i rzeczy są w `index.html` na listach `SK_TRIKI`, `SK_PRZYJACIELE` i `SK_KOLORY`.
 
 ## Tematy
 
