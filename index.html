@@ -1771,7 +1771,7 @@ function start(){
   const dzis = dniZCwiczeniem().has(dzienKlucz(new Date()));
   const s = seria();
   const pill = dzis ? "Dziś już poćwiczone ✓" : s ? `Seria: ${s} ${dniSlowo(s)}` : "Zacznij serię!";
-  const muchy = wszystkieMuchy();
+  const muchy = muchyDoWydania(); // ile much jest teraz do wydania (złapane minus wydane w sklepiku)
   const A = akcent();
   const last = Zapis.rundy.filter(r => r.rodzaj === "runda").slice(-1)[0];
   const kafel = (t, i, arch, wBloku) => {
