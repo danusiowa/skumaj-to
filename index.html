@@ -27,7 +27,7 @@
   color-scheme:light;
 }
 *,*::before,*::after{box-sizing:border-box}
-html,body{min-height:100%}
+html,body{min-height:100%;overscroll-behavior-y:none}
 body{background:var(--kartka);color:var(--staw);font-family:var(--tekst);font-size:16px;line-height:1.45;padding-inline:16px;padding-block:0}
 #app{max-width:440px;margin:0 auto;min-height:calc(100vh - env(safe-area-inset-top, 0px));min-height:calc(100dvh - env(safe-area-inset-top, 0px));display:flex;flex-direction:column}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
