@@ -27,9 +27,9 @@
   color-scheme:light;
 }
 *,*::before,*::after{box-sizing:border-box}
-/* Przewija się body, a nie cała strona: wtedy paski Safari na iPhonie nie chowają się przy przewijaniu i dolne menu nie podskakuje. */
-html{height:100%;overflow:hidden}
-body{height:100%;overflow-y:auto;overscroll-behavior-y:none;-webkit-overflow-scrolling:touch}
+/* Przewija się #przewijak (cały ekran), a nie strona: wtedy paski Safari na iPhonie nie chowają się przy przewijaniu i dolne menu nie podskakuje. */
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+#przewijak{position:fixed;inset:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-top:env(safe-area-inset-top,0px);padding-inline:inherit}
 body{background:var(--kartka);color:var(--staw);font-family:var(--tekst);font-size:16px;line-height:1.45;padding-inline:16px;padding-block:0}
 #app{max-width:440px;margin:0 auto;min-height:calc(100vh - env(safe-area-inset-top, 0px));min-height:calc(100dvh - env(safe-area-inset-top, 0px));display:flex;flex-direction:column}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
@@ -726,7 +726,7 @@ ul.zad .glosnik .ti{width:12px;height:12px}
   </defs>
 </svg>
 
-<div id="app"></div>
+<div id="przewijak"><div id="app"></div></div>
 
 <script>
 /* =====================================================================
@@ -1722,7 +1722,8 @@ let ostatnia = null;     // runda do podsumowania
 let kal = null;          // { r, m, sel }
 let pytanieOWyjscie = false;
 const app = document.getElementById("app");
-const przewinDo = o => { try { document.body.scrollTo(o); } catch (e) { document.body.scrollTop = (o && o.top) || 0; } };
+const przewijak = document.getElementById("przewijak");
+const przewinDo = o => { try { przewijak.scrollTo(o); } catch (e) { przewijak.scrollTop = (o && o.top) || 0; } };
 let gotowe = false;
 function loader(){
   return `<div class="loader" role="status">
