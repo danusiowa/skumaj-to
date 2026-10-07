@@ -1603,7 +1603,7 @@ function sklepik(){
     const stac = mam >= r.cena;
     let kl = "sk-karta", plak, opis;
     if (wyb) { kl += " wyb"; plak = "Wybrane ✓"; opis = ", wybrane"; }
-    else if (own) { kl += " moje"; plak = d.id === "sztuczki" ? "Pokaż ▶" : "Twoje"; opis = d.id === "sztuczki" ? ", kupiona, pokaż" : ", twoje"; }
+    else if (own) { kl += " moje"; plak = d.id === "sztuczki" ? `Pokaż<svg viewBox="0 0 24 24" aria-hidden="true" style="width:11px;height:11px"><path d="M7 4.5v15l12-7.5z" fill="currentColor"/></svg>` : "Twoje"; opis = d.id === "sztuczki" ? ", kupiona, pokaż" : ", twoje"; }
     else { if (!stac) kl += " drogo"; plak = ICO_MUCHA + r.cena; opis = `, ${r.cena} ${skMuchBier(r.cena)}${stac ? "" : ", za mało much"}`; }
     if (skPyt === r.id || skBrak === r.id) kl += " pyta";
     const ik = d.id === "sztuczki" ? `<svg viewBox="0 0 80 64" aria-hidden="true"><use href="#sk-${r.id}"/></svg>`
