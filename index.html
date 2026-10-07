@@ -636,6 +636,7 @@ ul.zad .glosnik .ti{width:12px;height:12px}
     <g id="ub-parasolka"><path d="M165 40v120q0 8-6 8t-6-6" fill="none"/><path d="M143 44q22-30 44 0q-5.5 5-11 0q-5.5 5-11 0q-5.5 5-11 0q-5.5 5-11 0z" style="fill:var(--fx,#F29CC3)"/><circle cx="165" cy="12" r="3.5" style="fill:var(--fx,#F4D242)"/><path d="M136 156q10-2 17 2" fill="none" stroke-width="3.6"/></g>
     <!-- Sklepik: kolory żabki (wzory na całą apkę), ikonki sztuczek i przyjaciele -->
     <linearGradient id="zaba-tecza" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F29CC3"/><stop offset=".28" stop-color="#F4D242"/><stop offset=".52" stop-color="#D6D35F"/><stop offset=".76" stop-color="#80B0E8"/><stop offset="1" stop-color="#D1CAEA"/></linearGradient>
+    <linearGradient id="zaba-zloto" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F4D242"/><stop offset=".4" stop-color="#F4D242"/><stop offset=".5" stop-color="#FFF6CC"/><stop offset=".6" stop-color="#F4D242"/><stop offset="1" stop-color="#F4D242"/><animateTransform attributeName="gradientTransform" type="translate" values="-1 -1;1 1;1 1" keyTimes="0;.35;1" dur="3.6s" repeatCount="indefinite"/></linearGradient>
     <pattern id="zaba-kropki" width="26" height="26" patternUnits="userSpaceOnUse"><rect width="26" height="26" fill="#D6D35F"/><circle cx="6" cy="7" r="4" fill="#F29CC3"/><circle cx="19" cy="19" r="4" fill="#80B0E8"/></pattern>
 <g id="sk-glowka">
 <path style="fill:var(--zaba,#D6D35F)" d="M40 100C38 80 46 66 52 60C44 40 62 30 74 34C84 36 90 44 92 52C98 50 104 50 110 52C112 42 120 34 132 34C146 34 154 46 148 60C158 70 162 86 160 100C158 122 132 132 100 132C66 133 42 122 40 100Z" transform="translate(6 5)"/>
@@ -658,6 +659,11 @@ ul.zad .glosnik .ti{width:12px;height:12px}
 <g id="sk-slimak"><path d="M6 56q0-12 12-14h42q12 2 12 14z" style="fill: var(--fx, #D6D35F)"/><path d="M10 46q-4-16 6-20q10 0 10 16" style="fill: var(--fx, #D6D35F)"/><path d="M14 27l-4-13M22 27l3-13" fill="none" stroke-width="2"/><circle cx="10" cy="12" r="4.2" style="fill: var(--fx, #FFFFFF)"/><circle cx="25" cy="12" r="4.2" style="fill: var(--fx, #FFFFFF)"/><circle cx="10.6" cy="12.6" r="1.8" stroke="none" style="fill: var(--ex, #008471)"/><circle cx="25.6" cy="12.6" r="1.8" stroke="none" style="fill: var(--ex, #008471)"/><circle cx="12" cy="40" r="2.6" stroke="none" style="fill: var(--ex, #F29CC3)"/><path d="M15 36q3 3 7 0" fill="none" stroke-width="1.8"/><circle cx="46" cy="32" r="17" style="fill: var(--fx, #F29CC3)"/><path d="M46 32m-3 0a3 3 0 1 1 6 0a7 7 0 1 1-13-3a11 11 0 1 1 20 8" fill="none" stroke-width="2"/><path d="M36 22q4-5 10-6" fill="none" stroke-width="2" style="stroke: var(--ex, #FFF8EE)"/></g>
 <g id="sk-kaczuszka"><path d="M40 56l-3 6h8M51 56l-1 6h7" fill="none" stroke-width="2" style="stroke: var(--ex, #E8A04A)"/><path d="M18 42q0-12 16-12h16q10 0 15-7l5 3q1 9-4 15q-5 15-26 15q-22 0-22-14z" style="fill: var(--fx, #F4D242)"/><circle cx="26" cy="22" r="12" style="fill: var(--fx, #F4D242)"/><path d="M15 23q-9-1-11 3q4 5 12 2z" style="fill: var(--fx, #E8A04A)"/><circle cx="24" cy="19" r="2.4" stroke="none" style="fill: var(--ex, #008471)"/><circle cx="22" cy="27" r="2.6" stroke="none" style="fill: var(--ex, #F29CC3)"/><path d="M38 40q8 10 18 2" fill="none" stroke-width="2"/><path d="M26 10q2-6 6-6" fill="none" stroke-width="2"/></g>
 <path id="sk-gw" d="M0 -8l2.4 5.2 5.6.6-4.2 3.8 1.2 5.6L0 4.4-5 7.2l1.2-5.6L-8 -2.2l5.6-.6z" fill="#F4D242" stroke="#008471" stroke-width="1.8" stroke-linejoin="round"/>
+    <g id="blyski" style="fill:var(--blysk,none);stroke:var(--blysk-k,none)" stroke-width="1.6" stroke-linejoin="round">
+        <path d="M0-15q1.5 13.5 15 15q-13.5 1.5-15 15q-1.5-13.5-15-15q13.5-1.5 15-15z" transform="translate(48 46)"><animateTransform attributeName="transform" type="scale" additive="sum" values="0;1;0;0" keyTimes="0;.14;.3;1" dur="3.6s" begin=".9s" repeatCount="indefinite"/></path>
+        <path d="M0-15q1.5 13.5 15 15q-13.5 1.5-15 15q-1.5-13.5-15-15q13.5-1.5 15-15z" transform="translate(160 82)"><animateTransform attributeName="transform" type="scale" additive="sum" values="0;.8;0;0" keyTimes="0;.14;.3;1" dur="3.6s" begin="2.1s" repeatCount="indefinite"/></path>
+        <path d="M0-15q1.5 13.5 15 15q-13.5 1.5-15 15q-1.5-13.5-15-15q13.5-1.5 15-15z" transform="translate(64 148)"><animateTransform attributeName="transform" type="scale" additive="sum" values="0;.65;0;0" keyTimes="0;.14;.3;1" dur="3.6s" begin="3s" repeatCount="indefinite"/></path>
+      </g>
     <g id="baza">
       <use href="#cialo" style="fill:var(--zaba,#D6D35F)" transform="translate(5 4)"/>
       <use href="#glowa" style="fill:var(--zaba,#D6D35F)" transform="translate(6 5)"/>
@@ -666,6 +672,7 @@ ul.zad .glosnik .ti{width:12px;height:12px}
         <path d="M80 141q-13 6-17 17M120 141q12 5 16 15"/>
         <path d="M84 167q-8 5-16 4M86 169q-4 7-12 10M116 167q8 5 16 4M114 169q4 7 12 10"/>
       </g>
+      <use href="#blyski"/>
     </g>
     <g id="baza-slonko">
       <use href="#cialo" fill="#F4D242" transform="translate(5 4)"/>
@@ -1295,7 +1302,7 @@ function zabaPet(mina0, cls, attrs, mina, stalyStroj, A){
       <path transform="translate(${-ax} 0)" d="M80 141q-13 6-17 17"/><path transform="translate(${ax} 0)" d="M120 141q12 5 16 15"/>
       <path transform="translate(${-fx} ${fy})" d="M84 167q-8 5-16 4M86 169q-4 7-12 10"/><path transform="translate(${fx} ${fy})" d="M116 167q8 5 16 4M114 169q4 7 12 10"/>
       ${twarzMina || twarz}
-    </g>${U.przod}${sezon}</svg>`;
+    </g><use href="#blyski"/>${U.przod}${sezon}</svg>`;
 }
 const ICO_MUCHA = '<svg class="mucha" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="8" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="currentColor" stroke-width="1.6" transform="rotate(-25 8 8)"/><ellipse cx="16" cy="8" rx="4.5" ry="3.2" fill="#FFF8EE" stroke="currentColor" stroke-width="1.6" transform="rotate(25 16 8)"/><ellipse cx="12" cy="14.5" rx="3.6" ry="5" fill="currentColor"/><circle cx="12" cy="9" r="2.6" fill="currentColor"/></svg>';
 /* STAW: za każdy dzień z ćwiczeniem w stawie pojawia się nowa rzecz. Żabka jest tu zawsze bez ubranek z garderoby.
@@ -1502,7 +1509,7 @@ const SK_KOLORY = [
   { id: "zielona", nazwa: "Zielona", cena: 0, fill: "#D6D35F", policzki: "#F29CC3" },
   { id: "rozowa", nazwa: "Różowa", cena: 210, fill: "#F29CC3", policzki: "#E0607A" },
   { id: "blekitna", nazwa: "Błękitna", cena: 210, fill: "#80B0E8", policzki: "#F29CC3" },
-  { id: "zlota", nazwa: "Złota", cena: 280, fill: "#F4D242", policzki: "#F29CC3" },
+  { id: "zlota", nazwa: "Złota", cena: 280, fill: "url(#zaba-zloto)", policzki: "#F29CC3", blysk: "#FFFBEA" },
   { id: "kropki", nazwa: "W kropki", cena: 350, fill: "url(#zaba-kropki)", policzki: "#F29CC3" },
   { id: "teczowa", nazwa: "Tęczowa", cena: 490, fill: "url(#zaba-tecza)", policzki: "#C45F3F" }
 ];
@@ -1538,6 +1545,7 @@ function ustawKolorZaby(){
   const goscie = Zapis.potrzebneLogowanie || Zapis.ustawHaslo || !gotowe;
   const k = goscie ? SK_KOLORY[0] : kolorZaby(), r = document.documentElement.style;
   r.setProperty("--zaba", k.fill); r.setProperty("--policzki", k.policzki);
+  r.setProperty("--blysk", k.blysk || "none"); r.setProperty("--blysk-k", k.blysk ? "#E8A04A" : "none");
 }
 let skPyt = null, skBrak = null, skNast = 0, skT1 = 0, skT2 = 0;
 function skDymek(txt, ms){

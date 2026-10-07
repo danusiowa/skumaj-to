@@ -88,7 +88,7 @@ Czwarta zakładka w menu. Muchy (jedna za każdą dobrą odpowiedź) wydaje się
 |---|---|
 | Sztuczki | Wielki skok 30, Taniec 55, Piruet 70, Śpiew 85, Fikołek 105 |
 | Przyjaciele | Żółwik 105, Biedronka 140, Motylek 175, Ślimak 210, Kaczuszka 245 |
-| Kolory żabki | Zielona (od początku), Różowa 210, Błękitna 210, Złota 280, W kropki 350, Tęczowa 490 |
+| Kolory żabki | Zielona (od początku), Różowa 210, Błękitna 210, Złota 280 (błyszczy i iskrzy się), W kropki 350, Tęczowa 490 |
 
 - Stuknięcie niekupionej rzeczy pyta „Kupić…?”, a gdy much za mało, mówi, ile jeszcze brakuje.
 - Kupioną sztuczkę pokazuje się stuknięciem jej karty albo samej żabki. Naraz jest jeden przyjaciel (stuknięcie wybranego go chowa).
