@@ -27,7 +27,9 @@
   color-scheme:light;
 }
 *,*::before,*::after{box-sizing:border-box}
-html,body{min-height:100%;overscroll-behavior-y:none}
+/* Przewija się body, a nie cała strona: wtedy paski Safari na iPhonie nie chowają się przy przewijaniu i dolne menu nie podskakuje. */
+html{height:100%;overflow:hidden}
+body{height:100%;overflow-y:auto;overscroll-behavior-y:none;-webkit-overflow-scrolling:touch}
 body{background:var(--kartka);color:var(--staw);font-family:var(--tekst);font-size:16px;line-height:1.45;padding-inline:16px;padding-block:0}
 #app{max-width:440px;margin:0 auto;min-height:calc(100vh - env(safe-area-inset-top, 0px));min-height:calc(100dvh - env(safe-area-inset-top, 0px));display:flex;flex-direction:column}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
@@ -1720,6 +1722,7 @@ let ostatnia = null;     // runda do podsumowania
 let kal = null;          // { r, m, sel }
 let pytanieOWyjscie = false;
 const app = document.getElementById("app");
+const przewinDo = o => { try { document.body.scrollTo(o); } catch (e) { document.body.scrollTop = (o && o.top) || 0; } };
 let gotowe = false;
 function loader(){
   return `<div class="loader" role="status">
@@ -1821,7 +1824,7 @@ function zacznijRunde(tematId, zadaniaPoprawki){
   const t = tematById(tematId); if (!t) return;
   const lista = zadaniaPoprawki ? shuffle(zadaniaPoprawki) : wybierzZadania(t, t.dlugosc || DLUGOSC_RUNDY);
   R = { temat: t, rodzaj: zadaniaPoprawki ? "poprawa" : "runda", lista, i: 0, input: "", odpowiedzi: [], start: Date.now(), tZad: Date.now() };
-  pytanieOWyjscie = false; ekran = "zadanie"; render(); window.scrollTo({ top: 0 }); czytajZadanie();
+  pytanieOWyjscie = false; ekran = "zadanie"; render(); przewinDo({ top: 0 }); czytajZadanie();
 }
 
 function zadanie(){
@@ -1950,7 +1953,7 @@ function zakonczRunde(){
   };
   ostatnia = runda; R = null; ekran = "podsumowanie"; pokazWszystkieBledy = false;
   Zapis.dodaj(runda);
-  render(); window.scrollTo({ top: 0 });
+  render(); przewinDo({ top: 0 });
   if (runda.rodzaj === "runda") setTimeout(() => pokazToast(runda), 350);
 }
 
@@ -2336,7 +2339,7 @@ function kalendarz(){
 app.addEventListener("click", async e => {
   const b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
   const a = b.dataset.act;
-  if (a === "ekran") { wybranyTemat = null; pytanieArchiwum = null; widokEtapu = null; skPyt = skBrak = null; ekran = b.dataset.to; if (ekran === "kalendarz") kal = null; render(); window.scrollTo({ top: 0 }); }
+  if (a === "ekran") { wybranyTemat = null; pytanieArchiwum = null; widokEtapu = null; skPyt = skBrak = null; ekran = b.dataset.to; if (ekran === "kalendarz") kal = null; render(); przewinDo({ top: 0 }); }
   else if (a === "runda") zacznijRunde(b.dataset.t);
   else if (a === "opcja") wybierzOpcje(Number(b.dataset.k));
   else if (a === "etap") { widokEtapu = Number(b.dataset.e); render(); }
