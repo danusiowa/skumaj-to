@@ -12,7 +12,7 @@ Powstała na prośbę mojej córki i na jej potrzeby, żeby powtarzanie materia�
 
 - **Rundy po 15 zadań.** Odpowiedź wpisuje się samodzielnie na klawiaturze apki (z cyframi albo z literami), więc klawiatura telefonu nie zasłania ekranu. Dobrze czy źle widać dopiero w podsumowaniu, razem z czasem.
 - **Mądre losowanie.** Zadanie nie powtarza się w rundzie (3×7 i 7×3 liczą się jako jedno). Błędne wracają częściej, opanowane rzadziej.
-- **Żabka i muchy.** Za każdą dobrą odpowiedź żabka dostaje muchę. Muchy „trawią się” z dnia na dzień, więc bez ćwiczeń żabka chudnie i robi się śpiąca.
+- **Żabka i muchy.** Za każdą dobrą odpowiedź żabka dostaje muchę. Muchy się sumują, a żabka zawsze jest wesoła.
 - **Nagrody za systematyczność.** Każdy dzień z rundą na co najmniej 12/15 przynosi nagrodę. Najpierw zapełnia się staw, potem garderoba żabki, potem jesienny staw (szczegóły niżej).
 - **Kalendarz.** Dla każdego tematu osobno. Widać serię, rekord, a po stuknięciu dnia rundy ze wszystkimi zadaniami.
 - **Wymowa i dyktando.** W angielskich słówkach z rodziny po rundzie można odsłuchać wymowę, a w dyktandzie apka sama czyta słowa (głos wbudowany w urządzenie).

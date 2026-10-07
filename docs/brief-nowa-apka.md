@@ -14,12 +14,12 @@ Ta apka ma być osobnym projektem, zbudowanym na wzór **Skumaj to!**
 3. **Dino Odkrywca**: dinozaurek wykopuje skamieliny, rośnie dżungla (paprocie, wulkan, jajka z kolegami). Zielono-piaskowe kolory.
 
 ## Mechanika do skopiowania ze Skumaj to!
-- **Ekran startowy**: powitanie z animowaną maskotką (oddycha, podskakuje, ma cień pod nogami, czasem coś łapie), kafelki tematów „PRZEDMIOT / Temat” z % i gwiazdkami. Po stuknięciu kafelka do wyboru „Zacznij ▶” albo „Skumane ✓” (archiwum). Sekcja z odłożonymi tematami i „Przywróć do ćwiczeń”.
+- **Ekran startowy**: powitanie z animowaną maskotką (oddycha, podskakuje, ma cień pod nogami, czasem coś łapie), kafelki tematów „PRZEDMIOT / Temat” z %. Po stuknięciu kafelka do wyboru „Zacznij ▶” albo „Skumane ✓” (archiwum). Sekcja z odłożonymi tematami i „Przywróć do ćwiczeń”.
 - **Runda**: 15 zadań, odpowiedź wpisywana samodzielnie (klawiatura z cyframi albo pole tekstowe). Bez informacji dobrze/źle w trakcie. Pasek postępu, przycisk „✕ Przerwij” z potwierdzeniem, czas pauzuje się, gdy apka jest w tle.
 - **Dobór zadań**: bez powtórek w rundzie (także odwrotności, np. 3×7 i 7×3). Błędne wracają częściej, opanowane (3× dobrze z rzędu) rzadziej, łatwe o połowę rzadziej, a zrobione dobrze w ostatniej rundzie prawie nie wracają od razu.
 - **Podsumowanie** dopiero na końcu: wynik X/15, czas (z porównaniem do poprzedniej rundy), średnio na zadanie, lista błędów (pierwsze 4 + „Pokaż wszystkie”), przyciski „Popraw błędy”, „Nowa runda”, „Wróć do menu”. Zabawne, rotujące powiadomienia (bez powtórek) po zaliczeniu albo niezaliczeniu.
 - **Nagrody**:
-  - punkty za każdą dobrą odpowiedź (w Skumaj to! muchy) karmią maskotkę, która jest najedzona albo głodna/śpiąca w zależności od ostatnich dni (punkty „trawią się” ~40% dziennie);
+  - punkty za każdą dobrą odpowiedź (w Skumaj to! muchy) karmią maskotkę i po prostu się sumują (bez stanu najedzona/głodna, maskotka zawsze wesoła);
   - **scena** (w Skumaj to! staw): 1 nowa rzecz za każdy dzień z rundą ≥ 12/15. Po skompletowaniu dosadzają się drobiazgi. Elementy w stylu doodle (kontur długopisem + kolor „zakreślaczem” przesunięty o 2–3 px), lekkie animacje, nic nie lewituje, na trawie są cienie.
 - **Kalendarz**: pigułki z wyborem tematu (bez widoku „wszystkie”), dni z ćwiczeniem w kolorze, dni bez na różowo, dni przed pierwszą rundą neutralne. Seria, rekord, „w tym miesiącu”. Po stuknięciu dnia rundy tego dnia z rozwijaną listą zadań (✓ / ✗ wpisane).
 - **Loader**: maskotka w ruchu + zabawny napis w innym kolorze niż maskotka.

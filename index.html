@@ -976,27 +976,10 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 const tematById = id => TEMATY.find(t => t.id === id);
 const kolorTematu = (t, i) => t.tlo ? [t.tlo, t.napis] : KOLORY_ZAPASOWE[i % KOLORY_ZAPASOWE.length];
 const frog = (id, cls) => `<svg class="${cls || "frog"}" aria-hidden="true"><use href="#${id}"/></svg>`;
-/* Żabka zbiera muchy: każda dobra odpowiedź to jedna mucha.
-   Najedzenie liczy się z ostatnich dni (starsze muchy „trawią się”), więc
-   gdy córka ćwiczy, żabka jest pulchna i zadowolona, a gdy robi przerwę, chudnie i robi się śpiąca. */
-function najedzenie(){
-  const dzis = new Date(dzienKlucz(new Date()) + "T12:00:00");
-  let s = 0;
-  for (const r of Zapis.rundy) {
-    const dni = Math.round((dzis - new Date(r.dzien + "T12:00:00")) / 864e5);
-    s += r.dobre * Math.pow(0.6, Math.max(0, dni));
-  }
-  if (!Zapis.rundy.length) return 1;
-  return s < 4 ? 0 : s < 12 ? 1 : s < 25 ? 2 : 3;
-}
+/* Żabka zbiera muchy: każda dobra odpowiedź to jedna mucha. Muchy tylko się sumują, żabka zawsze jest wesoła. */
+const ZABA_LV = 2;
 const wszystkieMuchy = () => Zapis.rundy.reduce((a, r) => a + r.dobre, 0);
 const muchSlowo = n => n === 1 ? "mucha" : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? "muchy" : "much";
-const STAN_ZABY = [
-  "Żabka jest głodna i śpiąca. Nakarmisz ją muchami?",
-  "Żabka zjadłaby jeszcze kilka much.",
-  "Żabka jest najedzona i zadowolona!",
-  "Żabka jest pełniutka i przeszczęśliwa!"
-];
 /* AKCENTY SEZONOWE (październik–grudzień) na ekranie głównym. Data wybiera akcent, a akcent dokłada:
    - rzeczy w rysunku żabki (skaczą razem z nią): kotylion, czapka sezonowa, cukierek, liść/śnieg lądujący na głowie,
    - tło karty (spadające liście, Fuji, żuraw, śnieg, konfetti),
@@ -1163,7 +1146,7 @@ function zabaPet(lv, cls, attrs, mina, stalyStroj, A){
        <path d="M90 106q10 6 20 0"/>`
     : null;
   const zzz = lv === 0 ? `<text x="150" y="34" font-family="Playpen Sans, sans-serif" font-weight="800" font-size="18" fill="#008471">z</text><text x="166" y="18" font-family="Playpen Sans, sans-serif" font-weight="800" font-size="13" fill="#008471">z</text>` : "";
-  // Strój z garderoby (nie na ekranie logowania). Ubranka na tułowiu rosną razem z najedzoną żabką.
+  // Strój z garderoby (nie na ekranie logowania).
   let stroj = stalyStroj || aktualnyStroj();
   if (A && (A.glowa || A.ame)) { stroj = { ...stroj }; if (A.glowa) delete stroj.glowa; if (A.ame) delete stroj.reka; }
   const U = (cls || "").includes("w-zaba") ? { tyl: "", przod: "" } : ubranieSVG(stroj, T, ax, fx, fy);
@@ -1378,7 +1361,6 @@ function opanowanie(t){
   const ok = all.filter(z => m[z.klucz] === true).length;
   return all.length ? ok / all.length : 0;
 }
-function gwiazdki(p){ const n = p >= 1 ? 3 : p >= .67 ? 2 : p >= .34 ? 1 : 0; return "★".repeat(n) + "☆".repeat(3 - n); }
 /* Dobór zadań do rundy:
    - w jednej rundzie żadne zadanie (ani jego odwrotność, np. 3×7 i 7×3) się nie powtarza,
    - zadania z ostatniej i przedostatniej rundy, zrobione dobrze, prawie nie wracają od razu,
@@ -1495,7 +1477,7 @@ function start(){
   const dzis = dniZCwiczeniem().has(dzienKlucz(new Date()));
   const s = seria();
   const pill = dzis ? "Dziś już poćwiczone ✓" : s ? `Seria: ${s} ${dniSlowo(s)}` : "Zacznij serię!";
-  const lv = najedzenie(), muchy = wszystkieMuchy();
+  const lv = ZABA_LV, muchy = wszystkieMuchy();
   const A = akcent();
   const last = Zapis.rundy.filter(r => r.rodzaj === "runda").slice(-1)[0];
   const kafel = (t, i, arch) => {
@@ -1508,7 +1490,7 @@ function start(){
         : `<button class="tb go" data-act="runda" data-t="${t.id}">Zacznij<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10.2-6.5a1 1 0 0 0 0-1.8L9.5 4.6A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg></button><button class="tb" data-act="pytaj-archiwum" data-t="${t.id}">Skumane<svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`;
     return `<div class="tile${open ? " open" : ""}${arch ? " arch" : ""}" style="background:${bg};color:${fg};--tb:${bg};--tf:${fg}" data-act="wybierz" data-t="${t.id}" tabindex="0" role="button" aria-expanded="${open}" aria-label="${esc(t.nazwa)}${arch ? ", skumane" : ""}">
       <span class="tname">${t.nazwa.includes(": ") ? `<small>${esc(t.nazwa.split(": ")[0])}</small>` : ""}<span class="mega">${esc(t.nazwa.includes(": ") ? t.nazwa.split(": ").slice(1).join(": ").replace(/^./, c => c.toUpperCase()) : t.nazwa)}</span></span>
-      <span class="foot"><span>${arch ? "skumane ✓" : Math.round(p * 100) + "%"}</span><span aria-hidden="true">${gwiazdki(p)}</span></span>
+      <span class="foot"><span>${arch ? "skumane ✓" : Math.round(p * 100) + "%"}</span></span>
       <div class="tmenu">${menu}</div>
     </div>`;
   };
@@ -1519,7 +1501,7 @@ function start(){
     <section class="hero${A ? " sezon" : ""}">
       ${tloHero(A)}
       <h1 class="mega">${esc(A && A.h1 || "Co dziś kumamy?")}</h1>${A && A.podpis ? `<p class="podpis">${esc(A.podpis)}</p>` : ""}
-      <p class="stan">${Zapis.rundy.length ? STAN_ZABY[lv] : "Żabka czeka na pierwsze muchy. Każda dobra odpowiedź to jedna mucha!"}</p>
+      ${Zapis.rundy.length ? "" : `<p class="stan">Żabka czeka na pierwsze muchy. Każda dobra odpowiedź to jedna mucha!</p>`}
       <div class="pills"><span class="pill">${pill}</span><span class="pill">${ICO_MUCHA}${muchy} ${muchSlowo(muchy)}</span></div>
       <span class="cien" aria-hidden="true"></span>
       ${zabaPet(lv, undefined, undefined, undefined, undefined, A)}
@@ -1786,7 +1768,7 @@ function podsumowanie(){
       <div style="display:flex;flex-direction:column;gap:6px"><span class="mega big">${r.dobre}/${r.wszystkie}</span><span style="font-weight:700;font-size:14px">dobrych odpowiedzi</span></div>
       ${frog(zaba)}
     </section>
-    <div class="strip" style="background:var(--staw)"><span class="mega" style="color:var(--zakreslacz);display:flex;align-items:center;gap:6px">${ICO_MUCHA}+${r.dobre} ${muchSlowo(r.dobre)}</span><span>${r.dobre ? "Żabka już zajada! " + STAN_ZABY[najedzenie()] : "Tym razem bez much, ale następna runda na pewno coś złapie."}</span></div>
+    <div class="strip" style="background:var(--staw)"><span class="mega" style="color:var(--zakreslacz);display:flex;align-items:center;gap:6px">${ICO_MUCHA}+${r.dobre} ${muchSlowo(r.dobre)}</span><span>${r.dobre ? "Żabka już zajada!" : "Tym razem bez much, ale następna runda na pewno coś złapie."}</span></div>
     ${brak > 0 ? `<div class="strip" style="background:var(--lawenda);color:var(--fiolet-ink)"><span class="mega" style="color:var(--pomidor)">${["Staw czeka", "Garderoba czeka", "Staw czeka"][biezacyEtap()]}</span><span>Do nowej nagrody zabrakło ${brak} ${brak === 1 ? "punktu" : "punktów"}. Potrzeba ${progRundy(r.wszystkie)}/${r.wszystkie}. Spróbujesz jeszcze raz?</span></div>` : ""}
     ${nowosc ? `<button class="strip" style="background:var(--slonko);color:var(--staw);text-align:left" data-act="ekran" data-to="staw"><span class="mega" style="color:var(--pomidor)">${nowosc.tytul}</span><span>${esc(nowosc.nazwa)} · ${nowosc.link}</span></button>` : ""}
     <div class="stats">
@@ -1906,7 +1888,7 @@ function zapros(){
 
 let widokEtapu = null; // który etap nagród oglądamy (null = bieżący)
 function staw(){
-  const p = postepNagrod(), cur = biezacyEtap(), lv = najedzenie();
+  const p = postepNagrod(), cur = biezacyEtap(), lv = ZABA_LV;
   const e = widokEtapu !== null && widokEtapu <= cur ? widokEtapu : cur;
   const etapy = cur > 0 ? `<nav class="etapy" aria-label="Zebrane nagrody">${ETAPY.slice(0, cur + 1).map((x, i) => {
     const pelny = p[i] >= x.ile;
@@ -1932,7 +1914,7 @@ function letniStaw(n, lv){
     : `Staw jest kompletny! Teraz każdy dzień z rundą na ${PROG_STAWU}/15 daje nowe ubranko w garderobie.`;
   return `<h1 class="mega" style="margin:4px 0 0;font-size:20px">Staw żabki</h1>
     <section class="pond">${stawSVG(n, lv)}</section>
-    <div class="strip" style="background:var(--staw)"><span class="mega" style="color:var(--zakreslacz)">${n}/${STAW.length}</span><span>${STAN_ZABY[lv]} ${info}</span></div>
+    <div class="strip" style="background:var(--staw)"><span class="mega" style="color:var(--zakreslacz)">${n}/${STAW.length}</span><span>${info}</span></div>
     <section class="chips" aria-label="Wyposażenie stawu">${zablokowane(STAW, n)}</section>`;
 }
 function garderoba(n, lv){
@@ -1969,7 +1951,7 @@ function jesiennyStaw(n, lv){
     : `Jesienny staw jest kompletny! Każdy kolejny dzień z wynikiem ${PROG_STAWU}/15 dosypuje liść albo kasztan na trawę (już ${Math.min(n - JESIEN.length, JESIEN_EXTRA.length)}).`;
   return `<h1 class="mega" style="margin:4px 0 0;font-size:20px">Jesienny staw</h1>
     <section class="pond">${jesienSVG(n, lv)}</section>
-    <div class="strip" style="background:var(--staw)"><span class="mega" style="color:var(--zakreslacz)">${Math.min(n, JESIEN.length)}/${JESIEN.length}</span><span>${STAN_ZABY[lv]} ${info}</span></div>
+    <div class="strip" style="background:var(--staw)"><span class="mega" style="color:var(--zakreslacz)">${Math.min(n, JESIEN.length)}/${JESIEN.length}</span><span>${info}</span></div>
     <section class="chips" aria-label="Jesienne rzeczy">${zablokowane(JESIEN, n)}</section>`;
 }
 
