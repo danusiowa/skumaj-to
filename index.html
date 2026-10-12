@@ -841,6 +841,38 @@ const TEMATY = [
     }
   },
   {
+    // ROZDZIAŁ 1, Get Grammar: to be (affirmative i negative), formy pełne i krótkie jak w tabelach z podręcznika.
+    // Krótka forma przeczenia: I'm not, isn't, aren't. Jeśli zadanie każe użyć krótkiej formy, pełna jest błędem (i odwrotnie).
+    id: "ang-to-be", od: "2026-10-12", nazwa: "Angielski: to be", typ: "tekst", zdania: true, wymowa: "en-GB",
+    tlo: "#E8973A", napis: "#FFF8EE",
+    zadania(){
+      // [podmiot, forma, krótka twierdząca, krótkie przeczenie, pełne przeczenie]
+      const ZAIM = [
+        ["I", "am", "I'm", "I'm not", "I am not"], ["You", "are", "You're", "You aren't", "You are not"],
+        ["He", "is", "He's", "He isn't", "He is not"], ["She", "is", "She's", "She isn't", "She is not"],
+        ["It", "is", "It's", "It isn't", "It is not"], ["We", "are", "We're", "We aren't", "We are not"],
+        ["They", "are", "They're", "They aren't", "They are not"]
+      ];
+      const IMIONA = [["Dug", "is", null, "Dug isn't", "Dug is not"], ["Kit", "is", null, "Kit isn't", "Kit is not"], ["Mum and Dad", "are", null, "Mum and Dad aren't", "Mum and Dad are not"]];
+      const CO = ["ten", "Spanish", "eleven", "Polish", "ready", "French", "at home"];
+      const out = [];
+      ZAIM.forEach(([kto, f, kr], i) => {
+        const a = CO[i % CO.length], b = CO[(i + 3) % CO.length];
+        out.push({ klucz: "krotka:" + kto + a, pytanie: `${kto} ${f} ${a}.`, odp: `${kr} ${a}.`, polecenie: "Krótka forma (short form)", mow: `${kto} ${f} ${a}.`, grupa: "k:" + kto });
+        out.push({ klucz: "pelna:" + kto + b, pytanie: `${kr} ${b}.`, odp: `${kto} ${f} ${b}.`, polecenie: "Pełna forma (long form)", mow: `${kr} ${b}.`, grupa: "p:" + kto });
+      });
+      [...ZAIM, ...IMIONA].forEach(([kto, f, kr, nk, np], i) => {
+        const a = CO[(i + 1) % CO.length], b = CO[(i + 2) % CO.length], c = CO[(i + 5) % CO.length], d = CO[(i + 4) % CO.length];
+        out.push({ klucz: "wpisz:" + kto + a, pytanie: `${kto} ___ ${a}.`, odp: f, polecenie: "Wpisz am, is albo are", grupa: "w:" + kto });
+        out.push({ klucz: "negp:" + kto + b, pytanie: `${kto} ${f} ${b}.`, odp: `${np} ${b}.`, polecenie: "Napisz przeczenie, pełna forma", mow: `${kto} ${f} ${b}.`, grupa: "np:" + kto });
+        out.push({ klucz: "negk:" + kto + c, pytanie: `${kto} ${f} ${c}.`, odp: `${nk} ${c}.`, polecenie: "Napisz przeczenie, krótka forma", mow: `${kto} ${f} ${c}.`, grupa: "nk:" + kto });
+        const luka = kto === "I" ? "am not / 'm not" : f === "is" ? "isn't / is not" : "aren't / are not";
+        out.push({ klucz: "wpiszn:" + kto + d, pytanie: `${kto} ___ ${d}.`, odp: luka, polecenie: "Wpisz przeczenie (z not)", grupa: "wn:" + kto });
+      });
+      return out;
+    }
+  },
+  {
     // ROZDZIAŁ 1, Lesson 1.3: Countries and nationalities (dokładnie słowa z podręcznika).
     // Wielkie litery nie są sprawdzane (klawiatura ich nie ma), ale „the” przy the UK i the USA jest wymagane jak w podręczniku.
     id: "ang-kraje", od: "2026-10-12", nazwa: "Angielski: państwa i narodowości", typ: "tekst", zdania: true, wymowa: "en-GB",
