@@ -986,6 +986,59 @@ const TEMATY = [
     }
   },
   {
+    // ROZDZIAŁ 1: powtórka w stylu sprawdzianu, na podstawie ćwiczeniówki (Culture str. 12, Check yourself! str. 13,
+    // Practise More: Support str. 14 i Stretch str. 15). Każde zadanie: jedno słowo albo krótki fragment do wpisania.
+    id: "ang-powtorka-1", od: "2026-10-12", nazwa: "Angielski: powtórka rozdziału 1", typ: "tekst", zdania: true, wymowa: "en-GB",
+    tlo: "#16324F", napis: "#F4D242",
+    zadania(){
+      const Z = []; // [polecenie, pytanie, odpowiedzi, grupa, waga]
+      const dodaj = (pol, gr, lista, waga) => lista.forEach(([q, a]) => Z.push([pol, q, a, gr, waga]));
+      dodaj("Uzupełnij parę", "rodzina", [["mum and ___", "dad"], ["___ and uncle", "aunt"], ["mother and ___", "father"], ["___ and sister", "brother"],
+        ["son and ___", "daughter"], ["___ and grandad", "granny / grandma / grandmother"]]);
+      dodaj("Uzupełnij słowo", "slowa", [["She's from P___ (polska flaga).", "Poland"], ["He's in the g___ (podlewa kwiatki).", "garden"],
+        ["She's A___ (flaga USA).", "American"], ["They are at s___ (lekcja).", "school"], ["Paris is in F___.", "France"], ["She's at h___ (na kanapie).", "home"]]);
+      dodaj("Wpisz to be: ✓ twierdzenie, ✗ przeczenie", "tobe", [["This ___ (✗) my garden. It's a park!", "isn't / is not"], ["My best friends ___ (✓) Maya and Jane.", "are"],
+        ["Maya ___ (✓) Italian.", "is / 's"], ["Jane and I ___ (✗) Italian.", "aren't / are not"], ["We ___ (✓) from the UK.", "are / 're"], ["I ___ (✗) in the UK in this photo!", "'m not / am not"]]);
+      dodaj("Wpisz am, is albo are", "amisare", [["She ___ seventy years old.", "is"], ["Her name ___ Sophie.", "is"], ["My brother and I ___ at her house.", "are"],
+        ["Our parents ___ here too.", "are"], ["Granny ___ very happy today.", "is"], ["The birthday cake ___ in a big box.", "is"], ["I ___ ready for the cake!", "am"],
+        ["Hi! I ___ eleven years old.", "am"], ["Jen ___ my best friend.", "is"], ["We ___ neighbours and good friends!", "are"], ["His name ___ Tommy.", "is"]]);
+      dodaj("Wpisz 'm not, isn't albo aren't", "przecz", [["I'm from Poland. I ___ from France.", "'m not / am not"], ["We're at school now. We ___ at home.", "aren't / are not"],
+        ["It's a pencil. It ___ a pen.", "isn't / is not"], ["Lian is twelve. He ___ thirteen.", "isn't / is not"],
+        ["Miranda and Lary are Alex's parents. They ___ his teachers.", "aren't / are not"], ["Alex is British. He ___ Spanish.", "isn't / is not"]]);
+      dodaj("Wpisz my, your, his albo her", "zaimki", [["My brother is very happy. It's ___ birthday present.", "his"], ["Emma's hobby is sport. This is ___ skateboard.", "her"],
+        ["I love music! This is ___ guitar.", "my"], ["My brother is at school. ___ favourite teacher is Mr Grey.", "his"], ["You're twelve today. It's ___ birthday.", "your"],
+        ["Jen is my best friend. ___ hobby is making cupcakes.", "her"], ["Alex is her brother. ___ hobbies are computers and computer games.", "his"]]);
+      dodaj("Wpisz poprawne słowo z nawiasu", "wybor", [["This is Jack, and this is (Jack / Jack's) cousin.", "Jack's"], ["(His / Her) name is Freddie.", "his"],
+        ["They are with (Freddie / Freddie's) dog, Wolfie.", "Freddie's"], ["This is Clara, and this is (his / her) best friend, Nadia.", "her"],
+        ["(Nadia / Nadia's) mum and Clara's mum are best friends too.", "Nadia's"], ["Dorota isn't Italian. She's (Polish / Poland).", "Polish"],
+        ["The dog isn't here. It's (in / on) the garden.", "in"], ["Paul is my dad's brother. He's my (grandad / uncle).", "uncle"],
+        ["My friends aren't at home. They're (on / at) a party.", "at"], ["Rose and Ben are Anna's children. They are brother and (cousin / sister).", "sister"],
+        ["Claude is from Paris. He's from (French / France).", "France"], ["My brother's name is Sam. (His / He's) four years old.", "He's"],
+        ["My mum is from Poland. She (isn't / 's) from Australia.", "isn't"], ["They are in Sydney now. They (are / aren't) in Poland.", "aren't"],
+        ["They are here for my (mum's / mum is) birthday.", "mum's"]], 0.8);
+      dodaj("Uzupełnij jednym słowem", "jedno", [["I'm in my room. I'm at ___.", "home"], ["There are three children in my family. I've got one brother and one ___.", "sister"],
+        ["Lin is Chinese. She's from ___.", "China"], ["We're from the UK, but we're in Spain now. We're on ___!", "holiday"],
+        ["I'm a girl. I'm my mother's ___.", "daughter"], ["Emile is from France. He's ___.", "French"], ["My dad is from the USA. He's ___.", "American"],
+        ["My uncle's son is my ___.", "cousin"], ["We aren't ___ home. We're at my granny's house.", "at"]]);
+      dodaj("Ułóż z wyrazów w nawiasie", "uloz", [["Today ___ (be / not / I / birthday). It's in December.", "isn't my birthday / is not my birthday"],
+        ["Nicki and Mark ___ (be / cousin).", "are cousins / 're cousins"], ["Tina ___ (be / not / Anna) aunt. She's her granny.", "isn't Anna's / is not Anna's"],
+        ["Mum and Dad ___ (be / garden).", "are in the garden / 're in the garden"], ["We're Polish, but we ___ (be / holiday) in Spain this week.", "are on holiday / 're on holiday"],
+        ["This is my best friend. ___ (she / name / be) Jackie.", "Her name is / Her name's"]], 0.8);
+      dodaj("Uzupełnij dialog jednym słowem", "dialog", [["Jack, this ___ my friend, Harry.", "is"], ["___, Harry. Nice to meet you.", "Hi / Hello"], ["Hi, Harry. ___ to meet you.", "Nice"],
+        ["Hi, Jack. Nice to ___ you.", "meet"], ["Nice to meet you ___.", "too"]]);
+      dodaj("Co powiesz po angielsku?", "sytuacje", [["Kolega odwiedza cię w domu. Przedstaw mu siostrę Annę.", "This is Anna. / This is my sister, Anna. / This is my sister Anna. / This is Anna. She's my sister."],
+        ["Koleżanka przedstawiła cię nauczycielowi, panu Brownowi. Co mu odpowiesz?", "Nice to meet you, Mr Brown. / Nice to meet you."],
+        ["Poproś koleżankę, żeby potrzymała prezent.", "Hold this, please. / Hold this please. / Please hold this."]]);
+      dodaj("Napisz całą nazwę państwa", "kultura", [["the U__ (gwiazdki i paski)", "the USA"], ["C_n_d_ (liść klonu)", "Canada"], ["Ir_l_nd", "Ireland"], ["Ne_ Zea_a__", "New Zealand"],
+        ["Sou__ A__i_a", "South Africa"], ["A_s_r_l_a", "Australia"], ["S__t__n_ (część UK)", "Scotland"], ["N__t___n I___a_d (część UK)", "Northern Ireland"],
+        ["W_l__ (część UK)", "Wales"], ["E_g___d (część UK)", "England"]], 0.6);
+      dodaj("Quiz: wpisz odpowiedź", "quiz", [["The capital of the UK is ___.", "London"], ["There are ___ countries in the UK. (słowem)", "four"],
+        ["The capital of the USA is ___.", "Washington, D.C. / Washington DC / Washington"], ["The capital of Australia is ___.", "Canberra"],
+        ["There are 27 million people in ___. (New Zealand / Australia / Sydney)", "Australia"]], 0.5);
+      return Z.map(([polecenie, pytanie, odp, gr, waga], i) => ({ klucz: gr + ":" + pytanie, pytanie, odp, polecenie, pl: true, grupa: gr + ":" + pytanie, ...(waga ? { waga } : {}) }));
+    }
+  },
+  {
     // Pytania i odpowiedzi do scenki na hiszpański (tylko teksty z zeszytu). Wszystko się pisze:
     // 1) jest pytanie (można odsłuchać) → napisz odpowiedź, 2) jest odpowiedź → napisz pytanie,
     // 3) słychać pytanie → zapisz je, 4) słychać odpowiedź → zapisz ją.

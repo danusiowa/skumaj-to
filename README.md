@@ -111,6 +111,7 @@ Czwarta zakładka w menu. Muchy (jedna za każdą dobrą odpowiedź) wydaje się
 | Angielski | Państwa i narodowości (Lesson 1.3: the USA, the UK, China, France, Italy, Poland, Spain i narodowości; tłumaczenie, państwo ↔ narodowość, zdanie „I'm from… I'm…”, zapis ze słuchu) |
 | Angielski | Dopełniacz ('s) i my/his/her (rodzina Marka z podręcznika: zdania i wyrażenia z 's, luki, „the sister of Mark” → Mark's sister; my, your, his, her) |
 | Angielski | Przedstawianie się (Lesson 1.4, str. 16: zwroty po angielsku, odpowiedzi jak w ćw. 5, przedstawianie kogoś jak w ćw. 6, zapis ze słuchu) |
+| Angielski | Powtórka rozdziału 1 (zadania w stylu sprawdzianu z ćwiczeniówki: Culture, Check yourself!, Practise More Support i Stretch) |
 | Hiszpański | Pytania i odpowiedzi (całe zdania do scenki: do pytania napisz odpowiedź, do odpowiedzi pytanie, a ze słuchu zapisz pytanie albo odpowiedź; akcenty i ñ się liczą, wielkie litery i znaki ¿ ? nie) |
 
 ### Jak dodać nowy temat
