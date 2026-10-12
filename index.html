@@ -147,6 +147,7 @@ nav.tabs button[aria-current="page"] i{background:var(--zakreslacz)}
 .card .label{font-size:13px;letter-spacing:.04em}
 .card .q{font-size:clamp(34px,13vw,54px);line-height:1.05;font-variant-numeric:tabular-nums;max-width:100%;overflow-wrap:anywhere}
 .card .q.long{font-size:clamp(26px,8vw,36px);max-width:62%}
+.card .q.long.xl{font-size:clamp(21px,6vw,28px);line-height:1.15}
 .card .ansrow{display:flex;align-items:center;gap:10px;max-width:62%}
 .card .eq{font-size:40px}
 .ans{min-width:104px;height:64px;padding:0 14px;border-radius:16px;background:var(--kartka);color:var(--staw);display:grid;place-items:center;font-family:var(--mega);font-weight:800;font-size:36px;box-shadow:inset 0 0 0 3px var(--zakreslacz)}
@@ -388,6 +389,7 @@ ul.zad .glosnik .ti{width:12px;height:12px}
   #app[data-ekran="zadanie"] .card{min-height:0;flex:1 1 auto;padding:14px 16px 16px;gap:6px;border-radius:24px}
   #app[data-ekran="zadanie"] .card .q{font-size:clamp(30px,11vw,44px)}
   #app[data-ekran="zadanie"] .card .q.long{font-size:clamp(24px,7.5vw,32px)}
+  #app[data-ekran="zadanie"] .card .q.long.xl{font-size:clamp(20px,5.6vw,24px)}
   #app[data-ekran="zadanie"] .card .frog{width:86px;height:94px;right:10px;bottom:10px}
   #app[data-ekran="zadanie"] .card.szeroka .frog{top:10px;bottom:auto}
   #app[data-ekran="zadanie"] .card .label{padding-right:84px}
@@ -911,6 +913,51 @@ const TEMATY = [
       for (const [of, en] of OF) out.push({ klucz: "of:" + of, pytanie: of, odp: en, polecenie: "Napisz krócej, z 's", mow: of, grupa: "of:" + of });
       for (const [zd, sl] of MOJE) out.push({ klucz: "mo:" + zd, pytanie: zd, odp: sl, polecenie: "Wpisz my, your, his albo her", grupa: "mo:" + zd });
       for (const [pl, en] of MOJE_PL) out.push({ klucz: "mp:" + pl, pytanie: pl, odp: en, polecenie: "Napisz po angielsku", pl: true, grupa: "mp:" + pl });
+      return out;
+    }
+  },
+  {
+    // ROZDZIAŁ 1, Lesson 1.4 (strona 16): Introductions / Functions. Zwroty ze słowniczka, dialog The Newmans,
+    // ćw. 3 (Adam, Lisa, Desi), ćw. 5 (odpowiedzi) i ćw. 6 (Tomek, this is Krysia. She's my cousin.).
+    id: "ang-przedstawianie", od: "2026-10-12", nazwa: "Angielski: przedstawianie się", typ: "tekst", zdania: true, dlugosc: 12, wymowa: "en-GB",
+    tlo: "#BFE3D0", napis: "#0F5A4A",
+    zadania(){
+      const POLSKIE = [ // po polsku → po angielsku (warianty)
+        ["To mój kolega z klasy.", "He is my classmate. / He's my classmate."],
+        ["Cześć, Lucas.", "Hello, Lucas. / Hi, Lucas."],
+        ["Lucas, to jest moja mama.", "Lucas, this is my mum."],
+        ["Mamo, to jest Lucas.", "Mum, this is Lucas."],
+        ["Miło cię poznać.", "Nice to meet you."],
+        ["Ciebie także miło poznać.", "Nice to meet you too."],
+        ["To mój przyjaciel.", "He is my friend. / He's my friend."],
+        ["On jest moim najlepszym przyjacielem.", "He is my best friend. / He's my best friend."],
+        ["On jest naszym nowym sąsiadem.", "He is our new neighbour. / He's our new neighbour."],
+        ["Ona jest moją kuzynką.", "She is my cousin. / She's my cousin."],
+        ["Przepraszam, mamo.", "Sorry, Mum."],
+        ["Chodźmy, Lucas.", "Let's go, Lucas."]
+      ];
+      const ODPOWIEDZI = [ // co ktoś mówi → co odpowiadasz (ćw. 5)
+        ["Hello, I'm George.", "Nice to meet you, George. / Nice to meet you. / Hello, George. Nice to meet you. / Hi, George. Nice to meet you."],
+        ["Mum, this is Sam.", "Hello, Sam. / Hi, Sam. / Hello, Sam. Nice to meet you. / Hi, Sam. Nice to meet you."],
+        ["Kate, this is my sister, Lisa.", "Hi, Lisa. Nice to meet you. / Hello, Lisa. Nice to meet you. / Nice to meet you, Lisa. / Nice to meet you."],
+        ["Nice to meet you, Anna.", "Nice to meet you too."],
+        ["Hello, Desi. Nice to meet you.", "Nice to meet you too, Lisa. / Nice to meet you too."],
+        ["Lucas, this is my mum.", "Nice to meet you. / Hello. Nice to meet you. / Nice to meet you, Mrs Newman."]
+      ];
+      const PRZEDSTAW = [ // ćw. 6: przedstaw kogoś
+        ["Przedstaw Tomkowi kuzynkę Krysię.", "Tomek, this is Krysia. She's my cousin. / Tomek, this is Krysia. She is my cousin. / Tomek, this is my cousin, Krysia."],
+        ["Przedstaw mamie kolegę z klasy, Sama.", "Mum, this is Sam. He's my classmate. / Mum, this is Sam. He is my classmate. / Mum, this is my classmate, Sam."],
+        ["Przedstaw Lisie najlepszego przyjaciela, Desiego.", "Lisa, this is Desi. He's my best friend. / Lisa, this is Desi. He is my best friend. / Lisa, this is my best friend, Desi."],
+        ["Przedstaw Desiemu kuzynkę Lisę.", "Desi, this is my cousin, Lisa. / Desi, this is Lisa. She's my cousin. / Desi, this is Lisa. She is my cousin."],
+        ["Przedstaw Kate siostrę Lisę.", "Kate, this is my sister, Lisa. / Kate, this is Lisa. She's my sister. / Kate, this is Lisa. She is my sister."],
+        ["Przedstaw mamie nowego sąsiada, Lucasa.", "Mum, this is Lucas. He's our new neighbour. / Mum, this is Lucas. He is our new neighbour. / Mum, this is our new neighbour, Lucas."]
+      ];
+      const SLUCH = ["Nice to meet you.", "Nice to meet you too.", "He is my classmate.", "Mum, this is Lucas.", "Lucas, this is my mum.", "He's my best friend.", "Desi, this is my cousin, Lisa.", "Sorry, Mum. Let's go."];
+      const out = [];
+      for (const [pl, en] of POLSKIE) out.push({ klucz: "pl:" + pl, pytanie: pl, odp: en, polecenie: "Napisz po angielsku", pl: true, grupa: "pl:" + pl });
+      for (const [kto, en] of ODPOWIEDZI) out.push({ klucz: "od:" + kto, pytanie: kto, odp: en, polecenie: "Odpowiedz po angielsku", mow: kto, grupa: "od:" + kto });
+      for (const [pl, en] of PRZEDSTAW) out.push({ klucz: "pr:" + pl, pytanie: pl, odp: en, polecenie: "Przedstaw po angielsku", pl: true, grupa: "pr:" + pl });
+      for (const zd of SLUCH) out.push({ klucz: "sl:" + zd, pytanie: "🔊 " + zd, odp: zd, polecenie: "Posłuchaj i zapisz", mow: zd, sluch: true, grupa: "sl:" + zd });
       return out;
     }
   },
@@ -1976,7 +2023,7 @@ function zadanie(){
       <span class="mega label">${esc(t.dyktando && !MOWA ? "Napisz po angielsku" : z.polecenie || t.polecenie)}</span>
       ${(t.dyktando || z.sluch) && MOWA
         ? `<div class="dykt"><button class="dykt-gra" data-act="mow" data-txt="${esc(z.sluch ? z.mow : z.odp)}" data-lang="${t.wymowa}" aria-label="Posłuchaj">${ICO_GLOSNIK}</button><span class="dykt-opis"><b>Stuknij, żeby posłuchać</b><button class="dykt-wolno" data-act="mow" data-txt="${esc(z.sluch ? z.mow : z.odp)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}">🐢 wolniej</button></span></div>`
-        : `<div class="mega q${dlugie ? " long" : ""}">${esc(z.sluch ? z.mow : z.pytanie)}</div>${z.mow && MOWA ? `<div class="q-glosy"><button class="q-glos" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" aria-label="Posłuchaj">${ICO_GLOSNIK}<span>posłuchaj</span></button><button class="q-glos" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}" aria-label="Posłuchaj wolniej">🐢 wolniej</button></div>` : ""}`}
+        : `<div class="mega q${dlugie ? " long" : ""}${z.pytanie.length > 26 ? " xl" : ""}">${esc(z.sluch ? z.mow : z.pytanie)}</div>${z.mow && MOWA ? `<div class="q-glosy"><button class="q-glos" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" aria-label="Posłuchaj">${ICO_GLOSNIK}<span>posłuchaj</span></button><button class="q-glos" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}" aria-label="Posłuchaj wolniej">🐢 wolniej</button></div>` : ""}`}
       <div class="ansrow">${t.typ === "liczby" ? '<span class="mega eq">=</span>' : ""}${odp}</div>
       ${frog("skup")}
     </section>
