@@ -873,6 +873,48 @@ const TEMATY = [
     }
   },
   {
+    // ROZDZIAŁ 1: dopełniacz saksoński na rodzinie Marka z podręcznika (LOOK: Paul = Mark's father, Lucy = Rose's daughter;
+    // ćw. 5: John i Agatha – dziadkowie, Paul i Rose – rodzice, Lucy – siostra, David – brat, Julia – ciocia, Peter – wujek,
+    // Anna i Tom – kuzyni) oraz my / your / his / her (LOOK: It's my birthday. I'm ten!).
+    id: "ang-saksonski", od: "2026-10-12", nazwa: "Angielski: dopełniacz ('s) i my/his/her", typ: "tekst", zdania: true, wymowa: "en-GB",
+    tlo: "#4A3F6B", napis: "#F4D242",
+    zadania(){
+      const ZDANIA = [ // po polsku → po angielsku
+        ["Paul jest tatą Marka.", "Paul is Mark's dad. / Paul is Mark's father."], ["Rose jest mamą Marka.", "Rose is Mark's mum. / Rose is Mark's mother."],
+        ["Lucy jest siostrą Marka.", "Lucy is Mark's sister."], ["David jest bratem Marka.", "David is Mark's brother."],
+        ["John jest dziadkiem Marka.", "John is Mark's grandfather. / John is Mark's grandad."], ["Agatha jest babcią Marka.", "Agatha is Mark's grandmother. / Agatha is Mark's granny."],
+        ["Julia jest ciocią Marka.", "Julia is Mark's aunt."], ["Peter jest wujkiem Marka.", "Peter is Mark's uncle."],
+        ["Anna jest kuzynką Marka.", "Anna is Mark's cousin."], ["Tom jest kuzynem Marka.", "Tom is Mark's cousin."],
+        ["Lucy jest córką Rose.", "Lucy is Rose's daughter."], ["Mark jest synem Paula.", "Mark is Paul's son."],
+        ["David jest synem Rose.", "David is Rose's son."], ["Lucy jest córką Paula.", "Lucy is Paul's daughter."]
+      ];
+      const WYRAZENIA = [
+        ["siostra Marka", "Mark's sister"], ["tata Lucy", "Lucy's dad / Lucy's father"], ["babcia Davida", "David's grandmother / David's granny"],
+        ["wujek Lucy", "Lucy's uncle"], ["ciocia Davida", "David's aunt"], ["rodzice Marka", "Mark's parents"], ["kuzyni Marka", "Mark's cousins"],
+        ["córka Rose", "Rose's daughter"], ["syn Paula", "Paul's son"], ["dziadek Lucy", "Lucy's grandfather / Lucy's grandad"]
+      ];
+      const LUKI = [ // zdanie z luką, czyje
+        ["Lucy is ___ daughter.", "Rose"], ["Paul is ___ father.", "Mark"], ["David is ___ brother.", "Lucy"], ["Agatha is ___ granny.", "Mark"],
+        ["Mark is ___ son.", "Paul"], ["Julia is ___ aunt.", "David"], ["Tom is ___ cousin.", "Lucy"], ["John is ___ grandad.", "David"]
+      ];
+      const OF = [["the sister of Mark", "Mark's sister"], ["the son of Rose", "Rose's son"], ["the aunt of Lucy", "Lucy's aunt"], ["the parents of David", "David's parents"],
+        ["the brother of Lucy", "Lucy's brother"], ["the daughter of Paul", "Paul's daughter"], ["the uncle of Mark", "Mark's uncle"], ["the granny of Lucy", "Lucy's granny"]];
+      const MOJE = [ // my / your / his / her
+        ["I'm ten. It's ___ birthday.", "my"], ["You're eleven. It's ___ birthday.", "your"], ["She's nine. It's ___ birthday.", "her"], ["He's twelve. It's ___ birthday.", "his"],
+        ["Granny, here's ___ birthday card!", "your"], ["This is Lucy. ___ brother is David.", "her"], ["This is Mark. ___ sister is Lucy.", "his"], ["I'm Mark. ___ dad is Paul.", "my"]
+      ];
+      const MOJE_PL = [["jej mama", "her mum"], ["jego tata", "his dad"], ["mój brat", "my brother"], ["twoja siostra", "your sister"], ["jego babcia", "his granny / his grandmother"], ["jej wujek", "her uncle"]];
+      const out = [];
+      for (const [pl, en] of ZDANIA) out.push({ klucz: "zd:" + pl, pytanie: pl, odp: en, polecenie: "Napisz po angielsku", pl: true, grupa: "zd:" + pl });
+      for (const [pl, en] of WYRAZENIA) out.push({ klucz: "wy:" + pl, pytanie: pl, odp: en, polecenie: "Napisz po angielsku z 's", pl: true, grupa: "wy:" + pl });
+      for (const [zd, kto] of LUKI) out.push({ klucz: "lu:" + zd, pytanie: `${zd} (${kto})`, odp: kto + "'s", polecenie: "Uzupełnij z 's", grupa: "lu:" + zd });
+      for (const [of, en] of OF) out.push({ klucz: "of:" + of, pytanie: of, odp: en, polecenie: "Napisz krócej, z 's", mow: of, grupa: "of:" + of });
+      for (const [zd, sl] of MOJE) out.push({ klucz: "mo:" + zd, pytanie: zd, odp: sl, polecenie: "Wpisz my, your, his albo her", grupa: "mo:" + zd });
+      for (const [pl, en] of MOJE_PL) out.push({ klucz: "mp:" + pl, pytanie: pl, odp: en, polecenie: "Napisz po angielsku", pl: true, grupa: "mp:" + pl });
+      return out;
+    }
+  },
+  {
     // ROZDZIAŁ 1, Lesson 1.3: Countries and nationalities (dokładnie słowa z podręcznika).
     // Wielkie litery nie są sprawdzane (klawiatura ich nie ma), ale „the” przy the UK i the USA jest wymagane jak w podręczniku.
     id: "ang-kraje", od: "2026-10-12", nazwa: "Angielski: państwa i narodowości", typ: "tekst", zdania: true, wymowa: "en-GB",
