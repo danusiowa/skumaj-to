@@ -16,7 +16,7 @@ Powstała na prośbę mojej córki i na jej potrzeby, żeby powtarzanie materia�
 - **Nagrody za systematyczność.** Każdy dzień z rundą na co najmniej 12/15 przynosi nagrodę. Najpierw zapełnia się staw, potem garderoba żabki, potem jesienny staw (szczegóły niżej).
 - **Sklepik.** Złapane muchy można wydać na sztuczki, przyjaciół i kolory żabki (szczegóły niżej).
 - **Kalendarz.** Dla każdego tematu osobno. Widać serię, rekord, a po stuknięciu dnia rundy ze wszystkimi zadaniami.
-- **Wymowa i dyktando.** W angielskich słówkach z rodziny po rundzie można odsłuchać wymowę, a w dyktandzie apka sama czyta słowa (głos wbudowany w urządzenie).
+- **Wymowa i dyktando.** W angielskim i hiszpańskim można odsłuchać wymowę, a w zadaniach ze słuchu apka sama czyta słowo albo zdanie (głos wbudowany w urządzenie). Hiszpański ma własny rząd klawiszy: á é í ó ú ñ ¿ ? , .
 - **Skumane.** Opanowany temat można odłożyć do archiwum i w każdej chwili przywrócić.
 - **Akcenty sezonowe.** Od października do Sylwestra żabka na ekranie głównym zmienia wygląd według daty (szczegóły niżej).
 - **Działa wszędzie:** na telefonie, tablecie i komputerze. Można ją dodać do ekranu głównego jak zwykłą apkę.
@@ -107,6 +107,7 @@ Czwarta zakładka w menu. Muchy (jedna za każdą dobrą odpowiedź) wydaje się
 | Angielski | Liczby do 100 (słowami) |
 | Angielski | Rodzina |
 | Angielski | Rodzina ze słuchu (dyktando: apka czyta słowo, wpisuje się, co słychać) |
+| Hiszpański | Pytania i odpowiedzi (całe zdania do scenki: do pytania napisz odpowiedź, do odpowiedzi pytanie, a ze słuchu zapisz pytanie albo odpowiedź; akcenty i ñ się liczą, wielkie litery i znaki ¿ ? nie) |
 
 ### Jak dodać nowy temat
 

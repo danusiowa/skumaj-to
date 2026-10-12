@@ -177,6 +177,7 @@ input.ans:focus,input.ans:focus-visible{outline:none;box-shadow:inset 0 0 0 3px 
 @media (prefers-reduced-motion:no-preference){.kursor{animation:kursor 1s steps(1) infinite}}
 @keyframes kursor{50%{opacity:0}}
 .klaw{display:flex;flex-direction:column;gap:7px}
+.klaw .kr-es button{background:var(--kartka);color:var(--pomidor)}
 .kr{display:flex;gap:5px;justify-content:center}
 .klaw button{flex:1 1 0;min-width:0;max-width:46px;height:52px;padding:0;border-radius:12px;background:var(--bialy);box-shadow:inset 0 0 0 1.5px var(--linia);font-family:var(--mega);font-weight:800;font-size:21px;color:var(--staw)}
 .klaw button:active,.pad button:active{transform:translateY(1px);filter:brightness(.94)}
@@ -838,10 +839,12 @@ const TEMATY = [
     }
   },
   {
-    // Dialogi do scenki na hiszpański (tylko teksty z zeszytu). Nic się tu nie pisze:
-    // do pytania wybierz pasującą odpowiedź (pytanie napisane albo tylko słyszane)
-    // albo do odpowiedzi wybierz pytanie. Każdy tekst można odsłuchać, stuknięta opcja czyta się na głos.
-    id: "hisz-dialogi", od: "2026-10-06", nazwa: "Hiszpański: dialogi", typ: "wybor", dlugosc: 10, wymowa: "es-ES",
+    // Pytania i odpowiedzi do scenki na hiszpański (tylko teksty z zeszytu). Wszystko się pisze:
+    // 1) jest pytanie (można odsłuchać) → napisz odpowiedź, 2) jest odpowiedź → napisz pytanie,
+    // 3) słychać pytanie → zapisz je, 4) słychać odpowiedź → zapisz ją.
+    // Sprawdzanie zdań (zdania: true): wielkie litery i znaki ¿ ? , . nie mają znaczenia, akcenty i ñ tak.
+    // id zostaje „hisz-dialogi”, żeby kalendarz i seria liczyły się dalej.
+    id: "hisz-dialogi", od: "2026-10-06", nazwa: "Hiszpański: pytania i odpowiedzi", typ: "tekst", zdania: true, dlugosc: 10, wymowa: "es-ES",
     tlo: "#E8483A", napis: "#FFE36E",
     zadania(){
       const D = [
@@ -850,15 +853,16 @@ const TEMATY = [
         { g: "skad", p: ["¿De dónde eres?"], o: ["Yo soy de Polonia. Soy polaca."] },
         { g: "lata", p: ["¿Cuántos años tienes?"], o: ["Tengo diez años."] }
       ];
-      const los = a => a[Math.floor(Math.random() * a.length)];
-      const opcje = (d, pole) => shuffle([los(d[pole]), ...D.filter(x => x !== d).map(x => los(x[pole]))]);
+      // Przy pisaniu odpowiedzi dobra jest też jej pierwsza część („Me llamo Amelka.”, „Yo soy de Polonia.”).
+      const odpowiedzi = d => [...new Set(d.o.flatMap(o => { const kr = o.split(/[,.](?=\s)/)[0].trim().replace(/[.,]$/, "") + "."; return kr !== o ? [o, kr] : [o]; }))];
       const out = [];
       for (const d of D) for (const p of d.p) {
-        out.push({ klucz: "o:" + p, pytanie: p, odp: d.o.join(" / "), polecenie: "Wybierz odpowiedź", mow: p, opcje: opcje(d, "o"), grupa: "o:" + p });
-        out.push({ klucz: "s:" + p, pytanie: "🔊 " + p, odp: d.o.join(" / "), polecenie: "Posłuchaj i wybierz odpowiedź", mow: p, sluch: true, opcje: opcje(d, "o"), grupa: "o:" + p });
+        out.push({ klucz: "o:" + p, pytanie: p, odp: odpowiedzi(d).join(" / "), polecenie: "Napisz odpowiedź", mow: p, grupa: "p:" + p });
+        out.push({ klucz: "sp:" + p, pytanie: "🔊 " + p, odp: p, polecenie: "Posłuchaj i zapisz pytanie", mow: p, sluch: true, grupa: "p:" + p });
       }
       for (const d of D) for (const o of d.o) {
-        out.push({ klucz: "z:" + o, pytanie: o, odp: d.p.join(" / "), polecenie: "Jakie to było pytanie?", mow: o, opcje: opcje(d, "p") });
+        out.push({ klucz: "z:" + o, pytanie: o, odp: d.p.join(" / "), polecenie: "Napisz pytanie", mow: o, grupa: "o:" + o });
+        out.push({ klucz: "so:" + o, pytanie: "🔊 " + o, odp: o, polecenie: "Posłuchaj i zapisz odpowiedź", mow: o, sluch: true, grupa: "o:" + o });
       }
       return out;
     }
@@ -1117,6 +1121,8 @@ const Zapis = {
 /* ===================== pomocnicze ===================== */
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
 const norm = s => String(s).toLowerCase().replace(/\s+/g, " ").trim();
+// Zdania (hiszpański): bez wielkich liter i interpunkcji, ale z akcentami i ñ.
+const normZdanie = s => norm(s).replace(/[¿?¡!.,;:"„”()-]/g, " ").replace(/\s+/g, " ").trim();
 const pad2 = n => String(n).padStart(2, "0");
 const dzienKlucz = d => d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
 const czas = ms => { const s = Math.round(ms / 1000); return Math.floor(s / 60) + ":" + pad2(s % 60); };
@@ -1874,11 +1880,11 @@ function zadanie(){
       <div class="ansrow">${t.typ === "liczby" ? '<span class="mega eq">=</span>' : ""}${odp}</div>
       ${frog("skup")}
     </section>
-    <p class="hint">${t.reszta ? "Wpisz wynik, potem resztę (r.)." : t.typ === "liczby" ? "Wpisz wynik i naciśnij OK." : t.dyktando && MOWA ? "Wpisz, co słyszysz, i naciśnij OK." : "Wpisz słówko i naciśnij OK."} Wyniki zobaczysz na końcu rundy.</p>
+    <p class="hint">${t.reszta ? "Wpisz wynik, potem resztę (r.)." : t.typ === "liczby" ? "Wpisz wynik i naciśnij OK." : t.zdania ? "Napisz całe zdanie. Akcenty (á, ñ) się liczą, znaki ¿ ? nie." : t.dyktando && MOWA ? "Wpisz, co słyszysz, i naciśnij OK." : "Wpisz słówko i naciśnij OK."} Wyniki zobaczysz na końcu rundy.</p>
     ${t.typ === "liczby"
       ? `<div class="pad">${[1,2,3,4,5,6,7,8,9].map(d => `<button data-act="cyfra" data-d="${d}">${d}</button>`).join("")}
          <button class="del" data-act="usun" aria-label="Usuń cyfrę">⌫</button><button data-act="cyfra" data-d="0">0</button><button class="ok" data-act="ok" aria-label="${t.reszta && pole === 0 ? "Dalej do reszty" : "Zatwierdź"}">${t.reszta && pole === 0 ? "Dalej" : "OK"}</button></div>`
-      : klawiatura()}
+      : klawiatura((t.wymowa || "").startsWith("es"))}
   </main>`;
 }
 
@@ -1924,9 +1930,11 @@ function zatwierdzWybor(ok, wpis){
 
 /* Własna klawiatura z literami: telefon nie wysuwa swojej, a układ jest zawsze ten sam. */
 const RZEDY = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
-function klawiatura(){
+const RZAD_ES = ["á", "é", "í", "ó", "ú", "ñ", "¿", "?", ",", "."];
+function klawiatura(hiszp){
   const k = l => `<button data-act="litera" data-l="${l}" aria-label="${l}">${l}</button>`;
-  return `<div class="klaw" role="group" aria-label="Klawiatura">
+  return `<div class="klaw${hiszp ? " es" : ""}" role="group" aria-label="Klawiatura">
+    ${hiszp ? `<div class="kr kr-es">${RZAD_ES.map(k).join("")}</div>` : ""}
     <div class="kr">${[...RZEDY[0]].map(k).join("")}</div>
     <div class="kr">${[...RZEDY[1]].map(k).join("")}</div>
     <div class="kr">${[...RZEDY[2]].map(k).join("")}<button class="del" data-act="usun" aria-label="Usuń literę">⌫</button></div>
@@ -1934,7 +1942,7 @@ function klawiatura(){
   </div>`;
 }
 function wpiszLitere(l){
-  if (R.input.length >= 40) return;
+  if (R.input.length >= (R.temat.zdania ? 70 : 40)) return;
   if (l === " " && (!R.input || R.input.endsWith(" "))) return;
   R.input += l; render();
 }
@@ -1951,8 +1959,9 @@ function zatwierdz(){
     if (!R.reszta) return;
   }
   const wpis = R.temat.reszta ? R.input + " r. " + R.reszta : R.input.trim(); if (!wpis) return;
-  const dobre = z.odp.split("/").map(norm).filter(Boolean);
-  const ok = dobre.includes(norm(wpis)) || norm(wpis) === norm(z.odp);
+  const N = R.temat.zdania ? normZdanie : norm;
+  const dobre = z.odp.split("/").map(N).filter(Boolean);
+  const ok = dobre.includes(N(wpis)) || N(wpis) === N(z.odp);
   const teraz = Date.now();
   R.odpowiedzi.push({ klucz: z.klucz, pytanie: z.pytanie, odp: z.odp, wpis, dobrze: ok, ms: teraz - R.tZad });
   R.tZad = teraz; R.input = ""; R.reszta = ""; R.pole = 0; R.i++;
@@ -2043,17 +2052,18 @@ function pokazToast(r){
    dobre i złe, z głośnikami przy tym, co jest w języku obcym. */
 function wynikiZGlosnikami(r, t){
   const g = tekst => t.wymowa ? glosnik(tekst, t.wymowa) : "";
-  const obcePytanie = t.typ === "wybor";             // w dialogach pytanie też jest po hiszpańsku
+  const obcePytanie = t.typ === "wybor" || t.zdania; // w zdaniach po hiszpańsku pytanie też jest w języku obcym
   const wiersz = z => {
     const warianty = z.odp.split("/").map(x => x.trim()).filter(Boolean);
     const pyt = z.pytanie.replace(/^🔊\s*/, "");
     const dobra = z.dobrze ? z.wpis : warianty[0];
-    const inne = warianty.filter(w => norm(w) !== norm(dobra));
+    const N = t.zdania ? normZdanie : norm;
+    const inne = warianty.filter(w => N(w) !== N(dobra));
     return `<div class="wyn${z.dobrze ? "" : " zle"}">
       <span class="w-pyt">${esc(pyt)}${obcePytanie ? g(pyt) : ""}</span>
       ${z.dobrze ? "" : `<span class="w-twoja">✗ <s>${esc(z.wpis)}</s></span>`}
       <span class="w-odp">✓ ${esc(dobra)}${g(dobra)}</span>
-      ${inne.length && t.typ === "wybor" ? `<span class="e-tez">też: ${inne.map(esc).join(", ")}</span>` : ""}
+      ${inne.length && (t.typ === "wybor" || t.zdania) ? `<span class="e-tez">też: ${inne.map(esc).join(" · ")}</span>` : ""}
     </div>`;
   };
   return `<section class="errs"><span class="mega t">Wyniki</span>${r.zadania.map(wiersz).join("")}</section>`;
@@ -2478,7 +2488,7 @@ document.addEventListener("keydown", e => {
     else if (e.key === "Enter") { e.preventDefault(); zatwierdz(); }
   } else {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
-    if (/^[a-zA-Z\- ]$/.test(e.key)) { e.preventDefault(); wpiszLitere(e.key.toLowerCase()); }
+    if (/^[a-zA-Z\- ]$/.test(e.key) || (R.temat.zdania && /^[áéíóúüñÁÉÍÓÚÜÑ¿?¡!,.]$/.test(e.key))) { e.preventDefault(); wpiszLitere(e.key.toLowerCase()); }
     else if (e.key === "Backspace") { e.preventDefault(); usunCyfre(); }
     else if (e.key === "Enter") { e.preventDefault(); zatwierdz(); }
   }
