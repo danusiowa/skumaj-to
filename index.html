@@ -1035,6 +1035,39 @@ const TEMATY = [
       dodaj("Quiz: wpisz odpowiedź", "quiz", [["The capital of the UK is ___.", "London"], ["There are ___ countries in the UK. (słowem)", "four"],
         ["The capital of the USA is ___.", "Washington, D.C. / Washington DC / Washington"], ["The capital of Australia is ___.", "Canberra"],
         ["There are 27 million people in ___. (New Zealand / Australia / Sydney)", "Australia"]], 0.5);
+      // Ćwiczeniówka str. 6–9 (Lesson 1.1–1.4).
+      dodaj("Uzupełnij (drzewo: Nick+Mary → Alan, David, Helen; Alan+Ruth → Mark; Helen+Rob → Steven, Holly)", "drzewo", [
+        ["Alan: Nick is my ___.", "father / dad"], ["Alan: Nick is Mark's ___ too.", "grandad / grandfather / grandpa"],
+        ["Holly: Ruth is my ___.", "aunt"], ["Holly: Steven and I are Mark's ___.", "cousins"], ["Holly: I am Helen and Rob's ___.", "daughter"],
+        ["Steven: Holly is my ___.", "sister"], ["Steven: I'm Helen's ___.", "son"]], 0.8);
+      dodaj("Uzupełnij zdanie", "relacje", [["Amy is Emily's mother. Emily is Amy's ___.", "daughter"], ["Tom is Danny's father. Danny is Tom's ___.", "son"],
+        ["Sara is Ben's mother and Ted's aunt. Ben and Ted are ___.", "cousins"], ["Ada is Sam's mother. Sam is Rosa's father. Ada is Rosa's ___.", "grandmother / granny / grandma"],
+        ["John is David's brother. David is Tina's father. John is Tina's ___.", "uncle"]]);
+      dodaj("Dokończ słowo", "koncowki", [["daught___", "daughter"], ["cous___", "cousin"], ["unc___", "uncle"], ["grand___ (dziadek)", "grandad"], ["au___", "aunt"], ["gran___ (babcia)", "granny"], ["s___ (syn)", "son"]], 0.6);
+      dodaj("Wpisz krótką formę: 'm, 're albo 's", "skroty", [["Look. We___ at Tom's party.", "'re"], ["He___ twelve today.", "'s"], ["I___ happy!", "'m"],
+        ["He___ a teacher.", "'s"], ["She___ a student.", "'s"], ["They___ at school.", "'re"], ["You___ in this class.", "'re"]]);
+      dodaj("Wpisz am, is albo are", "amisare2", [["Hi, Harry. I ___ Jack.", "am"], ["You ___ in Class 2 with me. Welcome!", "are"], ["This is Tony. He ___ my classmate.", "is"],
+        ["We ___ best friends too.", "are"], ["Mrs Lee and Mr Brown ___ my favourite teachers.", "are"], ["My parents' names ___ Amy and Andrew.", "are"], ["My sister ___ thirteen.", "is"]]);
+      dodaj("Wpisz my, your, his, her albo they", "zaimki2", [["This is my brother. ___ name is Alex.", "his"], ["The present is for Granny. ___ name is Sophie.", "her"],
+        ["(chłopiec do babci) This is ___ present, Granny.", "your"], ["Hi! I am Tom. This is ___ family.", "my"], ["My parents' names are Amy and Andrew. ___ are teachers.", "they"],
+        ["My sister is thirteen. ___ name is Katie.", "her"]]);
+      dodaj("Przepisz z krótką formą to be", "przepisz", [["You are not right.", "You aren't right."], ["I am not a superhero.", "I'm not a superhero."],
+        ["Ben is not my friend.", "Ben isn't my friend."], ["She is not my aunt.", "She isn't my aunt."], ["They are not my cousins.", "They aren't my cousins."],
+        ["My friends are not at home.", "My friends aren't at home."]]);
+      dodaj("Napisz przeczenie, krótka forma", "przecz2", [["She's at school.", "She isn't at school."], ["They're happy.", "They aren't happy."],
+        ["They're at home.", "They aren't at home."], ["He's a teacher.", "He isn't a teacher."], ["He's ready for school.", "He isn't ready for school."]]);
+      dodaj("Wpisz to be: ✓ twierdzenie, ✗ przeczenie", "kitdug", [["Kit: You ___ (✓) with your grandad and granny, right?", "are / 're"], ["Dug: No, I ___ (✗).", "'m not / am not"],
+        ["Dug: They ___ (✓) my parents.", "are / 're"], ["Dug: My dad ___ (✓) British,", "is / 's"], ["Dug: but my mother ___ (✗) British.", "isn't / is not"],
+        ["Dug: She ___ (✓) Polish.", "is / 's"], ["Kit: It ___ (✗) a new photo.", "isn't / is not"], ["Dug: That's right. It ___ (✓) very old.", "is / 's"]]);
+      dodaj("Uzupełnij dialog", "dialog2", [["Hi, Stella, this is Frankie. ___ my cousin.", "He's / He is"], ["___, Frankie. Nice to meet you.", "Hi / Hello"],
+        ["Hi, Frankie. Nice ___.", "to meet you"], ["___ to meet you too, Stella.", "Nice"], ["Hello, Nancy. ___ (miło cię poznać)", "Nice to meet you."],
+        ["Hello, Mrs Smith. ___ (ciebie także miło poznać)", "Nice to meet you too."], ["And this is Nancy. ___ (najlepsza przyjaciółka w szkole)", "She's my best friend at school. / She is my best friend at school."]]);
+      dodaj("Co powiesz po angielsku?", "sytuacje2", [["Spotykasz mamę przed szkołą. Przywitaj się.", "Hi, Mum! / Hello, Mum!"],
+        ["Przedstaw mamie nową koleżankę Amy.", "Mum, this is Amy. / This is Amy. / Mum, this is Amy. She's my new classmate. / Mum, this is Amy. She is my new classmate."],
+        ["Mama poznaje Amy. Co mówi mama?", "Hello, Amy. / Hi, Amy. / Hello, Amy. Nice to meet you. / Hi, Amy. Nice to meet you."],
+        ["Amy poznaje mamę koleżanki, panią Wilson. Co mówi Amy?", "Nice to meet you, Mrs Wilson. / Nice to meet you too, Mrs Wilson."],
+        ["Przedstaw nauczycielowi, panu Smithowi, koleżankę Hanię.", "Mr Smith, this is Hania. She's my friend. / Mr Smith, this is Hania. She is my friend. / Mr Smith, this is my friend, Hania. / Mr Smith, this is my friend Hania."],
+        ["Powiedz, że Hania jest z Anglii.", "Hania is from England. / She's from England. / She is from England."]]);
       return Z.map(([polecenie, pytanie, odp, gr, waga], i) => ({ klucz: gr + ":" + pytanie, pytanie, odp, polecenie, pl: true, grupa: gr + ":" + pytanie, ...(waga ? { waga } : {}) }));
     }
   },
