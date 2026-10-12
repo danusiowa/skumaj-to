@@ -750,9 +750,9 @@ const DLUGOSC_RUNDY = 15;
 
 const SLOWA_RODZINA = [
   ["mama","mum / mom / mother"],["tata","dad / father"],["siostra","sister"],["brat","brother"],
-  ["babcia","grandma / grandmother"],["dziadek","grandpa / grandfather"],["ciocia","aunt"],["wujek","uncle"],
+  ["babcia","grandma / grandmother"],["dziadek","grandpa / grandfather / granddad"],["ciocia","aunt"],["wujek","uncle"],
   ["kuzyn","cousin"],["rodzice","parents"],["syn","son"],["córka","daughter"],
-  ["rodzina","family"],["dziecko","child"],["dziadkowie","grandparents"]
+  ["rodzina","family"],["dziecko","child"],["dziadkowie","grandparents"],["mąż","husband"],["żona","wife"]
 ];
 
 function lista(pary){ return pary.map(([pytanie, odp]) => ({ klucz: pytanie, pytanie, odp })); }
@@ -835,6 +835,119 @@ const TEMATY = [
       for (const [pl, en] of SLOWA_RODZINA)
         for (const slowo of en.split("/").map(x => x.trim()).filter(x => x !== "mom"))
           out.push({ klucz: slowo, pytanie: pl, odp: slowo, grupa: pl });
+      return out;
+    }
+  },
+  {
+    // ROZDZIAŁ 1 (sprawdzian): czasownik to be, zdania twierdzące i przeczące.
+    // Trzy rodzaje zadań: wpisz am/is/are (albo przeczenie), zamień zdanie na przeczenie, przetłumacz zdanie.
+    // Dobre są formy pełne i skrócone (is not / isn't / 's not).
+    id: "ang-to-be", od: "2026-10-12", nazwa: "Angielski: to be", typ: "tekst", zdania: true, wymowa: "en-GB",
+    tlo: "#898E46", napis: "#FFF8EE",
+    zadania(){
+      const OS = [ // ang, pl, forma, skrót, pl „jestem”, pl „nie jestem”
+        ["I", "Ja", "am", "I'm", "jestem"], ["You", "Ty", "are", "You're", "jesteś"], ["He", "On", "is", "He's", "jest"],
+        ["She", "Ona", "is", "She's", "jest"], ["It", "To", "is", "It's", "jest"], ["We", "My", "are", "We're", "jesteśmy"],
+        ["They", "Oni", "are", "They're", "są"]
+      ];
+      const MIEJSCA = [["at school", "w szkole"], ["at home", "w domu"], ["in the park", "w parku"], ["from Poland", "z Polski"], ["in the garden", "w ogrodzie"]];
+      const plus = (o, m) => [`${o[0]} ${o[2]} ${m}.`, `${o[3]} ${m}.`];
+      const minus = (o, m) => {
+        const v = o[2], neg = { am: ["am not"], is: ["is not", "isn't"], are: ["are not", "aren't"] }[v];
+        return [...neg.map(n => `${o[0]} ${n} ${m}.`), `${o[3]} not ${m}.`];
+      };
+      const out = [];
+      OS.forEach((o, i) => MIEJSCA.forEach(([m, pm], k) => {
+        const zd = `${o[0] === "I" ? "I" : o[0]} ___ ${m}.`;
+        if ((i + k) % 2 === 0) out.push({ klucz: "wpisz:" + o[0] + m, pytanie: zd, odp: o[2], polecenie: "Wpisz am, is albo are", mow: plus(o, m)[0], grupa: "w:" + o[0] });
+        else out.push({ klucz: "wpiszn:" + o[0] + m, pytanie: zd + " ✗", odp: { am: "am not / 'm not", is: "isn't / is not", are: "aren't / are not" }[o[2]], polecenie: "Wpisz przeczenie (nie)", mow: minus(o, m)[1] || minus(o, m)[0], grupa: "w:" + o[0] });
+        out.push({ klucz: "neg:" + o[0] + m, pytanie: plus(o, m)[0], odp: minus(o, m).join(" / "), polecenie: "Zamień na przeczenie", mow: plus(o, m)[0], grupa: "n:" + o[0] });
+        const nie = k % 2 === 1;
+        const pl = `${o[1]} ${nie ? "nie " : ""}${o[4]} ${pm}.`.replace(/^To nie jest/, "To nie jest");
+        out.push({ klucz: "tl:" + (nie ? "-" : "+") + o[0] + m, pytanie: pl, odp: (nie ? minus(o, m) : plus(o, m)).join(" / "), polecenie: "Napisz po angielsku", mow: (nie ? minus(o, m) : plus(o, m))[0], grupa: "t:" + o[0] });
+      }));
+      return out;
+    }
+  },
+  {
+    // ROZDZIAŁ 1: państwa i narodowości. Wielkie litery nie są sprawdzane (ale w zeszycie piszemy je dużą literą!).
+    id: "ang-kraje", od: "2026-10-12", nazwa: "Angielski: państwa i narodowości", typ: "tekst", zdania: true, wymowa: "en-GB",
+    tlo: "#F29CC3", napis: "#5A1838",
+    zadania(){
+      const K = [ // pl państwo, ang państwo (warianty), narodowość
+        ["Polska", "Poland", "Polish"], ["Hiszpania", "Spain", "Spanish"], ["Niemcy", "Germany", "German"], ["Francja", "France", "French"],
+        ["Włochy", "Italy", "Italian"], ["Wielka Brytania", "the UK / UK / Great Britain / Britain / the United Kingdom", "British"],
+        ["Anglia", "England", "English"], ["Szkocja", "Scotland", "Scottish"], ["Irlandia", "Ireland", "Irish"],
+        ["Stany Zjednoczone", "the USA / USA / the United States / America", "American"], ["Kanada", "Canada", "Canadian"],
+        ["Australia", "Australia", "Australian"], ["Japonia", "Japan", "Japanese"], ["Chiny", "China", "Chinese"],
+        ["Brazylia", "Brazil", "Brazilian"], ["Meksyk", "Mexico", "Mexican"], ["Grecja", "Greece", "Greek"], ["Portugalia", "Portugal", "Portuguese"]
+      ];
+      const out = [];
+      for (const [pl, en, nar] of K) {
+        const kraj = en.split("/")[0].trim();
+        out.push({ klucz: "kraj:" + pl, pytanie: pl, odp: en, polecenie: "Napisz po angielsku nazwę państwa", mow: kraj, grupa: pl });
+        out.push({ klucz: "nar:" + pl, pytanie: kraj.replace(/^the /, "the "), odp: nar, polecenie: "Napisz narodowość", mow: nar, grupa: pl });
+        out.push({ klucz: "zd:" + pl, pytanie: `I'm from ${kraj}. I'm ___.`, odp: nar, polecenie: "Uzupełnij narodowość", mow: `I'm from ${kraj}. I'm ${nar}.`, grupa: pl });
+      }
+      return out;
+    }
+  },
+  {
+    // ROZDZIAŁ 1: dopełniacz saksoński (Jack's dog). Tylko liczba pojedyncza.
+    id: "ang-saksonski", od: "2026-10-12", nazwa: "Angielski: dopełniacz saksoński", typ: "tekst", zdania: true, wymowa: "en-GB",
+    tlo: "#4A3F6B", napis: "#F4D242",
+    zadania(){
+      const D = [ // pl, właściciel, rzecz
+        ["pies Jacka", "Jack", "dog"], ["kot Ani", "Ania", "cat"], ["rower Toma", "Tom", "bike"], ["mama Kasi", "Kasia", "mum"],
+        ["brat Olivera", "Oliver", "brother"], ["książka Maxa", "Max", "book"], ["zabawki Lily", "Lily", "toys"], ["samochód taty", "Dad", "car"],
+        ["dom babci", "Grandma", "house"], ["siostra Emmy", "Emma", "sister"], ["pokój Zosi", "Zosia", "room"], ["piłka Bena", "Ben", "ball"],
+        ["tata Amelki", "Amelka", "dad"], ["telefon mamy", "Mum", "phone"], ["chomik Leny", "Lena", "hamster"], ["plecak Kuby", "Kuba", "schoolbag"]
+      ];
+      const out = [];
+      for (const [pl, kto, co] of D) {
+        const ok = `${kto}'s ${co}`;
+        out.push({ klucz: "pl:" + pl, pytanie: pl, odp: ok, polecenie: "Napisz po angielsku z 's", mow: ok, grupa: pl });
+        out.push({ klucz: "of:" + pl, pytanie: `the ${co} of ${kto}`, odp: ok, polecenie: "Napisz krócej, z 's", mow: ok, grupa: pl });
+      }
+      return out;
+    }
+  },
+  {
+    // ROZDZIAŁ 1: funkcje językowe, przedstawianie siebie i innych. Jak hiszpański: pytanie → odpowiedź,
+    // odpowiedź → pytanie, polskie zdanie → angielskie, zapisywanie pytań i odpowiedzi ze słuchu.
+    id: "ang-przedstawianie", od: "2026-10-12", nazwa: "Angielski: przedstawianie się", typ: "tekst", zdania: true, dlugosc: 12, wymowa: "en-GB",
+    tlo: "#BFE3D0", napis: "#0F5A4A",
+    zadania(){
+      const D = [
+        { pl: "Jak masz na imię?", p: ["What's your name?", "What is your name?"], plo: "Mam na imię Amelka.", o: ["My name is Amelka.", "My name's Amelka.", "I'm Amelka.", "I am Amelka."] },
+        { pl: "Ile masz lat?", p: ["How old are you?"], plo: "Mam dziesięć lat.", o: ["I'm ten.", "I am ten.", "I'm ten years old.", "I am ten years old."] },
+        { pl: "Skąd jesteś?", p: ["Where are you from?"], plo: "Jestem z Polski.", o: ["I'm from Poland.", "I am from Poland."] },
+        { pl: "Jak się masz?", p: ["How are you?"], plo: "Dobrze, dziękuję.", o: ["I'm fine, thank you.", "I'm fine, thanks.", "Fine, thanks.", "Fine, thank you.", "I am fine, thank you."] },
+        { pl: "Kto to jest?", p: ["Who's this?", "Who is this?"], plo: "To jest mój przyjaciel Tom.", o: ["This is my friend Tom.", "This is my friend, Tom."] }
+      ];
+      const ZWROTY = [ // polski → angielski (warianty)
+        ["Cześć, jestem Amelka.", "Hi, I'm Amelka. / Hello, I'm Amelka. / Hi, I am Amelka. / Hello, I am Amelka."],
+        ["Miło cię poznać.", "Nice to meet you."], ["Mnie też miło cię poznać.", "Nice to meet you too."],
+        ["To jest moja mama.", "This is my mum. / This is my mother."], ["To jest mój brat Olek.", "This is my brother Olek. / This is my brother, Olek."],
+        ["Ona ma na imię Zosia.", "Her name is Zosia. / Her name's Zosia."], ["On ma na imię Tom.", "His name is Tom. / His name's Tom."],
+        ["On jest z Anglii.", "He's from England. / He is from England."], ["Ona ma jedenaście lat.", "She's eleven. / She is eleven. / She's eleven years old. / She is eleven years old."]
+      ];
+      const out = [];
+      for (const d of D) {
+        for (const p of d.p.slice(0, 1)) {
+          out.push({ klucz: "o:" + p, pytanie: p, odp: d.o.join(" / "), polecenie: "Napisz odpowiedź", mow: p, grupa: "p:" + p });
+          out.push({ klucz: "sp:" + p, pytanie: "🔊 " + p, odp: d.p.join(" / "), polecenie: "Posłuchaj i zapisz pytanie", mow: p, sluch: true, grupa: "p:" + p });
+          out.push({ klucz: "plp:" + p, pytanie: d.pl, odp: d.p.join(" / "), polecenie: "Napisz to pytanie po angielsku", mow: p, grupa: "q:" + p });
+        }
+        const o = d.o[0];
+        out.push({ klucz: "z:" + o, pytanie: o, odp: d.p.join(" / "), polecenie: "Napisz pytanie", mow: o, grupa: "o:" + o });
+        out.push({ klucz: "so:" + o, pytanie: "🔊 " + o, odp: d.o.join(" / "), polecenie: "Posłuchaj i zapisz odpowiedź", mow: o, sluch: true, grupa: "o:" + o });
+        out.push({ klucz: "plo:" + o, pytanie: d.plo, odp: d.o.join(" / "), polecenie: "Napisz po angielsku", mow: o, grupa: "r:" + o });
+      }
+      for (const [pl, en] of ZWROTY) {
+        const w = en.split("/")[0].trim();
+        out.push({ klucz: "zw:" + pl, pytanie: pl, odp: en, polecenie: "Napisz po angielsku", mow: w, grupa: "zw:" + pl });
+      }
       return out;
     }
   },
@@ -1122,7 +1235,7 @@ const Zapis = {
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
 const norm = s => String(s).toLowerCase().replace(/\s+/g, " ").trim();
 // Zdania (hiszpański): bez wielkich liter i interpunkcji, ale z akcentami i ñ.
-const normZdanie = s => norm(s).replace(/[¿?¡!.,;:"„”()-]/g, " ").replace(/\s+/g, " ").trim();
+const normZdanie = s => norm(s).replace(/[’‘`]/g, "'").replace(/[¿?¡!.,;:"„”()✗_-]/g, " ").replace(/\s+/g, " ").trim();
 const pad2 = n => String(n).padStart(2, "0");
 const dzienKlucz = d => d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
 const czas = ms => { const s = Math.round(ms / 1000); return Math.floor(s / 60) + ":" + pad2(s % 60); };
@@ -1938,7 +2051,7 @@ function klawiatura(hiszp){
     <div class="kr">${[...RZEDY[0]].map(k).join("")}</div>
     <div class="kr">${[...RZEDY[1]].map(k).join("")}</div>
     <div class="kr">${[...RZEDY[2]].map(k).join("")}<button class="del" data-act="usun" aria-label="Usuń literę">⌫</button></div>
-    <div class="kr dol"><button data-act="litera" data-l="-" aria-label="Myślnik">-</button><button class="spacja" data-act="litera" data-l=" " aria-label="Spacja">spacja</button><button class="ok" data-act="ok" aria-label="Zatwierdź">OK</button></div>
+    <div class="kr dol"><button data-act="litera" data-l="-" aria-label="Myślnik">-</button><button data-act="litera" data-l="'" aria-label="Apostrof">'</button><button class="spacja" data-act="litera" data-l=" " aria-label="Spacja">spacja</button><button class="ok" data-act="ok" aria-label="Zatwierdź">OK</button></div>
   </div>`;
 }
 function wpiszLitere(l){
@@ -2488,7 +2601,7 @@ document.addEventListener("keydown", e => {
     else if (e.key === "Enter") { e.preventDefault(); zatwierdz(); }
   } else {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
-    if (/^[a-zA-Z\- ]$/.test(e.key) || (R.temat.zdania && /^[áéíóúüñÁÉÍÓÚÜÑ¿?¡!,.]$/.test(e.key))) { e.preventDefault(); wpiszLitere(e.key.toLowerCase()); }
+    if (/^[a-zA-Z\- ]$/.test(e.key) || (R.temat.zdania && /^[áéíóúüñÁÉÍÓÚÜÑ¿?¡!,.']$/.test(e.key))) { e.preventDefault(); wpiszLitere(e.key.toLowerCase()); }
     else if (e.key === "Backspace") { e.preventDefault(); usunCyfre(); }
     else if (e.key === "Enter") { e.preventDefault(); zatwierdz(); }
   }
