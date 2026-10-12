@@ -105,7 +105,7 @@ Czwarta zakładka w menu. Muchy (jedna za każdą dobrą odpowiedź) wydaje się
 | Matematyka | Dzielenie do 100 |
 | Matematyka | Dzielenie z resztą do 100 (wynik i reszta w osobnych okienkach) |
 | Angielski | Liczby do 100 (słowami) |
-| Angielski | Rodzina |
+| Angielski | Rodzina (słowa z podręcznika, Lesson 1.1, plus family, child, grandparents) |
 | Angielski | Rodzina ze słuchu (dyktando: apka czyta słowo, wpisuje się, co słychać) |
 | Hiszpański | Pytania i odpowiedzi (całe zdania do scenki: do pytania napisz odpowiedź, do odpowiedzi pytanie, a ze słuchu zapisz pytanie albo odpowiedź; akcenty i ñ się liczą, wielkie litery i znaki ¿ ? nie) |
 

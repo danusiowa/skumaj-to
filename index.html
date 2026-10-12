@@ -748,11 +748,13 @@ ul.zad .glosnik .ti{width:12px;height:12px}
    ===================================================================== */
 const DLUGOSC_RUNDY = 15;
 
+// Rodzina według podręcznika (Wordlist, Lesson 1.1): [po polsku, słowa z podręcznika, inne też uznawane].
+// Dyktando czyta tylko słowa z podręcznika. Ostatnie trzy to dodatek spoza listy.
 const SLOWA_RODZINA = [
-  ["mama","mum / mom / mother"],["tata","dad / father"],["siostra","sister"],["brat","brother"],
-  ["babcia","grandma / grandmother"],["dziadek","grandpa / grandfather"],["ciocia","aunt"],["wujek","uncle"],
-  ["kuzyn","cousin"],["rodzice","parents"],["syn","son"],["córka","daughter"],
-  ["rodzina","family"],["dziecko","child"],["dziadkowie","grandparents"]
+  ["ciocia", "aunt"], ["brat", "brother"], ["kuzyn / kuzynka", "cousin"], ["tata", "dad"], ["córka", "daughter"],
+  ["ojciec", "father"], ["dziadek", "grandad / grandfather", "grandpa / granddad"], ["babcia", "grandmother / granny", "grandma"],
+  ["matka", "mother"], ["mama", "mum", "mom"], ["rodzice", "parents"], ["siostra", "sister"], ["syn", "son"], ["wujek", "uncle"],
+  ["rodzina", "family"], ["dziecko", "child"], ["dziadkowie", "grandparents"]
 ];
 
 function lista(pary){ return pary.map(([pytanie, odp]) => ({ klucz: pytanie, pytanie, odp })); }
@@ -823,7 +825,7 @@ const TEMATY = [
   {
     id: "ang-rodzina", od: "2026-10-03", nazwa: "Angielski: rodzina", typ: "tekst", polecenie: "Napisz po angielsku", wymowa: "en-GB",
     tlo: "#FFC0C0", napis: "#9C3A20",
-    zadania(){ return lista(SLOWA_RODZINA); }
+    zadania(){ return SLOWA_RODZINA.map(([pl, en, tez]) => ({ klucz: pl, pytanie: pl, odp: tez ? en + " / " + tez : en })); }
   },
   {
     // Dyktando: apka czyta słowo, dziecko wpisuje, co usłyszało. Te same słowa co w „rodzinie”.
@@ -833,7 +835,7 @@ const TEMATY = [
     zadania(){
       const out = [];
       for (const [pl, en] of SLOWA_RODZINA)
-        for (const slowo of en.split("/").map(x => x.trim()).filter(x => x !== "mom"))
+        for (const slowo of en.split("/").map(x => x.trim()))
           out.push({ klucz: slowo, pytanie: pl, odp: slowo, grupa: pl });
       return out;
     }
