@@ -178,6 +178,31 @@ input.ans:focus,input.ans:focus-visible{outline:none;box-shadow:inset 0 0 0 3px 
 @media (prefers-reduced-motion:no-preference){.kursor{animation:kursor 1s steps(1) infinite}}
 @keyframes kursor{50%{opacity:0}}
 .klaw{display:flex;flex-direction:column;gap:7px}
+.gcard{gap:6px;min-height:0;padding:12px 14px 14px}
+.gcard .q.long{font-size:26px;line-height:1.1}
+@media (max-width:759px) and (max-height:800px){
+  #app[data-ekran="zadanie"] .gcard .q.long{font-size:22px}
+  #app[data-ekran="zadanie"] .g-lista{gap:3px}
+  #app[data-ekran="zadanie"] .g-pole{min-height:27px;font-size:16px;padding:2px 10px}
+  #app[data-ekran="zadanie"] .gcard ~ .klaw button{height:38px}
+  #app[data-ekran="zadanie"] .gcard ~ .klaw .dol button{height:40px}
+  #app[data-ekran="zadanie"] .gcard ~ .klaw{gap:5px}
+}
+.gcard .q{margin:-2px 0 2px}
+.g-lista{display:flex;flex-direction:column;gap:5px;position:relative;z-index:2}
+.g-wiersz{display:grid;grid-template-columns:96px 1fr;align-items:center;gap:8px;text-align:left;cursor:pointer;background:none;padding:0}
+.g-et{font-size:13px;font-weight:700;color:var(--kartka);opacity:.85}
+.g-pole{min-height:34px;padding:4px 10px;border-radius:10px;background:var(--kartka);color:var(--staw);font-family:var(--mega);font-weight:800;font-size:18px;display:flex;align-items:center;box-shadow:inset 0 0 0 2px transparent}
+.g-wiersz.akt .g-pole{box-shadow:inset 0 0 0 3px var(--zakreslacz),0 0 0 2px var(--kartka)}
+.dp-siatka{display:grid;grid-template-columns:1fr 1.15fr;gap:10px}
+#app[data-ekran="zadanie"] .screen:has(.dp-siatka) > *{grid-column:1/-1 !important}
+#app[data-ekran="zadanie"] .screen:has(.dp-siatka) > .dp-siatka,#app[data-ekran="zadanie"] .screen:has(.dp-siatka) > .btn{width:100%;max-width:720px;justify-self:center}
+.dp-kol{display:flex;flex-direction:column;gap:8px}
+.dp{min-height:48px;padding:6px 10px;border-radius:14px;background:var(--bialy);box-shadow:inset 0 0 0 1.5px var(--linia);color:var(--staw);font-family:var(--mega);font-weight:800;font-size:15px;display:flex;align-items:center;gap:8px;text-align:left;cursor:pointer}
+.dp.prawa{font-family:var(--tekst);font-weight:700;font-size:15px}
+.dp b{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--staw);color:var(--kartka);font-size:13px}
+.dp.ma{background:var(--pc);box-shadow:none}
+.dp.akt{box-shadow:inset 0 0 0 3px var(--pomidor);background:var(--kartka)}
 .klaw .kr-es button{background:var(--kartka);color:var(--pomidor)}
 .kr{display:flex;gap:5px;justify-content:center}
 .klaw button{flex:1 1 0;min-width:0;max-width:46px;height:52px;padding:0;border-radius:12px;background:var(--bialy);box-shadow:inset 0 0 0 1.5px var(--linia);font-family:var(--mega);font-weight:800;font-size:21px;color:var(--staw)}
@@ -1092,18 +1117,18 @@ const TEMATY = [
     }
   },
   {
-    // POLSKI 1: przypadek → pytania. Runda = wszystkie 7 przypadków w losowej kolejności.
-    id: "pol-pytania", od: "2026-10-13", nazwa: "Polski: przypadki i pytania", typ: "tekst", zdania: true, klaw: "pl",
+    // POLSKI 1: dopasowanie przypadków do pytań. Jeden ekran: 7 przypadków po lewej, 7 zestawów pytań po prawej.
+    id: "pol-pytania", od: "2026-10-13", nazwa: "Polski: przypadki i pytania", typ: "dopasuj", polecenie: "Połącz przypadek z pytaniami",
     tlo: "#FFD3A8", napis: "#7A3510",
     zadania(){
-      return PRZYPADKI.map(([n, pyt]) => ({ klucz: "pyt:" + n, pytanie: n, odp: pyt, polecenie: "Na jakie pytania odpowiada?", grupa: n }));
+      return PRZYPADKI.map(([n, pyt]) => ({ klucz: "pyt:" + n, pytanie: n, odp: pyt.split(" / ")[0], ekran: 0, grupa: n }));
     },
-    runda(){ return shuffle(this.zadania()); }
+    runda(){ return this.zadania(); }
   },
   {
     // POLSKI 2: odmiana słowa po kolei przez wszystkie przypadki (bez pytań i podpowiedzi).
     // Runda = 2 losowe słowa × 7 przypadków. Przy narzędniku, miejscowniku i wołaczu można dopisać z / o.
-    id: "pol-przypadki", od: "2026-10-13", nazwa: "Polski: odmiana przez przypadki", typ: "tekst", zdania: true, klaw: "pl",
+    id: "pol-przypadki", od: "2026-10-13", nazwa: "Polski: odmiana przez przypadki", typ: "tekst", zdania: true, klaw: "pl", grupowo: true,
     tlo: "#F28C38", napis: "#3A1A05",
     zadania(){
       const PRZED = [null, null, null, null, "z", "o", "o"];
@@ -1111,7 +1136,7 @@ const TEMATY = [
       const out = [];
       for (const [W, lm] of [...SLOWA_ODMIANA.map(w => [w, false]), ...SLOWA_ODMIANA_LM.map(w => [w, true])]) {
         const baza = W[0].split("/")[0].trim() + (lm ? " (l. mnoga)" : "");
-        PRZYPADKI.forEach(([n], c) => out.push({ klucz: "odm:" + baza + ":" + n, pytanie: `${baza} → ${n}`, odp: odp(W[c], c), polecenie: `Odmień po kolei (${c + 1}/7)`, grupa: "s:" + baza, slowo: baza }));
+        PRZYPADKI.forEach(([n], c) => out.push({ klucz: "odm:" + baza + ":" + n, pytanie: `${baza} → ${n}`, odp: odp(W[c], c), polecenie: "Odmień przez przypadki", etykieta: n, grupa: "s:" + baza, slowo: baza }));
       }
       return out;
     },
@@ -1119,7 +1144,7 @@ const TEMATY = [
       const Z = this.zadania(), slowa = [...new Set(Z.map(z => z.slowo))];
       const lp = shuffle(slowa.filter(s => !s.includes("mnoga"))), lm = shuffle(slowa.filter(s => s.includes("mnoga")));
       const wybrane = [lp[0], Math.random() < 0.3 ? lm[0] : lp[1]];
-      return wybrane.flatMap(s => Z.filter(z => z.slowo === s));
+      return wybrane.flatMap((s, e) => Z.filter(z => z.slowo === s).map(z => ({ ...z, ekran: e })));
     }
   },
   {
@@ -2132,12 +2157,14 @@ function czytajZadanie(){
 function zacznijRunde(tematId, zadaniaPoprawki){
   const t = tematById(tematId); if (!t) return;
   const lista = zadaniaPoprawki ? shuffle(zadaniaPoprawki) : t.runda ? t.runda() : wybierzZadania(t, t.dlugosc || DLUGOSC_RUNDY);
-  R = { temat: t, rodzaj: zadaniaPoprawki ? "poprawa" : "runda", lista, i: 0, input: "", odpowiedzi: [], start: Date.now(), tZad: Date.now() };
+  R = { temat: t, rodzaj: zadaniaPoprawki ? "poprawa" : "runda", lista, i: 0, input: "", wpisy: [], odpowiedzi: [], start: Date.now(), tZad: Date.now() };
   pytanieOWyjscie = false; ekran = "zadanie"; render(); przewinDo({ top: 0 }); czytajZadanie();
 }
 
 function zadanie(){
   if (R.temat.typ === "wybor") return zadanieWybor();
+  if (R.temat.typ === "dopasuj") return zadanieDopasuj();
+  if (R.temat.grupowo) return zadanieGrupa();
   const t = R.temat, z = R.lista[R.i], n = R.lista.length;
   setTimeout(() => { if (R) R.pokazane = R.i; }, 0);
   const dots = R.lista.map((_, k) => `<i class="${k < R.i ? "done" : k === R.i ? "now" : ""}"></i>`).join("");
@@ -2233,7 +2260,99 @@ function wpiszLitere(l){
   R.input += l; render();
 }
 
+
+/* Zadania na jednym ekranie: grupa = zadania z tym samym „ekran” (np. słowo odmieniane przez 7 przypadków). */
+function grupaEkranu(){
+  const e = R.lista[R.i].ekran, out = [];
+  R.lista.forEach((z, k) => { if (z.ekran === e && k >= R.start0) out.push(k); });
+  return out;
+}
+function naglowekRundy(){
+  const n = R.lista.length, zrobione = R.odpowiedzi.length;
+  const dots = R.lista.map((_, k) => `<i class="${k < zrobione ? "done" : k === zrobione ? "now" : ""}"></i>`).join("");
+  return `
+  <div class="qhead">
+    <span class="mega" style="font-size:14px">${Math.min(zrobione + 1, n)} / ${n}</span>
+    <button class="x" data-act="wyjdz">✕ Przerwij</button>
+  </div>
+  <main class="screen" style="padding-top:10px">
+    <div class="dots" style="grid-template-columns:repeat(${n},minmax(0,1fr))" aria-hidden="true">${dots}</div>
+    ${pytanieOWyjscie ? `<div class="confirm"><span>Przerwać rundę? Wynik się nie zapisze.</span><div><button data-act="zostan">Zostaję</button><button class="go" data-act="przerwij">Przerwij</button></div></div>` : ""}`;
+}
+function zadanieGrupa(){
+  const t = R.temat;
+  if (R.start0 === undefined) R.start0 = 0;
+  R.wpisy[R.i] = R.input;
+  const G = grupaEkranu(), z0 = R.lista[G[0]];
+  const wiersze = G.map(k => { const z = R.lista[k], akt = k === R.i;
+    return `<button class="g-wiersz${akt ? " akt" : ""}" data-act="gpole" data-k="${k}" aria-pressed="${akt}"><span class="g-et">${esc(z.etykieta)}</span><span class="g-pole">${esc(R.wpisy[k] || "")}${akt ? '<i class="kursor" aria-hidden="true"></i>' : ""}</span></button>`; }).join("");
+  const wszystkie = G.every(k => (R.wpisy[k] || "").trim());
+  return `${naglowekRundy()}
+    <section class="card szeroka gcard">
+      <span class="mega label">${esc(z0.polecenie)}</span>
+      <div class="mega q long">${esc(z0.slowo)}</div>
+      <div class="g-lista">${wiersze}</div>
+    </section>
+    ${klawiatura(t.klaw).replace('aria-label="Zatwierdź">OK<', `aria-label="${wszystkie ? "Sprawdź" : "Dalej"}">${wszystkie ? "Sprawdź" : "OK"}<`)}
+  </main>`;
+}
+function zatwierdzGrupe(){
+  R.wpisy[R.i] = R.input;
+  const G = grupaEkranu();
+  const puste = G.filter(k => !(R.wpisy[k] || "").trim());
+  if (puste.length) {
+    if (!(R.wpisy[R.i] || "").trim()) return;
+    const dalej = puste.find(k => k > R.i) ?? puste[0];
+    R.i = dalej; R.input = R.wpisy[dalej] || ""; render(); return;
+  }
+  const N = R.temat.zdania ? normZdanie : norm, teraz = Date.now(), ms = Math.round((teraz - R.tZad) / G.length);
+  for (const k of G) {
+    const z = R.lista[k], wpis = R.wpisy[k].trim();
+    const ok = z.odp.split("/").map(N).includes(N(wpis));
+    R.odpowiedzi.push({ klucz: z.klucz, pytanie: z.pytanie, odp: z.odp, wpis, dobrze: ok, ms });
+  }
+  R.tZad = teraz;
+  const nast = Math.max(...G) + 1;
+  if (nast >= R.lista.length) return zakonczRunde();
+  R.start0 = nast; R.i = nast; R.input = ""; render(); przewinDo({ top: 0 });
+}
+/* Dopasowanie: stuknij przypadek (lewa kolumna), potem pytania (prawa). Każda para dostaje ten sam kolor i numer. */
+const KOLORY_PAR = ["#F4D242", "#F29CC3", "#80B0E8", "#D6D35F", "#FFC0C0", "#D1CAEA", "#E8A04A"];
+function zadanieDopasuj(){
+  const t = R.temat;
+  if (!R.prawe) R.prawe = shuffle([...new Set(R.lista.map(z => z.odp))]);
+  if (!R.pary) R.pary = {};
+  const nr = k => Object.keys(R.pary).map(Number).sort((a, b) => a - b).indexOf(k);
+  const lewe = R.lista.map((z, k) => { const ma = R.pary[k] !== undefined, akt = R.wybrany === k, c = ma ? KOLORY_PAR[nr(k) % 7] : "";
+    return `<button class="dp${akt ? " akt" : ""}${ma ? " ma" : ""}" data-act="dpl" data-k="${k}" style="${c ? `--pc:${c}` : ""}">${ma ? `<b>${nr(k) + 1}</b>` : ""}<span>${esc(z.pytanie)}</span></button>`; }).join("");
+  const prawe = R.prawe.map((o, j) => { const k = Object.keys(R.pary).find(x => R.pary[x] === o); const c = k !== undefined ? KOLORY_PAR[nr(+k) % 7] : "";
+    return `<button class="dp prawa${k !== undefined ? " ma" : ""}" data-act="dpp" data-j="${j}" style="${c ? `--pc:${c}` : ""}" ${R.wybrany === undefined ? "" : ""}>${k !== undefined ? `<b>${nr(+k) + 1}</b>` : ""}<span>${esc(o)}</span></button>`; }).join("");
+  const gotowe = Object.keys(R.pary).length === R.lista.length;
+  return `${naglowekRundy()}
+    <p class="hint" style="margin:0">${R.wybrany === undefined ? "Stuknij przypadek, a potem pasujące pytania." : `Teraz stuknij pytania do: <b>${esc(R.lista[R.wybrany].pytanie)}</b>`}</p>
+    <section class="dp-siatka"><div class="dp-kol">${lewe}</div><div class="dp-kol">${prawe}</div></section>
+    <button class="btn" data-act="ok" ${gotowe ? "" : "disabled"}>Sprawdź</button>
+  </main>`;
+}
+function wybierzLewa(k){ R.wybrany = k; render(); }
+function wybierzPrawa(j){
+  if (R.wybrany === undefined) return;
+  const o = R.prawe[j];
+  for (const x of Object.keys(R.pary)) if (R.pary[x] === o) delete R.pary[x];
+  R.pary[R.wybrany] = o;
+  const wolny = R.lista.findIndex((_, k) => R.pary[k] === undefined);
+  R.wybrany = wolny === -1 ? undefined : wolny; render();
+}
+function zatwierdzDopasuj(){
+  if (Object.keys(R.pary || {}).length !== R.lista.length) return;
+  const teraz = Date.now(), ms = Math.round((teraz - R.tZad) / R.lista.length);
+  R.lista.forEach((z, k) => R.odpowiedzi.push({ klucz: z.klucz, pytanie: z.pytanie, odp: z.odp, wpis: R.pary[k], dobrze: norm(R.pary[k]) === norm(z.odp), ms }));
+  R.i = R.lista.length; zakonczRunde();
+}
+
 function zatwierdz(){
+  if (R.temat.typ === "dopasuj") return zatwierdzDopasuj();
+  if (R.temat.grupowo) return zatwierdzGrupe();
   const z = R.lista[R.i];
   if (R.temat.typ === "wybor") {
     if (!R.wybor) return;
@@ -2676,6 +2795,9 @@ app.addEventListener("click", async e => {
   else if (a === "usun") usunCyfre();
   else if (a === "litera") wpiszLitere(b.dataset.l);
   else if (a === "pole") { R.pole = +b.dataset.p; render(); }
+  else if (a === "gpole") { R.wpisy[R.i] = R.input; R.i = +b.dataset.k; R.input = R.wpisy[R.i] || ""; render(); }
+  else if (a === "dpl") wybierzLewa(+b.dataset.k);
+  else if (a === "dpp") wybierzPrawa(+b.dataset.j);
   else if (a === "ok") zatwierdz();
   else if (a === "wyjdz") { pytanieOWyjscie = true; render(); }
   else if (a === "zostan") { pytanieOWyjscie = false; render(); }
