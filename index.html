@@ -750,6 +750,26 @@ ul.zad .glosnik .ti{width:12px;height:12px}
    ===================================================================== */
 const DLUGOSC_RUNDY = 15;
 
+// Polski: przypadki [nazwa, pytania] (wołacz: „O!”) i słowa do odmiany [M, D, C, B, N, Ms, W].
+const PRZYPADKI = [
+  ["mianownik", "kto? co?"], ["dopełniacz", "kogo? czego?"], ["celownik", "komu? czemu?"], ["biernik", "kogo? co?"],
+  ["narzędnik", "z kim? z czym? / kim? czym?"], ["miejscownik", "o kim? o czym?"], ["wołacz", "O! / o"]
+];
+const SLOWA_ODMIANA = [
+  ["Jan", "Jana", "Janowi", "Jana", "Janem", "Janie", "Janie"], ["książka", "książki", "książce", "książkę", "książką", "książce", "książko"],
+  ["kot", "kota", "kotu", "kota", "kotem", "kocie", "kocie"], ["pies", "psa", "psu", "psa", "psem", "psie", "psie"],
+  ["mama", "mamy", "mamie", "mamę", "mamą", "mamie", "mamo"], ["tata", "taty", "tacie", "tatę", "tatą", "tacie", "tato"],
+  ["babcia", "babci", "babci", "babcię", "babcią", "babci", "babciu"], ["lalka", "lalki", "lalce", "lalkę", "lalką", "lalce", "lalko"],
+  ["kolega", "kolegi", "koledze", "kolegę", "kolegą", "koledze", "kolego"], ["szkoła", "szkoły", "szkole", "szkołę", "szkołą", "szkole", "szkoło"],
+  ["dom", "domu", "domowi", "dom", "domem", "domu", "domu"], ["rower", "roweru", "rowerowi", "rower", "rowerem", "rowerze", "rowerze"],
+  ["okno", "okna", "oknu", "okno", "oknem", "oknie", "okno"], ["drzewo", "drzewa", "drzewu", "drzewo", "drzewem", "drzewie", "drzewo"],
+  ["dziecko", "dziecka", "dziecku", "dziecko", "dzieckiem", "dziecku", "dziecko"]
+];
+const SLOWA_ODMIANA_LM = [
+  ["Janowie / Jany", "Janów", "Janom", "Janów", "Janami", "Janach", "Janowie / Jany"], ["książki", "książek", "książkom", "książki", "książkami", "książkach", "książki"],
+  ["koty", "kotów", "kotom", "koty", "kotami", "kotach", "koty"], ["mamy", "mam", "mamom", "mamy", "mamami", "mamach", "mamy"]
+];
+
 // Rodzina według podręcznika (Wordlist, Lesson 1.1): [po polsku, słowa z podręcznika, inne też uznawane].
 // Dyktando czyta tylko słowa z podręcznika. Ostatnie trzy to dodatek spoza listy.
 const SLOWA_RODZINA = [
@@ -1072,53 +1092,34 @@ const TEMATY = [
     }
   },
   {
-    // POLSKI: odmiana rzeczowników przez przypadki, według tabelki (pytania + słówka pomocnicze:
-    // jest, nie ma, przyglądam się, widzę, idę z, myślę o, O!). Polskie litery się liczą, wielkie nie.
+    // POLSKI 1: przypadek → pytania. Runda = wszystkie 7 przypadków w losowej kolejności.
+    id: "pol-pytania", od: "2026-10-13", nazwa: "Polski: przypadki i pytania", typ: "tekst", zdania: true, klaw: "pl",
+    tlo: "#FFD3A8", napis: "#7A3510",
+    zadania(){
+      return PRZYPADKI.map(([n, pyt]) => ({ klucz: "pyt:" + n, pytanie: n, odp: pyt, polecenie: "Na jakie pytania odpowiada?", grupa: n }));
+    },
+    runda(){ return shuffle(this.zadania()); }
+  },
+  {
+    // POLSKI 2: odmiana słowa po kolei przez wszystkie przypadki (bez pytań i podpowiedzi).
+    // Runda = 2 losowe słowa × 7 przypadków. Przy narzędniku, miejscowniku i wołaczu można dopisać z / o.
     id: "pol-przypadki", od: "2026-10-13", nazwa: "Polski: odmiana przez przypadki", typ: "tekst", zdania: true, klaw: "pl",
     tlo: "#F28C38", napis: "#3A1A05",
     zadania(){
-      const P = [ // nazwa, pytania, pomocnik
-        ["mianownik", "kto? co?", "(jest)"], ["dopełniacz", "kogo? czego?", "(nie ma)"], ["celownik", "komu? czemu?", "(przyglądam się)"],
-        ["biernik", "kogo? co?", "(widzę)"], ["narzędnik", "z kim? z czym?", "(idę z)"], ["miejscownik", "o kim? o czym?", "(myślę o)"], ["wołacz", "O!", ""]
-      ];
-      const ZD = [null, "Nie ma ___.", "Przyglądam się ___.", "Widzę ___.", "Idę z ___.", "Myślę o ___.", null];
-      const PRZED = [null, null, null, null, "z", "o", "o"]; // dopuszczalny przyimek przed odpowiedzią
-      // M, D, C, B, N, Ms, W
-      const LP = [
-        ["Jan", "Jana", "Janowi", "Jana", "Janem", "Janie", "Janie"],
-        ["książka", "książki", "książce", "książkę", "książką", "książce", "książko"],
-        ["kot", "kota", "kotu", "kota", "kotem", "kocie", "kocie"], ["pies", "psa", "psu", "psa", "psem", "psie", "psie"],
-        ["mama", "mamy", "mamie", "mamę", "mamą", "mamie", "mamo"], ["tata", "taty", "tacie", "tatę", "tatą", "tacie", "tato"],
-        ["babcia", "babci", "babci", "babcię", "babcią", "babci", "babciu"], ["lalka", "lalki", "lalce", "lalkę", "lalką", "lalce", "lalko"],
-        ["kolega", "kolegi", "koledze", "kolegę", "kolegą", "koledze", "kolego"], ["szkoła", "szkoły", "szkole", "szkołę", "szkołą", "szkole", "szkoło"],
-        ["dom", "domu", "domowi", "dom", "domem", "domu", "domu"], ["rower", "roweru", "rowerowi", "rower", "rowerem", "rowerze", "rowerze"],
-        ["okno", "okna", "oknu", "okno", "oknem", "oknie", "okno"], ["drzewo", "drzewa", "drzewu", "drzewo", "drzewem", "drzewie", "drzewo"],
-        ["dziecko", "dziecka", "dziecku", "dziecko", "dzieckiem", "dziecku", "dziecko"]
-      ];
-      const LM = [
-        ["Janowie / Jany", "Janów", "Janom", "Janów", "Janami", "Janach", "Janowie / Jany"],
-        ["książki", "książek", "książkom", "książki", "książkami", "książkach", "książki"],
-        ["koty", "kotów", "kotom", "koty", "kotami", "kotach", "koty"], ["mamy", "mam", "mamom", "mamy", "mamami", "mamach", "mamy"],
-        ["lalki", "lalek", "lalkom", "lalki", "lalkami", "lalkach", "lalki"]
-      ];
+      const PRZED = [null, null, null, null, "z", "o", "o"];
       const odp = (forma, c) => { const w = forma.split("/").map(x => x.trim()); return [...w, ...(PRZED[c] ? w.map(x => PRZED[c] + " " + x) : [])].join(" / "); };
       const out = [];
-      // 1. pytania przypadku i przypadek po pytaniach / słówku pomocniczym
-      P.forEach(([n, pyt, pom], c) => {
-        if (c < 6) out.push({ klucz: "pyt:" + n, pytanie: n, odp: pyt + (c === 4 ? " / kim? czym?" : c === 5 ? " / kim? czym?" : ""), polecenie: "Na jakie pytania odpowiada?", grupa: "pyt:" + n });
-        out.push({ klucz: "nazwa:" + n, pytanie: pyt + (pom ? " " + pom : ""), odp: n, polecenie: "Jaki to przypadek?", grupa: "nazwa:" + n });
-      });
-      // 2. odmiana: słowo + przypadek → forma
-      const odmiana = (W, lm) => W.forEach(f => {
-        const baza = f[0].split("/")[0].trim();
-        P.forEach(([n, pyt, pom], c) => {
-          if (c === 0) return;
-          out.push({ klucz: (lm ? "lm:" : "lp:") + baza + ":" + n, pytanie: `${baza}${lm ? " (l. mnoga)" : ""} → ${n}: ${pom ? pom + " " : ""}${pyt}`, odp: odp(f[c], c), polecenie: "Odmień przez przypadek", grupa: "o:" + baza + (lm ? "+" : "") , waga: lm ? 0.6 : 1 });
-          if (ZD[c] && !lm) out.push({ klucz: "zd:" + baza + ":" + n, pytanie: ZD[c].replace("___", `___ (${baza})`), odp: f[c], polecenie: "Wpisz słowo w dobrej formie", grupa: "o:" + baza });
-        });
-      });
-      odmiana(LP, false); odmiana(LM, true);
+      for (const [W, lm] of [...SLOWA_ODMIANA.map(w => [w, false]), ...SLOWA_ODMIANA_LM.map(w => [w, true])]) {
+        const baza = W[0].split("/")[0].trim() + (lm ? " (l. mnoga)" : "");
+        PRZYPADKI.forEach(([n], c) => out.push({ klucz: "odm:" + baza + ":" + n, pytanie: `${baza} → ${n}`, odp: odp(W[c], c), polecenie: `Odmień po kolei (${c + 1}/7)`, grupa: "s:" + baza, slowo: baza }));
+      }
       return out;
+    },
+    runda(){
+      const Z = this.zadania(), slowa = [...new Set(Z.map(z => z.slowo))];
+      const lp = shuffle(slowa.filter(s => !s.includes("mnoga"))), lm = shuffle(slowa.filter(s => s.includes("mnoga")));
+      const wybrane = [lp[0], Math.random() < 0.3 ? lm[0] : lp[1]];
+      return wybrane.flatMap(s => Z.filter(z => z.slowo === s));
     }
   },
   {
@@ -2130,7 +2131,7 @@ function czytajZadanie(){
 }
 function zacznijRunde(tematId, zadaniaPoprawki){
   const t = tematById(tematId); if (!t) return;
-  const lista = zadaniaPoprawki ? shuffle(zadaniaPoprawki) : wybierzZadania(t, t.dlugosc || DLUGOSC_RUNDY);
+  const lista = zadaniaPoprawki ? shuffle(zadaniaPoprawki) : t.runda ? t.runda() : wybierzZadania(t, t.dlugosc || DLUGOSC_RUNDY);
   R = { temat: t, rodzaj: zadaniaPoprawki ? "poprawa" : "runda", lista, i: 0, input: "", odpowiedzi: [], start: Date.now(), tZad: Date.now() };
   pytanieOWyjscie = false; ekran = "zadanie"; render(); przewinDo({ top: 0 }); czytajZadanie();
 }
