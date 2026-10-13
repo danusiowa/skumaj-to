@@ -1127,7 +1127,7 @@ const TEMATY = [
   },
   {
     // POLSKI 2: odmiana słowa po kolei przez wszystkie przypadki (bez pytań i podpowiedzi).
-    // Runda = 2 losowe słowa × 7 przypadków. Przy narzędniku, miejscowniku i wołaczu można dopisać z / o.
+    // Runda = 5 losowych słów × 7 przypadków (4 w l. pojedynczej, 1 w mnogiej). Przy narzędniku, miejscowniku i wołaczu można dopisać z / o.
     id: "pol-przypadki", od: "2026-10-13", nazwa: "Polski: odmiana przez przypadki", typ: "tekst", zdania: true, klaw: "pl", grupowo: true,
     tlo: "#F28C38", napis: "#3A1A05",
     zadania(){
@@ -1143,7 +1143,7 @@ const TEMATY = [
     runda(){
       const Z = this.zadania(), slowa = [...new Set(Z.map(z => z.slowo))];
       const lp = shuffle(slowa.filter(s => !s.includes("mnoga"))), lm = shuffle(slowa.filter(s => s.includes("mnoga")));
-      const wybrane = [lp[0], Math.random() < 0.3 ? lm[0] : lp[1]];
+      const wybrane = shuffle([...lp.slice(0, 4), lm[0]]); // 5 słów: 4 w liczbie pojedynczej i 1 w mnogiej
       return wybrane.flatMap((s, e) => Z.filter(z => z.slowo === s).map(z => ({ ...z, ekran: e })));
     }
   },
