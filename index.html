@@ -1072,6 +1072,56 @@ const TEMATY = [
     }
   },
   {
+    // POLSKI: odmiana rzeczowników przez przypadki, według tabelki (pytania + słówka pomocnicze:
+    // jest, nie ma, przyglądam się, widzę, idę z, myślę o, O!). Polskie litery się liczą, wielkie nie.
+    id: "pol-przypadki", od: "2026-10-13", nazwa: "Polski: odmiana przez przypadki", typ: "tekst", zdania: true, klaw: "pl",
+    tlo: "#F28C38", napis: "#3A1A05",
+    zadania(){
+      const P = [ // nazwa, pytania, pomocnik
+        ["mianownik", "kto? co?", "(jest)"], ["dopełniacz", "kogo? czego?", "(nie ma)"], ["celownik", "komu? czemu?", "(przyglądam się)"],
+        ["biernik", "kogo? co?", "(widzę)"], ["narzędnik", "z kim? z czym?", "(idę z)"], ["miejscownik", "o kim? o czym?", "(myślę o)"], ["wołacz", "O!", ""]
+      ];
+      const ZD = [null, "Nie ma ___.", "Przyglądam się ___.", "Widzę ___.", "Idę z ___.", "Myślę o ___.", null];
+      const PRZED = [null, null, null, null, "z", "o", "o"]; // dopuszczalny przyimek przed odpowiedzią
+      // M, D, C, B, N, Ms, W
+      const LP = [
+        ["Jan", "Jana", "Janowi", "Jana", "Janem", "Janie", "Janie"],
+        ["książka", "książki", "książce", "książkę", "książką", "książce", "książko"],
+        ["kot", "kota", "kotu", "kota", "kotem", "kocie", "kocie"], ["pies", "psa", "psu", "psa", "psem", "psie", "psie"],
+        ["mama", "mamy", "mamie", "mamę", "mamą", "mamie", "mamo"], ["tata", "taty", "tacie", "tatę", "tatą", "tacie", "tato"],
+        ["babcia", "babci", "babci", "babcię", "babcią", "babci", "babciu"], ["lalka", "lalki", "lalce", "lalkę", "lalką", "lalce", "lalko"],
+        ["kolega", "kolegi", "koledze", "kolegę", "kolegą", "koledze", "kolego"], ["szkoła", "szkoły", "szkole", "szkołę", "szkołą", "szkole", "szkoło"],
+        ["dom", "domu", "domowi", "dom", "domem", "domu", "domu"], ["rower", "roweru", "rowerowi", "rower", "rowerem", "rowerze", "rowerze"],
+        ["okno", "okna", "oknu", "okno", "oknem", "oknie", "okno"], ["drzewo", "drzewa", "drzewu", "drzewo", "drzewem", "drzewie", "drzewo"],
+        ["dziecko", "dziecka", "dziecku", "dziecko", "dzieckiem", "dziecku", "dziecko"]
+      ];
+      const LM = [
+        ["Janowie / Jany", "Janów", "Janom", "Janów", "Janami", "Janach", "Janowie / Jany"],
+        ["książki", "książek", "książkom", "książki", "książkami", "książkach", "książki"],
+        ["koty", "kotów", "kotom", "koty", "kotami", "kotach", "koty"], ["mamy", "mam", "mamom", "mamy", "mamami", "mamach", "mamy"],
+        ["lalki", "lalek", "lalkom", "lalki", "lalkami", "lalkach", "lalki"]
+      ];
+      const odp = (forma, c) => { const w = forma.split("/").map(x => x.trim()); return [...w, ...(PRZED[c] ? w.map(x => PRZED[c] + " " + x) : [])].join(" / "); };
+      const out = [];
+      // 1. pytania przypadku i przypadek po pytaniach / słówku pomocniczym
+      P.forEach(([n, pyt, pom], c) => {
+        if (c < 6) out.push({ klucz: "pyt:" + n, pytanie: n, odp: pyt + (c === 4 ? " / kim? czym?" : c === 5 ? " / kim? czym?" : ""), polecenie: "Na jakie pytania odpowiada?", grupa: "pyt:" + n });
+        out.push({ klucz: "nazwa:" + n, pytanie: pyt + (pom ? " " + pom : ""), odp: n, polecenie: "Jaki to przypadek?", grupa: "nazwa:" + n });
+      });
+      // 2. odmiana: słowo + przypadek → forma
+      const odmiana = (W, lm) => W.forEach(f => {
+        const baza = f[0].split("/")[0].trim();
+        P.forEach(([n, pyt, pom], c) => {
+          if (c === 0) return;
+          out.push({ klucz: (lm ? "lm:" : "lp:") + baza + ":" + n, pytanie: `${baza}${lm ? " (l. mnoga)" : ""} → ${n}: ${pom ? pom + " " : ""}${pyt}`, odp: odp(f[c], c), polecenie: "Odmień przez przypadek", grupa: "o:" + baza + (lm ? "+" : "") , waga: lm ? 0.6 : 1 });
+          if (ZD[c] && !lm) out.push({ klucz: "zd:" + baza + ":" + n, pytanie: ZD[c].replace("___", `___ (${baza})`), odp: f[c], polecenie: "Wpisz słowo w dobrej formie", grupa: "o:" + baza });
+        });
+      });
+      odmiana(LP, false); odmiana(LM, true);
+      return out;
+    }
+  },
+  {
     // Pytania i odpowiedzi do scenki na hiszpański (tylko teksty z zeszytu). Wszystko się pisze:
     // 1) jest pytanie (można odsłuchać) → napisz odpowiedź, 2) jest odpowiedź → napisz pytanie,
     // 3) słychać pytanie → zapisz je, 4) słychać odpowiedź → zapisz ją.
@@ -2113,11 +2163,11 @@ function zadanie(){
       <div class="ansrow">${t.typ === "liczby" ? '<span class="mega eq">=</span>' : ""}${odp}</div>
       ${frog("skup")}
     </section>
-    <p class="hint">${t.reszta ? "Wpisz wynik, potem resztę (r.)." : t.typ === "liczby" ? "Wpisz wynik i naciśnij OK." : t.zdania && (t.wymowa || "").startsWith("es") ? "Napisz całe zdanie. Akcenty (á, ñ) się liczą, znaki ¿ ? nie." : t.zdania ? "Napisz i naciśnij OK. Wielkie litery nie są sprawdzane." : t.dyktando && MOWA ? "Wpisz, co słyszysz, i naciśnij OK." : "Wpisz słówko i naciśnij OK."} Wyniki zobaczysz na końcu rundy.</p>
+    <p class="hint">${t.reszta ? "Wpisz wynik, potem resztę (r.)." : t.typ === "liczby" ? "Wpisz wynik i naciśnij OK." : t.zdania && (t.wymowa || "").startsWith("es") ? "Napisz całe zdanie. Akcenty (á, ñ) się liczą, znaki ¿ ? nie." : t.klaw === "pl" ? "Polskie litery (ą, ę, ó…) się liczą, wielkie litery nie." : t.zdania ? "Napisz i naciśnij OK. Wielkie litery nie są sprawdzane." : t.dyktando && MOWA ? "Wpisz, co słyszysz, i naciśnij OK." : "Wpisz słówko i naciśnij OK."} Wyniki zobaczysz na końcu rundy.</p>
     ${t.typ === "liczby"
       ? `<div class="pad">${[1,2,3,4,5,6,7,8,9].map(d => `<button data-act="cyfra" data-d="${d}">${d}</button>`).join("")}
          <button class="del" data-act="usun" aria-label="Usuń cyfrę">⌫</button><button data-act="cyfra" data-d="0">0</button><button class="ok" data-act="ok" aria-label="${t.reszta && pole === 0 ? "Dalej do reszty" : "Zatwierdź"}">${t.reszta && pole === 0 ? "Dalej" : "OK"}</button></div>`
-      : klawiatura((t.wymowa || "").startsWith("es"))}
+      : klawiatura((t.wymowa || "").startsWith("es") ? "es" : t.klaw)}
   </main>`;
 }
 
@@ -2164,10 +2214,12 @@ function zatwierdzWybor(ok, wpis){
 /* Własna klawiatura z literami: telefon nie wysuwa swojej, a układ jest zawsze ten sam. */
 const RZEDY = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
 const RZAD_ES = ["á", "é", "í", "ó", "ú", "ñ", "¿", "?", ",", "."];
-function klawiatura(hiszp){
+const RZAD_PL = ["ą", "ć", "ę", "ł", "ń", "ó", "ś", "ź", "ż"];
+function klawiatura(rodzaj){
+  const hiszp = rodzaj === "es", pol = rodzaj === "pl";
   const k = l => `<button data-act="litera" data-l="${l}" aria-label="${l}">${l}</button>`;
   return `<div class="klaw${hiszp ? " es" : ""}" role="group" aria-label="Klawiatura">
-    ${hiszp ? `<div class="kr kr-es">${RZAD_ES.map(k).join("")}</div>` : ""}
+    ${hiszp ? `<div class="kr kr-es">${RZAD_ES.map(k).join("")}</div>` : pol ? `<div class="kr kr-es">${RZAD_PL.map(k).join("")}</div>` : ""}
     <div class="kr">${[...RZEDY[0]].map(k).join("")}</div>
     <div class="kr">${[...RZEDY[1]].map(k).join("")}</div>
     <div class="kr">${[...RZEDY[2]].map(k).join("")}<button class="del" data-act="usun" aria-label="Usuń literę">⌫</button></div>
@@ -2723,7 +2775,7 @@ document.addEventListener("keydown", e => {
     else if (e.key === "Enter") { e.preventDefault(); zatwierdz(); }
   } else {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
-    if (/^[a-zA-Z\- ]$/.test(e.key) || (R.temat.zdania && /^[áéíóúüñÁÉÍÓÚÜÑ¿?¡!,.']$/.test(e.key))) { e.preventDefault(); wpiszLitere(e.key.toLowerCase()); }
+    if (/^[a-zA-Z\- ]$/.test(e.key) || (R.temat.zdania && /^[áéíóúüñÁÉÍÓÚÜÑ¿?¡!,.'ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]$/.test(e.key))) { e.preventDefault(); wpiszLitere(e.key.toLowerCase()); }
     else if (e.key === "Backspace") { e.preventDefault(); usunCyfre(); }
     else if (e.key === "Enter") { e.preventDefault(); zatwierdz(); }
   }

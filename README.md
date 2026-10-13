@@ -113,6 +113,7 @@ Czwarta zakładka w menu. Muchy (jedna za każdą dobrą odpowiedź) wydaje się
 | Angielski | Przedstawianie się (Lesson 1.4, str. 16: zwroty po angielsku, odpowiedzi jak w ćw. 5, przedstawianie kogoś jak w ćw. 6, zapis ze słuchu) |
 | Angielski | Powtórka rozdziału 1 (zadania w stylu sprawdzianu z ćwiczeniówki, str. 6–9 i 12–15: rodzina, to be, my/his/her, państwa, przedstawianie, kultura) |
 | Hiszpański | Pytania i odpowiedzi (całe zdania do scenki: do pytania napisz odpowiedź, do odpowiedzi pytanie, a ze słuchu zapisz pytanie albo odpowiedź; akcenty i ñ się liczą, wielkie litery i znaki ¿ ? nie) |
+| Polski | Odmiana przez przypadki (nazwy przypadków, pytania i słówka pomocnicze, odmiana wybranych słów w liczbie pojedynczej i mnogiej; klawiatura z ą ć ę ł ń ó ś ź ż) |
 
 ### Jak dodać nowy temat
 
