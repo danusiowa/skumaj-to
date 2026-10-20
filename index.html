@@ -775,6 +775,41 @@ ul.zad .glosnik .ti{width:12px;height:12px}
    ===================================================================== */
 const DLUGOSC_RUNDY = 15;
 
+// Liczby słownie po polsku (0 < n ≤ 1 000 000). Zwraca warianty rozdzielone „ / ” (np. tysiąc / jeden tysiąc).
+const zLiczby = s => String(s).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+function slownie(n){
+  const J = ["", "jeden", "dwa", "trzy", "cztery", "pięć", "sześć", "siedem", "osiem", "dziewięć"];
+  const N = ["dziesięć", "jedenaście", "dwanaście", "trzynaście", "czternaście", "piętnaście", "szesnaście", "siedemnaście", "osiemnaście", "dziewiętnaście"];
+  const D = ["", "", "dwadzieścia", "trzydzieści", "czterdzieści", "pięćdziesiąt", "sześćdziesiąt", "siedemdziesiąt", "osiemdziesiąt", "dziewięćdziesiąt"];
+  const S = ["", "sto", "dwieście", "trzysta", "czterysta", "pięćset", "sześćset", "siedemset", "osiemset", "dziewięćset"];
+  const do999 = x => { const s = Math.floor(x / 100), r = x % 100, d = Math.floor(r / 10), j = r % 10;
+    return [S[s], r >= 10 && r < 20 ? N[r - 10] : D[d], r >= 10 && r < 20 ? "" : J[j]].filter(Boolean).join(" "); };
+  if (n === 1000000) return "milion / jeden milion";
+  const t = Math.floor(n / 1000), r = n % 1000;
+  let tys = "", tys2 = "";
+  if (t === 1) { tys = "tysiąc"; tys2 = "jeden tysiąc"; }
+  else if (t > 1) {
+    const j = t % 10, dz = t % 100;
+    const forma = j >= 2 && j <= 4 && !(dz >= 12 && dz <= 14) ? "tysiące" : "tysięcy";
+    tys = do999(t) + " " + forma;
+  }
+  const reszta = r ? do999(r) : "";
+  const a = [tys, reszta].filter(Boolean).join(" ");
+  return tys2 ? a + " / " + [tys2, reszta].filter(Boolean).join(" ") : a;
+}
+const LICZBY_MILION = (() => { // stała pula, żeby historia zadań się zgadzała
+  let x = 20261020; const los = (a, b) => { x = (x * 1103515245 + 12345) % 2147483648; return a + x % (b - a + 1); };
+  const out = new Set([1000, 2000, 5000, 10000, 12000, 21000, 100000, 101000, 250000, 500000, 1000000, 3004, 40500, 700070, 999999]);
+  const zakresy = [[100, 999, 25], [1001, 9999, 40], [10000, 99999, 45], [100000, 999999, 45]];
+  for (const [a, b, ile] of zakresy) for (let i = 0; i < ile; i++) {
+    let v = los(a, b);
+    if (i % 3 === 0) v = Math.round(v / 100) * 100;
+    if (i % 5 === 1) v = Math.floor(v / 1000) * 1000 + los(1, 9);
+    out.add(Math.min(Math.max(v, 100), 999999));
+  }
+  return [...out].sort((a, b) => a - b);
+})();
+
 // Polski: przypadki [nazwa, pytania] (wołacz: „O!”) i słowa do odmiany [M, D, C, B, N, Ms, W].
 const PRZYPADKI = [
   ["mianownik", "kto? co?"], ["dopełniacz", "kogo? czego?"], ["celownik", "komu? czemu?"], ["biernik", "kogo? co?"],
@@ -843,6 +878,20 @@ const TEMATY = [
         out.push({ klucz: a + ":" + b, pytanie: a + " : " + b, odp: q + " r. " + r,
           grupa: b + "|" + q,                                      // 17 : 5 i 18 : 5 nie w jednej rundzie
           waga: (q === 1 || b === 2 || b === 10) ? 0.5 : 1 });     // łatwe rzadziej
+      }
+      return out;
+    }
+  },
+  {
+    // Zapis liczb do miliona w obie strony: liczba → słownie (klawiatura z literami) i słownie → liczba (klawiatura z cyframi).
+    id: "mat-milion", od: "2026-10-20", nazwa: "Matematyka: liczby do miliona", typ: "tekst", zdania: true, klaw: "pl", duzeLiczby: true,
+    tlo: "#5AA9A0", napis: "#0B2E2A",
+    zadania(){
+      const out = [];
+      for (const n of LICZBY_MILION) {
+        const sl = slownie(n);
+        out.push({ klucz: "s:" + n, pytanie: zLiczby(n), odp: sl, polecenie: "Zapisz słownie", grupa: "n" + n });
+        out.push({ klucz: "l:" + n, pytanie: sl.split(" / ")[0], odp: String(n), polecenie: "Zapisz cyframi", typ: "liczby", grupa: "n" + n });
       }
       return out;
     }
@@ -2165,15 +2214,16 @@ function zadanie(){
   if (R.temat.typ === "wybor") return zadanieWybor();
   if (R.temat.typ === "dopasuj") return zadanieDopasuj();
   if (R.temat.grupowo) return zadanieGrupa();
-  const t = R.temat, z = R.lista[R.i], n = R.lista.length;
+  const z = R.lista[R.i], n = R.lista.length;
+  const t = z.typ ? { ...R.temat, typ: z.typ } : R.temat; // zadanie może mieć własny typ (np. liczby do miliona w obie strony)
   setTimeout(() => { if (R) R.pokazane = R.i; }, 0);
   const dots = R.lista.map((_, k) => `<i class="${k < R.i ? "done" : k === R.i ? "now" : ""}"></i>`).join("");
-  const dlugie = t.typ === "tekst" && z.pytanie.length > 4;
+  const dlugie = (t.typ === "tekst" && z.pytanie.length > 4) || z.pytanie.length > 10;
   const pole = R.pole || 0;
   const odp = t.reszta
     ? `<button class="ans ans2${pole === 0 ? " akt" : ""}" data-act="pole" data-p="0" aria-label="Wynik" aria-pressed="${pole === 0}">${esc(R.input) || "?"}</button><span class="mega eq">r.</span><button class="ans ans2${pole === 1 ? " akt" : ""}" data-act="pole" data-p="1" aria-label="Reszta" aria-pressed="${pole === 1}">${esc(R.reszta || "") || "?"}</button>`
     : t.typ === "liczby"
-    ? `<span class="ans" aria-live="polite" aria-label="Twoja odpowiedź">${esc(R.input) || "?"}</span>`
+    ? `<span class="ans" aria-live="polite" aria-label="Twoja odpowiedź">${esc(R.temat.duzeLiczby ? zLiczby(R.input) : R.input) || "?"}</span>`
     : `<span class="ans txt" aria-live="polite" aria-label="Twoja odpowiedź">${esc(R.input)}<i class="kursor" aria-hidden="true"></i></span>`;
   return `
   <div class="qhead">
@@ -2188,10 +2238,10 @@ function zadanie(){
       ${(t.dyktando || z.sluch) && MOWA
         ? `<div class="dykt"><button class="dykt-gra" data-act="mow" data-txt="${esc(z.sluch ? z.mow : z.odp)}" data-lang="${t.wymowa}" aria-label="Posłuchaj">${ICO_GLOSNIK}</button><span class="dykt-opis"><b>Stuknij, żeby posłuchać</b><button class="dykt-wolno" data-act="mow" data-txt="${esc(z.sluch ? z.mow : z.odp)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}">🐢 wolniej</button></span></div>`
         : `<div class="mega q${dlugie ? " long" : ""}${z.pytanie.length > 26 ? " xl" : ""}">${esc(z.sluch ? z.mow : z.pytanie)}</div>${z.mow && MOWA ? `<div class="q-glosy"><button class="q-glos" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" aria-label="Posłuchaj">${ICO_GLOSNIK}<span>posłuchaj</span></button><button class="q-glos" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}" aria-label="Posłuchaj wolniej">🐢 wolniej</button></div>` : ""}`}
-      <div class="ansrow">${t.typ === "liczby" ? '<span class="mega eq">=</span>' : ""}${odp}</div>
+      <div class="ansrow">${t.typ === "liczby" && !R.temat.duzeLiczby ? '<span class="mega eq">=</span>' : ""}${odp}</div>
       ${frog("skup")}
     </section>
-    <p class="hint">${t.reszta ? "Wpisz wynik, potem resztę (r.)." : t.typ === "liczby" ? "Wpisz wynik i naciśnij OK." : t.zdania && (t.wymowa || "").startsWith("es") ? "Napisz całe zdanie. Akcenty (á, ñ) się liczą, znaki ¿ ? nie." : t.klaw === "pl" ? "Polskie litery (ą, ę, ó…) się liczą, wielkie litery nie." : t.zdania ? "Napisz i naciśnij OK. Wielkie litery nie są sprawdzane." : t.dyktando && MOWA ? "Wpisz, co słyszysz, i naciśnij OK." : "Wpisz słówko i naciśnij OK."} Wyniki zobaczysz na końcu rundy.</p>
+    <p class="hint">${t.reszta ? "Wpisz wynik, potem resztę (r.)." : t.typ === "liczby" && R.temat.duzeLiczby ? "Wpisz liczbę cyframi i naciśnij OK." : t.typ === "liczby" ? "Wpisz wynik i naciśnij OK." : t.zdania && (t.wymowa || "").startsWith("es") ? "Napisz całe zdanie. Akcenty (á, ñ) się liczą, znaki ¿ ? nie." : t.klaw === "pl" ? "Polskie litery (ą, ę, ó…) się liczą, wielkie litery nie." : t.zdania ? "Napisz i naciśnij OK. Wielkie litery nie są sprawdzane." : t.dyktando && MOWA ? "Wpisz, co słyszysz, i naciśnij OK." : "Wpisz słówko i naciśnij OK."} Wyniki zobaczysz na końcu rundy.</p>
     ${t.typ === "liczby"
       ? `<div class="pad">${[1,2,3,4,5,6,7,8,9].map(d => `<button data-act="cyfra" data-d="${d}">${d}</button>`).join("")}
          <button class="del" data-act="usun" aria-label="Usuń cyfrę">⌫</button><button data-act="cyfra" data-d="0">0</button><button class="ok" data-act="ok" aria-label="${t.reszta && pole === 0 ? "Dalej do reszty" : "Zatwierdź"}">${t.reszta && pole === 0 ? "Dalej" : "OK"}</button></div>`
@@ -2255,7 +2305,7 @@ function klawiatura(rodzaj){
   </div>`;
 }
 function wpiszLitere(l){
-  if (R.input.length >= (R.temat.zdania ? 70 : 40)) return;
+  if (R.input.length >= (R.temat.zdania ? 100 : 40)) return;
   if (l === " " && (!R.input || R.input.endsWith(" "))) return;
   R.input += l; render();
 }
@@ -2508,7 +2558,7 @@ function podsumowanie(){
     </div>
     ${t.wymowa ? wynikiZGlosnikami(r, t) : bledy.length ? `<section class="errs"><span class="mega t">Do poprawy</span>
       ${bledy.slice(0, pokazWszystkieBledy ? bledy.length : 4).map(z => { const warianty = z.odp.split("/").map(x => x.trim()).filter(Boolean); return `<div class="err">
-        <span class="e-pyt">${esc(z.pytanie)}${t.typ === "liczby" ? " = ?" : ""}</span>
+        <span class="e-pyt">${esc(z.pytanie)}${t.typ === "liczby" && !t.duzeLiczby ? " = ?" : ""}</span>
         <span class="e-odp"><span class="e-zle"><small>✗ Twoja odpowiedź</small><b>${esc(z.wpis)}</b></span><span class="e-ok"><small>✓ Dobrze</small><b>${esc(warianty[0])}${t.wymowa ? glosnik(warianty[0], t.wymowa) : ""}</b>${warianty.length > 1 ? `<span class="e-tez">też: ${warianty.slice(1).map(esc).join(", ")}</span>` : ""}</span></span>
       </div>`; }).join("")}
       ${bledy.length > 4 && !pokazWszystkieBledy ? `<button class="tbtn" style="align-self:center" data-act="wszystkie-bledy">Pokaż wszystkie (${bledy.length})</button>` : ""}
@@ -2876,7 +2926,7 @@ document.addEventListener("visibilitychange", () => {
 /* Cyfry trafiają do aktywnego okienka: wynik albo (przy dzieleniu z resztą) reszta. */
 function wpiszCyfre(d){
   if (R.temat.reszta && R.pole === 1) { if ((R.reszta || "").length < 2) R.reszta = (R.reszta || "") + d; }
-  else if (R.input.length < 3) R.input += d;
+  else if (R.input.length < (R.temat.duzeLiczby ? 7 : 3)) R.input += d;
   render();
 }
 function usunCyfre(){
@@ -2891,7 +2941,7 @@ document.addEventListener("keydown", e => {
     const z = R.lista[R.i];
     if (z && z.opcje && /^[1-9]$/.test(e.key)) wybierzOpcje(Number(e.key) - 1);
     else if (e.key === "Enter") { e.preventDefault(); zatwierdz(); }
-  } else if (R.temat.typ === "liczby") {
+  } else if ((R.lista[R.i] && R.lista[R.i].typ || R.temat.typ) === "liczby") {
     if (/^[0-9]$/.test(e.key)) wpiszCyfre(e.key);
     else if (e.key === "Backspace") usunCyfre();
     else if (R.temat.reszta && (e.key === "r" || e.key === "R" || e.key === "Tab" || e.key === "ArrowRight" || e.key === "ArrowLeft")) { e.preventDefault(); R.pole = e.key === "ArrowLeft" ? 0 : e.key === "ArrowRight" || e.key === "r" || e.key === "R" ? 1 : 1 - (R.pole || 0); render(); }
