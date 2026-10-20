@@ -2578,8 +2578,7 @@ function podsumowanie(){
       ${bledy.length > 4 && !pokazWszystkieBledy ? `<button class="tbtn" style="align-self:center" data-act="wszystkie-bledy">Pokaż wszystkie (${bledy.length})</button>` : ""}
     </section>` : `<div class="strip"><span class="mega">Zero błędów</span><span>Żabka zakłada okulary. Pełen luz!</span></div>`}
     <div class="spacer"></div>
-    ${bledy.length ? `<button class="btn" data-act="popraw">Popraw błędy</button>` : ""}
-    <button class="btn ghost" data-act="runda" data-t="${r.temat}">Nowa runda</button>
+    <button class="btn" data-act="runda" data-t="${r.temat}">Nowa runda</button>
     <button class="btn ghost" style="box-shadow:none;height:44px" data-act="ekran" data-to="start">Wróć do menu</button>
   </main>`;
 }
@@ -2867,11 +2866,6 @@ app.addEventListener("click", async e => {
   else if (a === "wyjdz") { pytanieOWyjscie = true; render(); }
   else if (a === "zostan") { pytanieOWyjscie = false; render(); }
   else if (a === "przerwij") { R = null; pytanieOWyjscie = false; ekran = "start"; render(); }
-  else if (a === "popraw") {
-    const t = tematById(ostatnia.temat);
-    const klucze = new Set(ostatnia.zadania.filter(z => !z.dobrze).map(z => z.klucz));
-    zacznijRunde(ostatnia.temat, t.zadania().filter(z => klucze.has(z.klucz)));
-  }
   else if (a === "mies") { let m = kal.m + Number(b.dataset.d), r = kal.r; if (m < 0) { m = 11; r--; } if (m > 11) { m = 0; r++; } kal = { r, m, sel: kal.sel, filtr: kal.filtr }; render(); }
   else if (a === "filtr") { kal.filtr = b.dataset.t; kal.otwarta = null; render(); }
   else if (a === "wybierz") { wybranyTemat = wybranyTemat === b.dataset.t ? null : b.dataset.t; pytanieArchiwum = null; render(); }
