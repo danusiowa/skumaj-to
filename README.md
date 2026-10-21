@@ -104,7 +104,7 @@ Czwarta zakładka w menu. Muchy (jedna za każdą dobrą odpowiedź) wydaje się
 | Matematyka | Mnożenie do 100 |
 | Matematyka | Dzielenie do 100 |
 | Matematyka | Dzielenie z resztą do 100 (wynik i reszta w osobnych okienkach) |
-| Matematyka | Liczby do miliona (w obie strony: liczba → słownie i słownie → liczba) |
+| Matematyka | Liczby do miliardów (w obie strony: liczba → słownie i słownie → liczba) |
 | Angielski | Liczby do 100 (słowami) |
 | Angielski | Rodzina (słowa z podręcznika, Lesson 1.1, plus family, child, grandparents) |
 | Angielski | Rodzina ze słuchu (dyktando: apka czyta słowo, wpisuje się, co słychać) |

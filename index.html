@@ -175,6 +175,13 @@ input.ans:focus,input.ans:focus-visible{outline:none;box-shadow:inset 0 0 0 3px 
 .pad button.kreska{background:var(--kartka);color:var(--pomidor)}
 .pad-duze .ok{height:52px}
 .kq{display:flex;flex-wrap:wrap;align-items:center;gap:0}
+#app[data-ekran] .card .q.kq.dl{font-size:clamp(22px,8vw,40px);flex-wrap:nowrap;margin-top:58px;letter-spacing:-.01em}
+.card .kq.dl .kr-l{margin:0 1px}
+#app .card .ans.dl1{font-size:26px}
+#app[data-ekran] .card .q.long.xl.xxl{max-width:none;font-size:clamp(19px,5.6vw,24px);line-height:1.2}
+.miejsce-zabki{float:right;width:96px;height:62px}
+@media (max-width:759px) and (max-height:700px){ #app[data-ekran="zadanie"] .pad-duze button{height:48px} #app[data-ekran="zadanie"] .pad-duze .ok{height:48px} }
+#app .card .ans.dl2{font-size:clamp(19px,6.4vw,24px);padding:0 10px}
 .kc{font:inherit;color:inherit;background:none;padding:0 1px;cursor:pointer;border-radius:6px}
 .kc:active{background:rgba(255,248,238,.15)}
 .kr-l{color:var(--pomidor);font-weight:800;margin:0 3px;text-shadow:0 0 0 var(--kartka)}
@@ -782,7 +789,8 @@ ul.zad .glosnik .ti{width:12px;height:12px}
    ===================================================================== */
 const DLUGOSC_RUNDY = 15;
 
-// Liczby słownie po polsku (0 < n ≤ 1 000 000). Zwraca warianty rozdzielone „ / ” (np. tysiąc / jeden tysiąc).
+// Liczby słownie po polsku (0 < n < 1 000 000 000 000). Zwraca warianty rozdzielone „ / ”
+// (np. tysiąc / jeden tysiąc, milion tysiąc / jeden milion jeden tysiąc). Pierwszy wariant jest najkrótszy.
 const zLiczby = s => String(s).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 function slownie(n){
   const J = ["", "jeden", "dwa", "trzy", "cztery", "pięć", "sześć", "siedem", "osiem", "dziewięć"];
@@ -791,18 +799,18 @@ function slownie(n){
   const S = ["", "sto", "dwieście", "trzysta", "czterysta", "pięćset", "sześćset", "siedemset", "osiemset", "dziewięćset"];
   const do999 = x => { const s = Math.floor(x / 100), r = x % 100, d = Math.floor(r / 10), j = r % 10;
     return [S[s], r >= 10 && r < 20 ? N[r - 10] : D[d], r >= 10 && r < 20 ? "" : J[j]].filter(Boolean).join(" "); };
-  if (n === 1000000) return "milion / jeden milion";
-  const t = Math.floor(n / 1000), r = n % 1000;
-  let tys = "", tys2 = "";
-  if (t === 1) { tys = "tysiąc"; tys2 = "jeden tysiąc"; }
-  else if (t > 1) {
-    const j = t % 10, dz = t % 100;
-    const forma = j >= 2 && j <= 4 && !(dz >= 12 && dz <= 14) ? "tysiące" : "tysięcy";
-    tys = do999(t) + " " + forma;
+  const RZEDY = [["miliard", "miliardy", "miliardów", 1e9], ["milion", "miliony", "milionów", 1e6], ["tysiąc", "tysiące", "tysięcy", 1e3]];
+  let warianty = [""], reszta = n;
+  for (const [jed, kilka, wiele, w] of RZEDY) {
+    const g = Math.floor(reszta / w); reszta %= w;
+    if (!g) continue;
+    let czesci;
+    if (g === 1) czesci = [jed, "jeden " + jed];
+    else { const j = g % 10, dz = g % 100; czesci = [do999(g) + " " + (j >= 2 && j <= 4 && !(dz >= 12 && dz <= 14) ? kilka : wiele)]; }
+    warianty = warianty.flatMap(a => czesci.map(c => (a + " " + c).trim()));
   }
-  const reszta = r ? do999(r) : "";
-  const a = [tys, reszta].filter(Boolean).join(" ");
-  return tys2 ? a + " / " + [tys2, reszta].filter(Boolean).join(" ") : a;
+  if (reszta) warianty = warianty.map(a => (a + " " + do999(reszta)).trim());
+  return warianty.join(" / ");
 }
 const LICZBY_MILION = (() => { // stała pula, żeby historia zadań się zgadzała
   let x = 20261020; const los = (a, b) => { x = (x * 1103515245 + 12345) % 2147483648; return a + x % (b - a + 1); };
@@ -813,6 +821,20 @@ const LICZBY_MILION = (() => { // stała pula, żeby historia zadań się zgadza
     if (i % 3 === 0) v = Math.round(v / 100) * 100;
     if (i % 5 === 1) v = Math.floor(v / 1000) * 1000 + los(1, 9);
     out.add(Math.min(Math.max(v, 100), 999999));
+  }
+  return [...out].sort((a, b) => a - b);
+})();
+const LICZBY_MILIARD = (() => { // liczby od miliona do miliardów; osobna stała pula (wcześniejsze zostają bez zmian)
+  let x = 20261021; const los = (a, b) => { x = (x * 1103515245 + 12345) % 2147483648; return a + Math.floor(x / 2147483648 * (b - a + 1)); };
+  const out = new Set([2000000, 7000000, 21000000, 100000000, 1000001, 1001000, 3500000, 40000500, 300000005,
+    999999999, 1000000000, 2000000000, 5000000000, 2500000000, 12000000000, 100000000000, 1001001001, 7000000300, 45000000000]);
+  // g = ile grup po trzy cyfry (milionowa: 3, miliardowa: 4); część liczb ma dużo zer, jak w zadaniach szkolnych
+  for (const [ile, gr] of [[25, 3], [25, 4]]) for (let i = 0; i < ile; i++) {
+    const grupy = Array.from({ length: gr }, (_, k) => k === 0 ? los(1, gr === 4 ? 99 : 999) : los(0, 999));
+    if (i % 3 === 0) grupy[gr - 1] = 0;
+    if (i % 4 === 1) grupy[gr - 2] = 0;
+    if (i % 5 === 2) grupy[1] = los(0, 9);
+    out.add(grupy.reduce((a, g) => a * 1000 + g, 0));
   }
   return [...out].sort((a, b) => a - b);
 })();
@@ -890,12 +912,12 @@ const TEMATY = [
     }
   },
   {
-    // Zapis liczb do miliona w obie strony: liczba → słownie (klawiatura z literami) i słownie → liczba (klawiatura z cyframi).
-    id: "mat-milion", od: "2026-10-20", nazwa: "Matematyka: liczby do miliona", typ: "tekst", zdania: true, klaw: "pl", duzeLiczby: true,
+    // Zapis liczb do miliardów w obie strony: liczba → słownie (klawiatura z literami) i słownie → liczba (klawiatura z cyframi).
+    id: "mat-milion", od: "2026-10-20", nazwa: "Matematyka: liczby do miliardów", typ: "tekst", zdania: true, klaw: "pl", duzeLiczby: true,
     tlo: "#5AA9A0", napis: "#0B2E2A",
     zadania(){
       const out = [];
-      for (const n of LICZBY_MILION) {
+      for (const n of [...LICZBY_MILION, ...LICZBY_MILIARD]) {
         const sl = slownie(n);
         out.push({ klucz: "s:" + n, pytanie: String(n), odp: sl, polecenie: "Zapisz słownie", kreski: true, grupa: "n" + n });
         out.push({ klucz: "l:" + n, pytanie: sl.split(" / ")[0], odp: String(n), polecenie: "Zapisz cyframi", typ: "liczby", grupa: "n" + n });
@@ -2230,7 +2252,7 @@ function zadanie(){
   const odp = t.reszta
     ? `<button class="ans ans2${pole === 0 ? " akt" : ""}" data-act="pole" data-p="0" aria-label="Wynik" aria-pressed="${pole === 0}">${esc(R.input) || "?"}</button><span class="mega eq">r.</span><button class="ans ans2${pole === 1 ? " akt" : ""}" data-act="pole" data-p="1" aria-label="Reszta" aria-pressed="${pole === 1}">${esc(R.reszta || "") || "?"}</button>`
     : t.typ === "liczby"
-    ? `<span class="ans" aria-live="polite" aria-label="Twoja odpowiedź">${esc(R.input) || "?"}</span>`
+    ? `<span class="ans${R.temat.duzeLiczby && R.input.length > 7 ? (R.input.length > 11 ? " dl2" : " dl1") : ""}" aria-live="polite" aria-label="Twoja odpowiedź">${esc(R.input) || "?"}</span>`
     : `<span class="ans txt" aria-live="polite" aria-label="Twoja odpowiedź">${esc(R.input)}<i class="kursor" aria-hidden="true"></i></span>`;
   return `
   <div class="qhead">
@@ -2240,16 +2262,16 @@ function zadanie(){
   <main class="screen" style="padding-top:10px">
     <div class="dots" style="grid-template-columns:repeat(${n},minmax(0,1fr))" aria-hidden="true">${dots}</div>
     ${pytanieOWyjscie ? `<div class="confirm"><span>Przerwać rundę? Wynik się nie zapisze.</span><div><button data-act="zostan">Zostaję</button><button class="go" data-act="przerwij">Przerwij</button></div></div>` : ""}
-    <section class="card${t.reszta || t.typ === "tekst" ? " szeroka" : ""}${R.pokazane !== R.i ? " pop" : ""}">
+    <section class="card${t.reszta || t.typ === "tekst" || R.temat.duzeLiczby ? " szeroka" : ""}${R.pokazane !== R.i ? " pop" : ""}">
       <span class="mega label">${esc(t.dyktando && !MOWA ? "Napisz po angielsku" : z.polecenie || t.polecenie)}</span>
       ${(t.dyktando || z.sluch) && MOWA
         ? `<div class="dykt"><button class="dykt-gra" data-act="mow" data-txt="${esc(z.sluch ? z.mow : z.odp)}" data-lang="${t.wymowa}" aria-label="Posłuchaj">${ICO_GLOSNIK}</button><span class="dykt-opis"><b>Stuknij, żeby posłuchać</b><button class="dykt-wolno" data-act="mow" data-txt="${esc(z.sluch ? z.mow : z.odp)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}">🐢 wolniej</button></span></div>`
-        : z.kreski ? `<div class="mega q kq" aria-label="${esc(z.pytanie)}">${[...z.pytanie].map((c, k) => `<button class="kc" data-act="kreskaq" data-k="${k}">${c}</button>${(R.kreski || []).includes(k) && k < z.pytanie.length - 1 ? '<span class="kr-l">|</span>' : ""}`).join("")}</div><p class="kq-pod">Stuknij cyfrę, żeby postawić za nią kreskę.</p>`
-        : `<div class="mega q${dlugie ? " long" : ""}${z.pytanie.length > 26 ? " xl" : ""}">${esc(z.sluch ? z.mow : z.pytanie)}</div>${z.mow && MOWA ? `<div class="q-glosy"><button class="q-glos" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" aria-label="Posłuchaj">${ICO_GLOSNIK}<span>posłuchaj</span></button><button class="q-glos" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}" aria-label="Posłuchaj wolniej">🐢 wolniej</button></div>` : ""}`}
+        : z.kreski ? `<div class="mega q kq${z.pytanie.length > 7 ? " dl" : ""}" aria-label="${esc(z.pytanie)}">${[...z.pytanie].map((c, k) => `<button class="kc" data-act="kreskaq" data-k="${k}">${c}</button>${(R.kreski || []).includes(k) && k < z.pytanie.length - 1 ? '<span class="kr-l">|</span>' : ""}`).join("")}</div><p class="kq-pod">Stuknij cyfrę, żeby postawić za nią kreskę.</p>`
+        : `<div class="mega q${dlugie ? " long" : ""}${z.pytanie.length > 26 ? " xl" : ""}${z.pytanie.length > 60 ? " xxl" : ""}">${z.pytanie.length > 60 ? '<span class="miejsce-zabki" aria-hidden="true"></span>' : ""}${esc(z.sluch ? z.mow : z.pytanie)}</div>${z.mow && MOWA ? `<div class="q-glosy"><button class="q-glos" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" aria-label="Posłuchaj">${ICO_GLOSNIK}<span>posłuchaj</span></button><button class="q-glos" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}" aria-label="Posłuchaj wolniej">🐢 wolniej</button></div>` : ""}`}
       <div class="ansrow">${t.typ === "liczby" && !R.temat.duzeLiczby ? '<span class="mega eq">=</span>' : ""}${odp}</div>
       ${frog("skup")}
     </section>
-    <p class="hint">${t.reszta ? "Wpisz wynik, potem resztę (r.)." : t.typ === "liczby" && R.temat.duzeLiczby ? "Kreska | pomaga oddzielić tysiące." : t.typ === "liczby" ? "Wpisz wynik i naciśnij OK." : t.zdania && (t.wymowa || "").startsWith("es") ? "Napisz całe zdanie. Akcenty (á, ñ) się liczą, znaki ¿ ? nie." : t.klaw === "pl" ? "Polskie litery (ą, ę, ó…) się liczą, wielkie litery nie." : t.zdania ? "Napisz i naciśnij OK. Wielkie litery nie są sprawdzane." : t.dyktando && MOWA ? "Wpisz, co słyszysz, i naciśnij OK." : "Wpisz słówko i naciśnij OK."} Wyniki zobaczysz na końcu rundy.</p>
+    <p class="hint"${R.temat.duzeLiczby && t.typ === "liczby" && z.pytanie.length > 60 ? " hidden" : ""}>${t.reszta ? "Wpisz wynik, potem resztę (r.)." : t.typ === "liczby" && R.temat.duzeLiczby ? "Kreska | pomaga oddzielić tysiące." : t.typ === "liczby" ? "Wpisz wynik i naciśnij OK." : t.zdania && (t.wymowa || "").startsWith("es") ? "Napisz całe zdanie. Akcenty (á, ñ) się liczą, znaki ¿ ? nie." : t.klaw === "pl" ? "Polskie litery (ą, ę, ó…) się liczą, wielkie litery nie." : t.zdania ? "Napisz i naciśnij OK. Wielkie litery nie są sprawdzane." : t.dyktando && MOWA ? "Wpisz, co słyszysz, i naciśnij OK." : "Wpisz słówko i naciśnij OK."} Wyniki zobaczysz na końcu rundy.</p>
     ${t.typ === "liczby"
       ? R.temat.duzeLiczby
       ? `<div class="pad pad-duze">${[1,2,3,4,5,6,7,8,9].map(d => `<button data-act="cyfra" data-d="${d}">${d}</button>`).join("")}
@@ -2317,7 +2339,7 @@ function klawiatura(rodzaj){
   </div>`;
 }
 function wpiszLitere(l){
-  if (R.input.length >= (R.temat.zdania ? 100 : 40)) return;
+  if (R.input.length >= (R.temat.zdania ? 220 : 40)) return;
   if (l === " " && (!R.input || R.input.endsWith(" "))) return;
   R.input += l; render();
 }
@@ -2936,7 +2958,7 @@ document.addEventListener("visibilitychange", () => {
 function wpiszCyfre(d){
   if (R.temat.reszta && R.pole === 1) { if ((R.reszta || "").length < 2) R.reszta = (R.reszta || "") + d; }
   else if (d === "|") { if (R.input && !R.input.endsWith("|")) R.input += "|"; }
-  else if (R.input.replace(/\|/g, "").length < (R.temat.duzeLiczby ? 7 : 3)) R.input += d;
+  else if (R.input.replace(/\|/g, "").length < (R.temat.duzeLiczby ? 12 : 3)) R.input += d;
   render();
 }
 function usunCyfre(){
