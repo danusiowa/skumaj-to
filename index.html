@@ -167,7 +167,8 @@ input.ans:focus,input.ans:focus-visible{outline:none;box-shadow:inset 0 0 0 3px 
 @media (prefers-reduced-motion:no-preference){.dykt-gra.gra{animation:dyktPuls .6s ease-out}}
 @keyframes dyktPuls{40%{transform:scale(1.08)}}
 .card.szeroka .frog{top:16px;bottom:auto}
-.obr-wrap{position:relative;z-index:2;display:flex}
+.obr-wrap{position:relative;z-index:2;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.obr-podpis{font-family:var(--mega);font-weight:800;font-size:18px;line-height:1.2;color:var(--kartka);max-width:min(240px,62vw)}
 .obr{display:block;width:min(176px,46vw);height:auto;aspect-ratio:1;background:#fff;border-radius:20px;box-shadow:0 0 0 3px var(--zakreslacz)}
 .obr-mini{width:34px;height:34px;flex:none;background:#fff;border-radius:8px;box-shadow:inset 0 0 0 1.5px var(--linia)}
 .hint{margin:6px 0 0;font-size:15px;color:var(--szary)}
@@ -2458,7 +2459,7 @@ function zadanie(){
       <span class="mega label">${esc(t.dyktando && !MOWA ? "Napisz po angielsku" : z.polecenie || t.polecenie)}</span>
       ${(t.dyktando || z.sluch) && MOWA
         ? `<div class="dykt"><button class="dykt-gra" data-act="mow" data-txt="${esc(z.sluch ? z.mow : z.odp)}" data-lang="${t.wymowa}" aria-label="Posłuchaj">${ICO_GLOSNIK}</button><span class="dykt-opis"><b>Stuknij, żeby posłuchać</b><button class="dykt-wolno" data-act="mow" data-txt="${esc(z.sluch ? z.mow : z.odp)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}">🐢 wolniej</button></span></div>`
-        : z.obrazek ? `<div class="obr-wrap">${obrazUbrania(z.obrazek, "obr")}</div>`
+        : z.obrazek ? `<div class="obr-wrap">${obrazUbrania(z.obrazek, "obr")}<span class="obr-podpis">${esc(z.pytanie)}</span></div>`
         : z.kreski ? `<div class="mega q kq${z.pytanie.length > 7 ? " dl" : ""}" aria-label="${esc(z.pytanie)}">${[...z.pytanie].map((c, k) => `<button class="kc" data-act="kreskaq" data-k="${k}">${c}</button>${(R.kreski || []).includes(k) && k < z.pytanie.length - 1 ? '<span class="kr-l">|</span>' : ""}`).join("")}</div><p class="kq-pod">Stuknij cyfrę, żeby postawić za nią kreskę.</p>`
         : `<div class="mega q${dlugie ? " long" : ""}${z.pytanie.length > 26 ? " xl" : ""}${z.pytanie.length > 60 ? " xxl" : ""}">${z.pytanie.length > 60 ? '<span class="miejsce-zabki" aria-hidden="true"></span>' : ""}${esc(z.sluch ? z.mow : z.pytanie)}</div>${z.mow && MOWA ? `<div class="q-glosy"><button class="q-glos" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" aria-label="Posłuchaj">${ICO_GLOSNIK}<span>posłuchaj</span></button><button class="q-glos" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}" aria-label="Posłuchaj wolniej">🐢 wolniej</button></div>` : ""}`}
       <div class="ansrow">${t.typ === "liczby" && !R.temat.duzeLiczby ? '<span class="mega eq">=</span>' : ""}${odp}</div>
