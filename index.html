@@ -167,6 +167,9 @@ input.ans:focus,input.ans:focus-visible{outline:none;box-shadow:inset 0 0 0 3px 
 @media (prefers-reduced-motion:no-preference){.dykt-gra.gra{animation:dyktPuls .6s ease-out}}
 @keyframes dyktPuls{40%{transform:scale(1.08)}}
 .card.szeroka .frog{top:16px;bottom:auto}
+.obr-wrap{position:relative;z-index:2;display:flex}
+.obr{display:block;width:min(176px,46vw);height:auto;aspect-ratio:1;background:#fff;border-radius:20px;box-shadow:0 0 0 3px var(--zakreslacz)}
+.obr-mini{width:34px;height:34px;flex:none;background:#fff;border-radius:8px;box-shadow:inset 0 0 0 1.5px var(--linia)}
 .hint{margin:6px 0 0;font-size:15px;color:var(--szary)}
 .pad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .pad button{height:60px;border-radius:18px;background:var(--bialy);box-shadow:inset 0 0 0 1.5px var(--linia);font-family:var(--mega);font-weight:800;font-size:24px;color:var(--staw)}
@@ -432,6 +435,7 @@ ul.zad .glosnik .ti{width:12px;height:12px}
   #app[data-ekran="zadanie"] .card .frog{width:86px;height:94px;right:10px;bottom:10px}
   #app[data-ekran="zadanie"] .card.szeroka .frog{top:10px;bottom:auto}
   #app[data-ekran="zadanie"] .card .label{padding-right:84px}
+  #app[data-ekran="zadanie"] .obr{width:min(132px,36vw)}
   #app[data-ekran="zadanie"] .ans{height:54px;font-size:30px}
   #app[data-ekran="zadanie"] .ans.txt{height:auto;min-height:48px;font-size:22px}
   #app[data-ekran="zadanie"] .hint{font-size:13px;line-height:1.35;margin:0}
@@ -443,6 +447,7 @@ ul.zad .glosnik .ti{width:12px;height:12px}
 }
 @media (max-width:759px) and (max-height:640px){
   #app[data-ekran="zadanie"] .hint{display:none}
+  #app[data-ekran="zadanie"] .obr{width:100px}
   #app[data-ekran="zadanie"] .pad button{height:46px}
   #app[data-ekran="zadanie"] .klaw button,#app[data-ekran="zadanie"] .klaw .dol button{height:42px}
 }
@@ -510,6 +515,7 @@ ul.zad .glosnik .ti{width:12px;height:12px}
   #app[data-ekran="zadanie"] .klaw .dol button{height:60px;max-width:none}
   #app[data-ekran="zadanie"] .klaw .dol button:first-child{max-width:70px}
   .card .q{font-size:clamp(48px,6vw,72px)}
+  .obr{width:240px}
   .wejscie{padding-block:48px}
   .w-karta{padding:24px}
 }
@@ -866,6 +872,62 @@ const SLOWA_RODZINA = [
   ["ojciec", "father"], ["dziadek", "grandad / grandfather", "grandpa / granddad"], ["babcia", "grandmother / granny", "grandma"],
   ["matka", "mother"], ["mama", "mum", "mom"], ["rodzice", "parents"], ["siostra", "sister"], ["syn", "son"], ["wujek", "uncle"],
   ["rodzina", "family"], ["dziecko", "child"], ["dziadkowie", "grandparents"]
+];
+
+
+/* HISZPAŃSKI, Unidad 1 (lecciones 1–3) i ANGIELSKI: ubrania.
+   Każdy blok: [polecenie, rodzaj, lista]. Rodzaj: "pl" (pytanie po polsku), "es" (pytanie po hiszpańsku, można odsłuchać),
+   "luka" (zdanie z luką), "sluch" (posłuchaj i zapisz), "liczba" (odpowiedź cyframi), "sluch-liczba" (posłuchaj i wpisz cyfrę).
+   Pozycja listy: [pytanie, odpowiedź, grupa?]. Grupa pilnuje, żeby to samo słowo nie wypadło dwa razy w rundzie. */
+function blokiZadan(pref, bloki){
+  const out = [];
+  for (const [polecenie, rodzaj, lista] of bloki) for (const poz of lista) {
+    const [q, a, g] = Array.isArray(poz) ? poz : [poz, poz];
+    const gr = pref + ":" + (g || normZdanie(a.split("/")[0]));
+    const z = { klucz: pref + ":" + rodzaj + ":" + q, pytanie: q, odp: a, polecenie, grupa: gr };
+    if (rodzaj === "pl") z.pl = true;
+    if (rodzaj === "es") z.mow = q;
+    if (rodzaj === "sluch") { z.pytanie = "🔊 " + q; z.mow = q; z.sluch = true; }
+    if (rodzaj === "liczba") { z.typ = "liczby"; z.mow = q; }
+    if (rodzaj === "sluch-liczba") { z.pytanie = "🔊 " + q; z.mow = q; z.sluch = true; z.typ = "liczby"; }
+    out.push(z);
+  }
+  return out;
+}
+const HISZ_LICZBY = ["uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez"];
+
+/* Obrazki ubrań (do tematu „Angielski: ubrania”). Kadr 100×100, kontur jak w doodle żabki. */
+const OBR_BUT = "M40 8 L60 8 L60 60 Q82 62 88 74 L88 86 L32 86 L32 68 Q40 58 40 48Z",
+  OBR_BUCIK = "M10 72 Q12 56 26 56 L42 58 Q52 48 64 52 Q86 58 90 70 L90 78 L10 78Z",
+  OBR_TRAMP = `<path fill="#fff" d="M8 70 Q10 52 26 50 L40 52 Q50 40 62 46 Q84 54 92 64 L92 72 L8 72Z"/><path fill="#E9534A" d="M8 72 L92 72 L92 80 L8 80Z"/><path fill="none" stroke="#1F86C7" stroke-width="4" d="M28 64 Q52 56 76 60"/><path fill="none" d="M44 50 L52 54 M50 46 L58 50"/>`;
+const OBRAZKI_UBRAN = {
+  "T-shirt": `<path fill="#E9534A" d="M35 18 L20 24 L8 40 L20 48 L26 42 L26 86 L74 86 L74 42 L80 48 L92 40 L80 24 L65 18 Q50 30 35 18Z"/>`,
+  top: `<path fill="#F2A7C3" d="M34 12 L34 30 Q28 44 30 56 L28 88 L72 88 L70 56 Q72 44 66 30 L66 12 L60 12 Q58 34 50 34 Q42 34 40 12Z"/>`,
+  shirt: `<path fill="#8FC3EC" d="M36 14 L20 20 L8 70 L20 73 L28 40 L28 90 L72 90 L72 40 L80 73 L92 70 L80 20 L64 14Z"/><path fill="none" d="M50 28 L50 90"/><path fill="#fff" d="M36 14 L50 28 L40 34Z M64 14 L50 28 L60 34Z"/><g fill="#008471" stroke="none"><circle cx="54" cy="42" r="2"/><circle cx="54" cy="56" r="2"/><circle cx="54" cy="70" r="2"/></g>`,
+  jumper: `<path fill="#6AA82F" d="M38 14 L22 20 L10 72 L22 75 L28 42 L28 86 L72 86 L72 42 L78 75 L90 72 L78 20 L62 14 Q50 24 38 14Z"/><path fill="none" d="M28 78 L72 78 M12 64 L23 67 M88 64 L77 67 M30 52 L36 47 L42 52 L48 47 L54 52 L60 47 L66 52 L70 49"/>`,
+  hoodie: `<path fill="#5B4FB8" d="M34 22 Q32 2 50 2 Q68 2 66 22Z"/><path fill="#7A6FD0" d="M36 16 L22 22 L10 74 L22 77 L28 44 L28 88 L72 88 L72 44 L78 77 L90 74 L78 22 L64 16 Q50 30 36 16Z"/><path fill="#5B4FB8" d="M38 64 L62 64 L66 80 L34 80Z"/><path fill="none" d="M45 26 L44 42 M55 26 L56 42"/>`,
+  jacket: `<path fill="#F0A33A" d="M38 12 L22 18 L10 66 L22 69 L28 40 L28 76 L72 76 L72 40 L78 69 L90 66 L78 18 L62 12 L50 18Z"/><path fill="#D9862A" d="M38 12 L44 6 L56 6 L62 12 L50 18Z"/><path fill="none" d="M50 18 L50 76 M28 70 L72 70 M34 52 L42 52 M58 52 L66 52"/><rect x="47" y="22" width="6" height="9" rx="2" fill="#C0C8D0"/>`,
+  coat: `<path fill="#9B6744" d="M38 6 L22 12 L12 70 L24 72 L28 36 L24 96 L76 96 L72 36 L76 72 L88 70 L78 12 L62 6 L50 24Z"/><path fill="#7D4F31" d="M38 6 L50 24 L42 40Z M62 6 L50 24 L58 40Z"/><path fill="none" d="M50 24 L50 96"/><g fill="#008471" stroke="none"><circle cx="44" cy="52" r="2.5"/><circle cx="56" cy="52" r="2.5"/><circle cx="44" cy="68" r="2.5"/><circle cx="56" cy="68" r="2.5"/></g>`,
+  dress: `<path fill="#E95A8A" d="M40 8 L40 22 Q34 30 38 42 L20 92 L80 92 L62 42 Q66 30 60 22 L60 8 L56 8 Q54 20 50 20 Q46 20 44 8Z"/><path fill="none" d="M38 42 L62 42"/><g fill="#fff" stroke="none"><circle cx="40" cy="62" r="2.5"/><circle cx="56" cy="58" r="2.5"/><circle cx="48" cy="76" r="2.5"/><circle cx="66" cy="78" r="2.5"/><circle cx="32" cy="82" r="2.5"/></g>`,
+  skirt: `<path fill="#3F8ED6" d="M32 22 L68 22 L68 32 L84 80 L16 80 L32 32Z"/><path fill="none" d="M32 32 L68 32 M43 32 L36 80 M57 32 L64 80 M50 32 L50 80"/>`,
+  trousers: `<path fill="#6B7A8A" d="M30 8 L70 8 L75 94 L56 94 L50 34 L44 94 L25 94Z"/><path fill="none" d="M30 16 L70 16 M50 16 L50 30"/>`,
+  jeans: `<path fill="#3C6FB4" d="M30 8 L70 8 L75 94 L56 94 L50 34 L44 94 L25 94Z"/><path fill="none" d="M30 16 L70 16 M50 16 L50 30"/><path fill="none" stroke="#F6C343" stroke-width="1.5" stroke-dasharray="3 2" d="M33 20 Q38 30 46 22 M67 20 Q62 30 54 22 M29 88 L44 88 M56 88 L71 88"/><circle cx="50" cy="12" r="2" fill="#F6C343" stroke="none"/>`,
+  tracksuit: `<path fill="#1F9E8F" d="M40 4 L28 8 L18 40 L26 42 L32 22 L32 48 L68 48 L68 22 L74 42 L82 40 L72 8 L60 4 Q50 10 40 4Z"/><path fill="none" d="M50 7 L50 48"/><path fill="#1F9E8F" d="M33 50 L67 50 L69 96 L55 96 L50 66 L45 96 L31 96Z"/><path fill="none" stroke="#fff" stroke-width="2.5" d="M27 12 L20 36 M73 12 L80 36 M35 53 L34 92 M65 53 L66 92"/>`,
+  cap: `<g transform="translate(2 2) scale(.92)"><path fill="#E9534A" d="M16 64 Q16 28 50 28 Q84 28 84 64Z"/><path fill="#C23D35" d="M60 64 L84 64 Q98 66 96 74 Q78 76 58 70Z"/><path fill="none" d="M50 28 Q44 46 46 64"/><circle cx="50" cy="28" r="3.5" fill="#C23D35"/></g>`,
+  boots: `<g transform="translate(10 6) scale(.84)"><g transform="translate(-16,-2)"><path fill="#7D4F31" d="${OBR_BUT}"/><path fill="none" d="M32 80 L88 80"/></g><path fill="#9B6744" d="${OBR_BUT}" transform="translate(0,8)"/><path fill="none" d="M32 88 L88 88"/></g>`,
+  shoes: `<g transform="translate(7 14) scale(.84)"><g transform="translate(4,-30)"><path fill="#8E4A26" d="${OBR_BUCIK}"/></g><path fill="#B5653A" d="${OBR_BUCIK}"/><path fill="none" d="M46 56 L54 58 M50 52 L58 54"/></g>`,
+  trainers: `<g transform="translate(6 16) scale(.84)"><g transform="translate(4,-30)">${OBR_TRAMP}</g>${OBR_TRAMP}</g>`
+};
+function obrazUbrania(k, cls){
+  const s = OBRAZKI_UBRAN[k]; if (!s) return "";
+  return `<svg class="${cls || "obr"}" viewBox="0 0 100 100" role="img" aria-label="Obrazek ubrania"><g stroke="#22313F" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">${s}</g></svg>`;
+}
+// Ubrania z podręcznika (Wordlist, Lesson 2.1): [po angielsku, po polsku, inne poprawne zapisy].
+const SLOWA_UBRANIA = [
+  ["boots", "buty, kozaki"], ["cap", "czapka z daszkiem"], ["coat", "płaszcz"], ["dress", "sukienka"], ["hoodie", "bluza z kapturem"],
+  ["jacket", "kurtka"], ["jeans", "dżinsy"], ["jumper", "sweter, bluza"], ["shirt", "koszula"], ["shoes", "buty"], ["skirt", "spódnica"],
+  ["T-shirt", "koszulka z krótkim rękawem", "t-shirt / t shirt / tshirt"], ["top", "bluzka, top"], ["tracksuit", "dres"],
+  ["trainers", "trampki, buty sportowe"], ["trousers", "spodnie"], ["at the weekend", "w weekend"]
 ];
 
 function lista(pary){ return pary.map(([pytanie, odp]) => ({ klucz: pytanie, pytanie, odp })); }
@@ -1250,6 +1312,136 @@ const TEMATY = [
       for (const d of D) for (const o of d.o) {
         out.push({ klucz: "z:" + o, pytanie: o, odp: d.p.join(" / "), polecenie: "Napisz pytanie", mow: o, grupa: "o:" + o });
         out.push({ klucz: "so:" + o, pytanie: "🔊 " + o, odp: o, polecenie: "Posłuchaj i zapisz odpowiedź", mow: o, sluch: true, grupa: "o:" + o });
+      }
+      return out;
+    }
+  },
+  /* ===== HISZPAŃSKI, Unidad 1: osobny temat na każdy dział z podręcznika i ćwiczeniówki (str. 6–22). ===== */
+  {
+    id: "hisz-saludos", od: "2026-10-24", nazwa: "Hiszpański: powitania i samopoczucie", typ: "tekst", zdania: true, dlugosc: 10, wymowa: "es-ES",
+    tlo: "#FFE36E", napis: "#7A3510",
+    zadania(){
+      return blokiZadan("sal", [
+        ["Napisz po hiszpańsku", "pl", [["Cześć!", "¡Hola!"], ["Dzień dobry (rano)", "¡Buenos días!"], ["Dzień dobry (po południu)", "¡Buenas tardes!"], ["Dobranoc", "¡Buenas noches!"],
+          ["Do widzenia", "Adiós."], ["Do zobaczenia!", "¡Hasta luego!"], ["Miło mi!", "¡Mucho gusto!"], ["Jak się masz?", "¿Cómo estás? / ¿Qué tal?"]]],
+        ["Odpowiedz po hiszpańsku: ¿Cómo estás?", "pl", [["świetnie 🤩", "Estoy genial. / Genial."], ["bardzo dobrze 😀", "Estoy muy bien. / Muy bien."], ["dobrze 🙂", "Estoy bien. / Bien."],
+          ["tak sobie 😐", "Estoy así, así. / Así, así. / Ni fu ni fa."], ["źle 🙁", "Estoy mal. / Mal."], ["fatalnie 😖", "Estoy fatal. / Fatal."]]],
+        ["Co powiesz po hiszpańsku?", "pl", [["Jest rano. Witasz panią w szkole.", "¡Buenos días!", "rano"], ["Jest 16:00. Witasz babcię.", "¡Buenas tardes!", "popoludnie"], ["Idziesz spać.", "¡Buenas noches!", "noc"]]],
+        ["Posłuchaj i zapisz", "sluch", ["¡Buenos días!", "¡Hasta luego!", "¿Cómo estás?", "Estoy genial.", "¡Buenas tardes!"]]
+      ]);
+    }
+  },
+  {
+    id: "hisz-przedstawianie", od: "2026-10-24", nazwa: "Hiszpański: przedstawiam się", typ: "tekst", zdania: true, dlugosc: 12, wymowa: "es-ES",
+    tlo: "#9ED8C8", napis: "#0B3D33",
+    zadania(){
+      return blokiZadan("prz", [
+        ["Wpisz llamarse: me llamo, te llamas, se llama", "luka", [["Yo ___ Amelia.", "me llamo"], ["¿Cómo ___ (tú)?", "te llamas"], ["Ella ___ Sofía.", "se llama", "ella"], ["Él ___ Leon.", "se llama", "el"]]],
+        ["Wpisz ser: soy, eres, es", "luka", [["Yo ___ de Polonia.", "soy"], ["¿Tú ___ de España?", "eres"], ["Él ___ de España.", "es"]]],
+        ["Wpisz tener: tengo, tienes, tiene", "luka", [["Yo ___ diez años.", "tengo"], ["¿Cuántos años ___ (tú)?", "tienes"], ["Sofía ___ nueve años.", "tiene", "sofia"], ["Mi compañera ___ diez años.", "tiene", "comp"]]],
+        ["Napisz po hiszpańsku", "pl", [["Jak się nazywasz?", "¿Cómo te llamas?"], ["Skąd jesteś?", "¿De dónde eres?"], ["Ile masz lat?", "¿Cuántos años tienes?"],
+          ["Nazywam się Amelia.", "Me llamo Amelia. / Yo me llamo Amelia."], ["Jestem z Polski.", "Soy de Polonia. / Yo soy de Polonia."], ["Mam dziesięć lat.", "Tengo diez años. / Yo tengo diez años."],
+          ["Co to jest?", "¿Qué es esto?"], ["Moja przyjaciółka ma na imię Sofía.", "Mi amiga se llama Sofía."]]]
+      ]);
+    }
+  },
+  {
+    id: "hisz-paises", od: "2026-10-24", nazwa: "Hiszpański: kraje i narodowości", typ: "tekst", zdania: true, dlugosc: 12, wymowa: "es-ES",
+    tlo: "#E7B6E0", napis: "#4F1E4A",
+    zadania(){
+      return blokiZadan("pai", [
+        ["Państwo po hiszpańsku", "pl", [["Polska", "Polonia"], ["Hiszpania", "España"], ["Niemcy", "Alemania"], ["Francja", "Francia"], ["Włochy", "Italia"], ["Wielka Brytania", "Gran Bretaña"],
+          ["Stany Zjednoczone", "Estados Unidos"], ["Grecja", "Grecia"], ["Norwegia", "Noruega"], ["Szwecja", "Suecia"], ["Czechy", "República Checa"], ["Słowacja", "Eslovaquia"],
+          ["Ukraina", "Ucrania"], ["Holandia", "Países Bajos"]]],
+        ["Wpisz narodowość (chłopiec -o, dziewczynka -a)", "luka", [["Leon es de Polonia. Leon es ___.", "polaco"], ["Amelia es de Polonia. Amelia es ___.", "polaca"],
+          ["Adam es de España. Adam es ___.", "español"], ["Sofía es de España. Sofía es ___.", "española"]]],
+        ["Napisz po hiszpańsku", "pl", [["Jestem z Polski.", "Soy de Polonia. / Yo soy de Polonia.", "zpolski"], ["Jestem Polką.", "Soy polaca. / Yo soy polaca.", "polka"], ["Jestem Polakiem.", "Soy polaco. / Yo soy polaco.", "polak"]]]
+      ]);
+    }
+  },
+  {
+    id: "hisz-numeros", od: "2026-10-24", nazwa: "Hiszpański: liczby 1–10", typ: "tekst", zdania: true, dlugosc: 12, wymowa: "es-ES",
+    tlo: "#A9C8F0", napis: "#16324F",
+    zadania(){
+      const L = HISZ_LICZBY;
+      return blokiZadan("num", [
+        ["Napisz słowem po hiszpańsku", "pl", L.map((w, i) => [String(i + 1), w, "n" + (i + 1)])],
+        ["Wpisz cyfrę", "liczba", L.map((w, i) => [w, String(i + 1), "n" + (i + 1)])],
+        ["Posłuchaj i wpisz cyfrę", "sluch-liczba", L.map((w, i) => [w, String(i + 1), "n" + (i + 1)])],
+        ["Policz i napisz wynik słowem", "es", [["dos + tres", "cinco", "d5"], ["cuatro + cuatro", "ocho", "d8"], ["seis + tres", "nueve", "d9"], ["cinco + cinco", "diez", "d10"], ["uno + seis", "siete", "d7"]]]
+      ]);
+    }
+  },
+  {
+    id: "hisz-cumple", od: "2026-10-24", nazwa: "Hiszpański: urodziny", typ: "tekst", zdania: true, dlugosc: 10, wymowa: "es-ES",
+    tlo: "#FFB37A", napis: "#5A2408",
+    zadania(){
+      return blokiZadan("cum", [
+        ["Napisz po hiszpańsku z el, la, los albo las", "pl", [["prezent", "el regalo"], ["prezenty", "los regalos"], ["balonik", "el globo"], ["baloniki", "los globos"],
+          ["cukierek", "el caramelo"], ["cukierki", "los caramelos"], ["tort", "la tarta / la tarta de cumpleaños"], ["piłka", "la pelota"], ["piłki", "las pelotas"],
+          ["lizak", "la piruleta"], ["lizaki", "las piruletas"], ["Wszystkiego najlepszego!", "¡Feliz cumpleaños!"]]],
+        ["Dokończ słowo", "luka", [["Adam tiene tres g___ (baloniki).", "globos"], ["Sofía tiene ocho c___ (cukierki).", "caramelos"], ["Leon tiene dos t___ (torty).", "tartas"], ["Amelia tiene cinco p___ (piłki).", "pelotas"]]]
+      ]);
+    }
+  },
+  {
+    id: "hisz-familia", od: "2026-10-24", nazwa: "Hiszpański: rodzina", typ: "tekst", zdania: true, dlugosc: 10, wymowa: "es-ES",
+    tlo: "#C9E37A", napis: "#2E4A0E",
+    zadania(){
+      return blokiZadan("fam", [
+        ["Napisz po hiszpańsku z el, la albo los", "pl", [["mama", "la madre"], ["tata", "el padre"], ["babcia", "la abuela"], ["dziadek", "el abuelo"], ["siostra", "la hermana"],
+          ["brat", "el hermano"], ["rodzeństwo", "los hermanos"]]],
+        ["Napisz po hiszpańsku", "pl", [["Nie mam rodzeństwa.", "No tengo hermanos."], ["Przedstawiam ci moją rodzinę.", "Te presento a mi familia."]]],
+        ["Uzupełnij (rodziny Leona i Sofii)", "luka", [["Marta es la ___ de Sofía. (mama)", "madre", "marta"], ["Pablo es el ___ de Sofía. (tata)", "padre", "pablo"], ["Adam es el ___ de Sofía. (brat)", "hermano", "adam"],
+          ["Amelia es la ___ de Sofía. (siostra)", "hermana", "amelia"], ["Víctor es el ___ de Leon. (dziadek)", "abuelo", "victor"], ["María es la ___ de Leon. (babcia)", "abuela", "maria"]]],
+        ["Posłuchaj i zapisz", "sluch", [["la abuela", "la abuela", "s1"], ["el hermano", "el hermano", "s2"], ["la madre", "la madre", "s3"]]]
+      ]);
+    }
+  },
+  {
+    id: "hisz-mascotas", od: "2026-10-24", nazwa: "Hiszpański: zwierzątka", typ: "tekst", zdania: true, dlugosc: 10, wymowa: "es-ES",
+    tlo: "#B98B6E", napis: "#FFF8EE",
+    zadania(){
+      return blokiZadan("mas", [
+        ["Napisz po hiszpańsku z el albo la", "pl", [["pies", "el perro"], ["kot", "el gato"], ["papuga", "el loro"], ["ryba", "el pez"], ["zwierzątko domowe", "la mascota"]]],
+        ["Napisz po hiszpańsku", "pl", [["Masz zwierzątko?", "¿Tienes una mascota?"], ["Mam psa.", "Tengo un perro.", "mampsa"], ["Mam kota.", "Tengo un gato.", "mamkota"]]],
+        ["Uzupełnij", "luka", [["Sparky es el ___ de Leon. (pies)", "perro", "sparky"], ["Flipi es el ___ de Sofía. (kot)", "gato", "flipi"], ["Tori es el ___ de Adam. (papuga)", "loro", "tori"]]],
+        ["Posłuchaj i zapisz", "sluch", [["el pez", "el pez", "s1"], ["el loro", "el loro", "s2"]]]
+      ]);
+    }
+  },
+  {
+    id: "hisz-posesivos", od: "2026-10-24", nazwa: "Hiszpański: mi, tu, su", typ: "tekst", zdania: true, dlugosc: 10, wymowa: "es-ES",
+    tlo: "#5B6FB8", napis: "#FFF8EE",
+    zadania(){
+      return blokiZadan("pos", [
+        ["Wpisz mi, tu albo su", "luka", [["Yo tengo un perro. Es ___ perro.", "mi", "l1"], ["Tú tienes un gato. Es ___ gato.", "tu", "l2"], ["Él tiene un loro. Es ___ loro.", "su", "l3"],
+          ["Ella tiene un pez. Es ___ pez.", "su", "l4"], ["Leon: ___ madre se llama Ana.", "mi", "l5"], ["Sofía pyta Leona: ¿Cómo se llama ___ perro?", "tu", "l6"],
+          ["Sofía tiene una hermana. ___ hermana se llama Amelia.", "su", "l7"], ["Adam tiene un loro. ___ loro se llama Tori.", "su", "l8"], ["Yo tengo una hermana. ___ hermana se llama Clara.", "mi", "l9"]]],
+        ["Napisz po hiszpańsku", "pl", [["mój pies", "mi perro"], ["twój kot", "tu gato"], ["jego papuga", "su loro"], ["jej rybka", "su pez"], ["moja mama", "mi madre"], ["twoja babcia", "tu abuela"]]]
+      ]);
+    }
+  },
+  {
+    // Powtórka przed sprawdzianem: losowe zadania ze wszystkich tematów Unidad 1 powyżej.
+    id: "hisz-powtorka-1", od: "2026-10-24", nazwa: "Hiszpański: powtórka Unidad 1", typ: "tekst", zdania: true, wymowa: "es-ES",
+    tlo: "#8C1C2E", napis: "#FFE36E",
+    zadania(){
+      return ["hisz-saludos", "hisz-przedstawianie", "hisz-paises", "hisz-numeros", "hisz-cumple", "hisz-familia", "hisz-mascotas", "hisz-posesivos"]
+        .flatMap(id => tematById(id).zadania().map(z => ({ ...z, klucz: "pw:" + z.klucz, grupa: "pw:" + z.grupa })));
+    }
+  },
+  {
+    // ANGIELSKI, Lesson 2.1: Clothes. Najwięcej jest obrazków (co to jest?), do tego polski → angielski i dyktando.
+    id: "ang-ubrania", od: "2026-10-24", nazwa: "Angielski: ubrania", typ: "tekst", wymowa: "en-GB",
+    tlo: "#E3D3F5", napis: "#4A3F6B",
+    zadania(){
+      const out = [];
+      for (const [en, pl, tez] of SLOWA_UBRANIA) {
+        const odp = tez ? en + " / " + tez : en;
+        if (OBRAZKI_UBRAN[en]) out.push({ klucz: "ob:" + en, pytanie: pl, odp, obrazek: en, polecenie: "Co to jest? Napisz po angielsku", pl: true, grupa: en, waga: 1.6 });
+        out.push({ klucz: "pl:" + en, pytanie: pl, odp, polecenie: "Napisz po angielsku", pl: true, grupa: en, waga: 0.6 });
+        out.push({ klucz: "sl:" + en, pytanie: "🔊 " + en, odp, mow: en, sluch: true, polecenie: "Posłuchaj i zapisz", grupa: en, waga: 0.6 });
       }
       return out;
     }
@@ -2266,6 +2458,7 @@ function zadanie(){
       <span class="mega label">${esc(t.dyktando && !MOWA ? "Napisz po angielsku" : z.polecenie || t.polecenie)}</span>
       ${(t.dyktando || z.sluch) && MOWA
         ? `<div class="dykt"><button class="dykt-gra" data-act="mow" data-txt="${esc(z.sluch ? z.mow : z.odp)}" data-lang="${t.wymowa}" aria-label="Posłuchaj">${ICO_GLOSNIK}</button><span class="dykt-opis"><b>Stuknij, żeby posłuchać</b><button class="dykt-wolno" data-act="mow" data-txt="${esc(z.sluch ? z.mow : z.odp)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}">🐢 wolniej</button></span></div>`
+        : z.obrazek ? `<div class="obr-wrap">${obrazUbrania(z.obrazek, "obr")}</div>`
         : z.kreski ? `<div class="mega q kq${z.pytanie.length > 7 ? " dl" : ""}" aria-label="${esc(z.pytanie)}">${[...z.pytanie].map((c, k) => `<button class="kc" data-act="kreskaq" data-k="${k}">${c}</button>${(R.kreski || []).includes(k) && k < z.pytanie.length - 1 ? '<span class="kr-l">|</span>' : ""}`).join("")}</div><p class="kq-pod">Stuknij cyfrę, żeby postawić za nią kreskę.</p>`
         : `<div class="mega q${dlugie ? " long" : ""}${z.pytanie.length > 26 ? " xl" : ""}${z.pytanie.length > 60 ? " xxl" : ""}">${z.pytanie.length > 60 ? '<span class="miejsce-zabki" aria-hidden="true"></span>' : ""}${esc(z.sluch ? z.mow : z.pytanie)}</div>${z.mow && MOWA ? `<div class="q-glosy"><button class="q-glos" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" aria-label="Posłuchaj">${ICO_GLOSNIK}<span>posłuchaj</span></button><button class="q-glos" data-act="mow" data-txt="${esc(z.mow)}" data-lang="${t.wymowa}" data-tempo="${TEMPO_WOLNE}" aria-label="Posłuchaj wolniej">🐢 wolniej</button></div>` : ""}`}
       <div class="ansrow">${t.typ === "liczby" && !R.temat.duzeLiczby ? '<span class="mega eq">=</span>' : ""}${odp}</div>
@@ -2553,7 +2746,7 @@ function wynikiZGlosnikami(r, t){
     const dobra = z.dobrze ? (t.zdania && trafiona ? trafiona : z.wpis) : warianty[0];
     const inne = warianty.filter(w => N(w) !== N(dobra));
     return `<div class="wyn${z.dobrze ? "" : " zle"}">
-      <span class="w-pyt">${esc(pyt)}${obcePytanie && !z.pl ? g(pyt.replace(/\s*I'm _+\.?$/, "").replace(/_+/g, "").trim()) : ""}</span>
+      <span class="w-pyt">${z.klucz && z.klucz.startsWith("ob:") ? obrazUbrania(z.klucz.slice(3), "obr-mini") : ""}${esc(pyt)}${obcePytanie && !z.pl ? g(pyt.replace(/\s*I'm _+\.?$/, "").replace(/_+/g, "").trim()) : ""}</span>
       ${z.dobrze ? "" : `<span class="w-twoja">✗ <s>${esc(z.wpis)}</s></span>`}
       <span class="w-odp">✓ ${esc(dobra)}${g(dobra)}</span>
       ${inne.length && (t.typ === "wybor" || t.zdania) ? `<span class="e-tez">też: ${inne.map(esc).join(" · ")}</span>` : ""}
